@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AppTheme.Dark">
+        <attr name="card_color" format="color" />
+        <attr name="txt_color" format="color" />
+        <attr name="media_icon_color" format="reference" />
+        <attr name="ringer_icon_color" format="reference" />
+        <attr name="alarm_icon_color" format="reference" />
+        <attr name="close_icon_color" format="reference" />
+    </declare-styleable>
+</resources>

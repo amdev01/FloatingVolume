@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Floating Volume</string>
+    <string name="draw_other_app_permission_denied">Draw over other app permission not available. App won\'t work without permission. Please try again.</string>
+    <string name="start_service">Start Floating Service</string>
+    <string name="stop_service">Stop Floating Service</string>
+    <string name="media_volume">Media</string>
+    <string name="ringer_volume">Ringer</string>
+    <string name="alarm_volume">Alarm</string>
+</resources>

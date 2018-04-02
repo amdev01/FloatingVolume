@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryP">#3F51B5</color>
+    <color name="colorPrimaryDarkP">#303F9F</color>
+    <color name="colorAccentP">#FF4081</color>
+
+    <color name="colorPrimaryInverse">#000000</color>
+    <color name="colorPrimaryDarkInverse">#000000</color>
+    <color name="colorAccentInverse">#4285F4</color>
+</resources>
