@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             card_view:cardBackgroundColor="@android:color/black"
-            card_view:cardCornerRadius="8dp"
+            card_view:cardCornerRadius="20dp"
             card_view:cardElevation="6dp"
             card_view:cardUseCompatPadding="true"
             card_view:contentPadding="10dp">
@@ -59,8 +59,6 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:background="@android:color/black"
-                android:gravity="center"
-                android:orientation="horizontal"
                 android:padding="8dp">
 
                 <TextView
@@ -85,9 +83,10 @@
                     app:layout_constraintTop_toBottomOf="@+id/textViewMedia">
 
                     <ImageView
+                        android:id="@+id/ImageMedia"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_volume_up_white_24dp"
+                        android:src="@drawable/ic_volume_up_white_24dp"
                         tools:ignore="ContentDescription" />
 
                     <SeekBar
@@ -121,7 +120,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_ring_volume_white_24dp"
+                        android:src="@drawable/ic_ring_volume_white_24dp"
                         tools:ignore="ContentDescription" />
 
                     <SeekBar
@@ -155,7 +154,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_alarm_white_24dp"
+                        android:src="@drawable/ic_alarm_white_24dp"
                         tools:ignore="ContentDescription" />
 
                     <SeekBar
