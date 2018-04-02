@@ -327,7 +327,7 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
                                 inBounded = false;
                                 remove_image_view.getLayoutParams().height = remove_img_height;
                                 remove_image_view.getLayoutParams().width = remove_img_width;
-                                onFloatingWidgetClick();
+                                //onFloatingWidgetClick();
                             }
 
                         }
