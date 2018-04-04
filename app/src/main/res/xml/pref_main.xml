@@ -1,6 +1,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <SwitchPreference
+        android:icon="?attr/theme_icon_color"
         android:key="enable_dark_mode_switch"
-        android:summary="Dark mode"
-        android:title="Dark mode" />
+        android:summary="@string/pref_darkmode_summary"
+        android:title="@string/pref_darkmode" />
 </PreferenceScreen>

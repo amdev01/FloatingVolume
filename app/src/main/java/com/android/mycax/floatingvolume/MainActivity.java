@@ -1,5 +1,7 @@
 package com.android.mycax.floatingvolume;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -14,9 +16,10 @@ import android.widget.Toast;
 import com.android.mycax.floatingvolume.utils.AppUtils;
 import com.basel.DualButton.DualButton;
 
+import java.util.Objects;
+
 @SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatPreferenceActivity implements SwitchPreference.OnPreferenceChangeListener, DualButton.OnDualClickListener{
-    private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
     private DualButton FloatingService;
     private static final String PREF_ENABLE_DARK_MODE = "enable_dark_mode_switch";
     private AppUtils utils;
@@ -33,10 +36,20 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
-        } else if (Settings.canDrawOverlays(this)){
+            startActivity(intent);
+        }
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
+            Intent intent = new Intent(
+                    android.provider.Settings
+                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+
+            startActivity(intent);
+        }
+        if (Settings.canDrawOverlays(this) && Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
             initializeView();
         }
+        else Toast.makeText(this,R.string.app_permission_denied, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -70,22 +83,5 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
             startActivity(intent);
         }
         return true;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
-            if (resultCode == RESULT_OK) {
-                initializeView();
-            } else { //Permission is not available
-                Toast.makeText(this,
-                        R.string.draw_other_app_permission_denied,
-                        Toast.LENGTH_SHORT).show();
-
-                finish();
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
     }
 }

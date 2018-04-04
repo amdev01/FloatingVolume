@@ -5,6 +5,7 @@
 
     <!-- Permission required to draw floating widget over other apps -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             tools:ignore="ExportedPreferenceActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,18 +29,19 @@
         <service
             android:name=".FloatingVolumeService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
         <service
             android:name=".FloatingTile"
             android:enabled="true"
             android:exported="true"
-            android:icon="@drawable/ic_music_note_black_24dp"
+            android:icon="@drawable/ic_music_note_white_24dp"
             android:label="Floating Volume"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>

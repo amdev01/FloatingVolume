@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.media.AudioManager;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -20,8 +19,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
+import android.media.AudioManager;
 
 import java.util.Objects;
 
@@ -29,7 +33,7 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
     private WindowManager mWindowManager;
     private View mFloatingWidgetView, collapsedView;
     private CardView expandedView;
-    private ImageView remove_image_view;
+    private ImageView remove_image_view, change_ringer_mode, ImageToAnimate;
     private final Point szWindow = new Point();
     private View removeFloatingWidgetView;
     private AudioManager audioManager;
@@ -37,6 +41,7 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
     private int x_init_cord, y_init_cord, x_init_margin, y_init_margin;
 
     public FloatingVolumeService() {
+
     }
 
     @Nullable
@@ -52,6 +57,8 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
         //init WindowManager
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         getWindowManagerDefaultDisplay();
 
         //Init LayoutInflater
@@ -59,42 +66,83 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
 
         addRemoveView(Objects.requireNonNull(inflater));
         addFloatingWidgetView(inflater);
-        implementSeekbarListeners();
         implementClickListeners();
         implementTouchListenerToFloatingWidgetView();
     }
 
-    private void implementSeekbarListeners() {
-        audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-
-        int maxVolumeMedia = Objects.requireNonNull(audioManager).getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        int curVolumeMedia = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+    private void implementVolumeFeatures() {
         SeekBar mediaControl = mFloatingWidgetView.findViewById(R.id.SeekBarMedia);
-        mediaControl.setMax(maxVolumeMedia);
-        mediaControl.setProgress(curVolumeMedia);
+        mediaControl.setMax(Objects.requireNonNull(audioManager).getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        mediaControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         mediaControl.setOnSeekBarChangeListener(this);
 
-        int maxVolumeRinger = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
-        int curVolumeRinger = audioManager.getStreamVolume(AudioManager.STREAM_RING);
         SeekBar ringerControl = mFloatingWidgetView.findViewById(R.id.SeekBarRinger);
-        ringerControl.setMax(maxVolumeRinger);
-        ringerControl.setProgress(curVolumeRinger);
+        ringerControl.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
+        ringerControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_RING));
         ringerControl.setOnSeekBarChangeListener(this);
 
-        int maxVolumeAlarm = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-        int curVolumeAlarm = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
         SeekBar alarmControl = mFloatingWidgetView.findViewById(R.id.SeekBarAlarm);
-        alarmControl.setMax(maxVolumeAlarm);
-        alarmControl.setProgress(curVolumeAlarm);
+        alarmControl.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
+        alarmControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_ALARM));
         alarmControl.setOnSeekBarChangeListener(this);
+
+        LinearLayout linearLayoutInCall = mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall);
+        TextView textViewInCall = mFloatingWidgetView.findViewById(R.id.textViewVoiceCall);
+        if (audioManager.getMode() == AudioManager.MODE_IN_CALL) {
+            linearLayoutInCall.setVisibility(View.VISIBLE);
+            textViewInCall.setVisibility(View.VISIBLE);
+            SeekBar voiceCallControl = mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCall);
+            voiceCallControl.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL));
+            voiceCallControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
+            voiceCallControl.setOnSeekBarChangeListener(this);
+        } else {
+            linearLayoutInCall.setVisibility(View.GONE);
+            textViewInCall.setVisibility(View.GONE);
+        }
+
+        change_ringer_mode = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitch);
+        change_ringer_mode.setImageResource(getCurrentRingerModeDrawable());
+        change_ringer_mode.setOnClickListener(this);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar arg0) {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fab_close_13_to_1);
+        switch (arg0.getId()) {
+            case R.id.SeekBarMedia:
+                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageMedia);
+                break;
+            case R.id.SeekBarRinger:
+                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageRinger);
+                break;
+            case R.id.SeekBarAlarm:
+                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageAlarm);
+                break;
+            case R.id.SeekBarVoiceCall:
+                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageVoiceCall);
+                break;
+        }
+        ImageToAnimate.startAnimation(animation);
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar arg0) {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fab_open_1_to_13);
+        switch (arg0.getId()) {
+            case R.id.SeekBarMedia:
+                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageMedia);
+                break;
+            case R.id.SeekBarRinger:
+                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageRinger);
+                break;
+            case R.id.SeekBarAlarm:
+                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageAlarm);
+                break;
+            case R.id.SeekBarVoiceCall:
+                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageVoiceCall);
+                break;
+        }
+        ImageToAnimate.startAnimation(animation);
     }
 
     @Override
@@ -108,6 +156,9 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
                 break;
             case R.id.SeekBarAlarm:
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, arg1, 0);
+                break;
+            case R.id.SeekBarVoiceCall:
+                audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, arg1, 0);
                 break;
         }
     }
@@ -124,8 +175,8 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 Build.VERSION.SDK_INT < Build.VERSION_CODES.O ?
-                                                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY :
-                                                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                        WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY :
+                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 PixelFormat.TRANSLUCENT);
 
@@ -152,8 +203,8 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 Build.VERSION.SDK_INT < Build.VERSION_CODES.O ?
-                                                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY :
-                                                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                        WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY :
+                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
@@ -165,7 +216,7 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
         mWindowManager.getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
         params.x = displayMetrics.widthPixels;
-        params.y = height-(height/2);
+        params.y = height - (height / 2);
 
         //Add the view to the window
         mWindowManager.addView(mFloatingWidgetView, params);
@@ -178,7 +229,7 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
     }
 
     private void getWindowManagerDefaultDisplay() {
-            mWindowManager.getDefaultDisplay().getSize(szWindow);
+        mWindowManager.getDefaultDisplay().getSize(szWindow);
     }
 
     /*  Implement Touch Listener to Floating Widget Root View  */
@@ -350,6 +401,39 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
         mFloatingWidgetView.findViewById(R.id.close_expanded_view).setOnClickListener(this);
     }
 
+    private int getCurrentRingerModeDrawable() {
+        switch (audioManager.getRingerMode()) {
+            case AudioManager.RINGER_MODE_NORMAL:
+                return R.drawable.ic_volume_up_white_24dp;
+            case AudioManager.RINGER_MODE_VIBRATE:
+                return R.drawable.ic_vibration_white_24dp;
+            case AudioManager.RINGER_MODE_SILENT:
+                return R.drawable.ic_do_not_disturb_on_white_24dp;
+        }
+        return -1;
+    }
+
+    private void setNewRingerMode() {
+        int ringerMode = audioManager.getRingerMode();
+        Animation fab_open = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
+        switch (ringerMode) {
+            case AudioManager.RINGER_MODE_NORMAL:
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                change_ringer_mode.setImageResource(R.drawable.ic_vibration_white_24dp);
+                change_ringer_mode.startAnimation(fab_open);
+                break;
+            case AudioManager.RINGER_MODE_VIBRATE:
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                change_ringer_mode.setImageResource(R.drawable.ic_do_not_disturb_on_white_24dp);
+                change_ringer_mode.startAnimation(fab_open);
+                break;
+            case AudioManager.RINGER_MODE_SILENT:
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                change_ringer_mode.setImageResource(R.drawable.ic_volume_up_white_24dp);
+                change_ringer_mode.startAnimation(fab_open);
+                break;
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -361,6 +445,9 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
                 collapsedView.setVisibility(View.VISIBLE);
                 expandedView.setVisibility(View.GONE);
                 resetPosition(x_init_cord);
+                break;
+            case R.id.imageViewModeSwitch:
+                setNewRingerMode();
                 break;
         }
     }
@@ -507,6 +594,7 @@ public class FloatingVolumeService extends Service implements View.OnClickListen
             //and expanded view will become visible.
             collapsedView.setVisibility(View.GONE);
             expandedView.setVisibility(View.VISIBLE);
+            implementVolumeFeatures();
 
         }
     }

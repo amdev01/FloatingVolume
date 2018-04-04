@@ -1,9 +1,5 @@
-<!-- Base application theme. -->
 <resources>
-
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimaryP</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkP</item>
         <item name="colorAccent">@color/colorAccentP</item>
@@ -13,9 +9,11 @@
         <item name="ringer_icon_color">@drawable/ic_ring_volume_black_24dp</item>
         <item name="alarm_icon_color">@drawable/ic_alarm_black_24dp</item>
         <item name="close_icon_color">@drawable/ic_close_black_24dp</item>
+        <item name="theme_icon_color">@drawable/ic_color_lens_black_24dp</item>
+        <item name="voicecall_icon_color">@drawable/ic_call_black_24dp</item>
     </style>
 
-    <style name="AppTheme.Dark" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.Dark" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/colorPrimaryInverse</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkInverse</item>
         <item name="colorAccent">@color/colorAccentInverse</item>
@@ -26,6 +24,7 @@
         <item name="ringer_icon_color">@drawable/ic_ring_volume_white_24dp</item>
         <item name="alarm_icon_color">@drawable/ic_alarm_white_24dp</item>
         <item name="close_icon_color">@drawable/ic_close_white_24dp</item>
+        <item name="theme_icon_color">@drawable/ic_color_lens_white_24dp</item>
+        <item name="voicecall_icon_color">@drawable/ic_call_white_24dp</item>
     </style>
-
 </resources>
