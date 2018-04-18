@@ -4,7 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 
-import com.android.mycax.floatingvolume.FloatingVolumeService;
+import com.android.mycax.floatingvolume.services.FloatingVolumeService;
 
 import java.util.Objects;
 

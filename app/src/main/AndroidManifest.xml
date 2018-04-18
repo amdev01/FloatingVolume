@@ -24,14 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Declare FloatingWidget Service over here and set enabled true -->
         <service
-            android:name=".FloatingVolumeService"
+            android:name=".services.FloatingVolumeService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".FloatingTile"
+            android:name=".services.FloatingTile"
             android:enabled="true"
             android:exported="true"
             android:icon="@drawable/ic_music_note_white_24dp"

@@ -1,4 +1,4 @@
-package com.android.mycax.floatingvolume;
+package com.android.mycax.floatingvolume.services;
 
 import android.annotation.TargetApi;
 import android.os.Build;
