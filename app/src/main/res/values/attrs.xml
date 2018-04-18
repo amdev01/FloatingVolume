@@ -9,5 +9,6 @@
         <attr name="close_icon_color" format="reference" />
         <attr name="theme_icon_color" format="reference" />
         <attr name="voicecall_icon_color" format="reference" />
+        <attr name="save_icon_color" format="reference" />
     </declare-styleable>
 </resources>

@@ -4,4 +4,9 @@
         android:key="enable_dark_mode_switch"
         android:summary="@string/pref_darkmode_summary"
         android:title="@string/pref_darkmode" />
+    <SwitchPreference
+        android:icon="?attr/save_icon_color"
+        android:key="settings_save_last_position"
+        android:summary="@string/settings_summary_save_position"
+        android:title="@string/settings_title_save_position"/>
 </PreferenceScreen>

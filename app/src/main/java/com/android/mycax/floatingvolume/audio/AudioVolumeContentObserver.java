@@ -6,13 +6,13 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
-public class AudioVolumeContentObserver extends ContentObserver {
+class AudioVolumeContentObserver extends ContentObserver {
 
     private final OnAudioVolumeChangedListener mListener;
     private final AudioManager mAudioManager;
     private final int mAudioStreamType;
     private int mLastVolume;
-    private AudioVolumeObserver audioVolumeObserver;
+    private final AudioVolumeObserver audioVolumeObserver;
 
     public AudioVolumeContentObserver(
             @NonNull Handler handler,
@@ -32,15 +32,15 @@ public class AudioVolumeContentObserver extends ContentObserver {
     @Override
     public void onChange(boolean selfChange, Uri uri) {
         if (mAudioManager != null && mListener != null) {
-            int maxVolume = mAudioManager.getStreamMaxVolume(mAudioStreamType);
             int currentVolume = mAudioManager.getStreamVolume(mAudioStreamType);
             if (currentVolume != mLastVolume) {
                 mLastVolume = currentVolume;
-                mListener.onAudioVolumeChanged(audioVolumeObserver, currentVolume, maxVolume);
+                mListener.onAudioVolumeChanged(audioVolumeObserver);
             }
         }
     }
 
+    @SuppressWarnings("EmptyMethod")
     @Override
     public boolean deliverSelfNotifications() {
         return super.deliverSelfNotifications();

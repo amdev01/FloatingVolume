@@ -2,11 +2,15 @@ package com.android.mycax.floatingvolume.services;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -38,6 +42,9 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private FloatingViewManager mFloatingViewManager;
     private AudioVolumeObserver mAudioVolumeObserverMedia, mAudioVolumeObserverVoiceCall, mAudioVolumeObserverRinger, mAudioVolumeObserverAlarm;
     private SeekBar mediaControl, ringerControl, alarmControl, voiceCallControl;
+    private static final String PREF_KEY_LAST_POSITION_X = "last_position_x";
+    private static final String PREF_KEY_LAST_POSITION_Y = "last_position_y";
+    private BroadcastReceiver RingerModeReceiver;
 
     @Nullable
     @Override
@@ -66,12 +73,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
         mFloatingViewManager = new FloatingViewManager(this, this);
         mFloatingViewManager.setFixedTrashIconImage(R.drawable.ic_delete_white_24dp);
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-        int height = displayMetrics.heightPixels;
-        FloatingViewManager.Options options = new FloatingViewManager.Options();
-        options.floatingViewX = displayMetrics.widthPixels;
-        options.floatingViewY = height - (height / 2);
+        final FloatingViewManager.Options options = loadOptions(metrics);
         mFloatingViewManager.addViewToWindow(iconView, options);
 
         return START_REDELIVER_INTENT;
@@ -82,6 +84,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         addFloatingWidgetView(inflater);
         implementVolumeFeatures();
+
         mAudioVolumeObserverRinger = new AudioVolumeObserver(this);
         mAudioVolumeObserverRinger.register(AudioManager.STREAM_RING, this);
 
@@ -149,7 +152,17 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         }
 
         change_ringer_mode = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitch);
-        change_ringer_mode.setImageResource(getCurrentRingerModeDrawable());
+        final Animation fab_open = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
+        RingerModeReceiver =new BroadcastReceiver(){
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                change_ringer_mode.setImageResource(getCurrentRingerModeDrawable());
+                change_ringer_mode.startAnimation(fab_open);
+            }
+        };
+        IntentFilter filter=new IntentFilter(
+                AudioManager.RINGER_MODE_CHANGED_ACTION);
+        registerReceiver(RingerModeReceiver,filter);
         change_ringer_mode.setOnClickListener(this);
     }
 
@@ -255,6 +268,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                 mAudioVolumeObserverMedia.unregister();
                 mAudioVolumeObserverVoiceCall.unregister();
                 mAudioVolumeObserverAlarm.unregister();
+                unregisterReceiver(RingerModeReceiver);
                 break;
             case R.id.imageViewModeSwitch:
                 setNewRingerMode();
@@ -269,7 +283,12 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
     @Override
     public void onTouchFinished(boolean isFinishing, int x, int y) {
-
+        if (!isFinishing) {
+            final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+            editor.putInt(PREF_KEY_LAST_POSITION_X, x);
+            editor.putInt(PREF_KEY_LAST_POSITION_Y, y);
+            editor.apply();
+        }
     }
 
     private void removeExpandedView() {
@@ -290,7 +309,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     }
 
     @Override
-    public void onAudioVolumeChanged(AudioVolumeObserver audioVolumeObserver, int currentVolume, int maxVolume) {
+    public void onAudioVolumeChanged(AudioVolumeObserver audioVolumeObserver) {
         if (audioVolumeObserver.equals(mAudioVolumeObserverRinger))
             ringerControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_RING));
         else if (audioVolumeObserver.equals(mAudioVolumeObserverMedia))
@@ -299,5 +318,24 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             voiceCallControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
         else if (audioVolumeObserver.equals(mAudioVolumeObserverAlarm))
             alarmControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_ALARM));
+    }
+
+    private FloatingViewManager.Options loadOptions(DisplayMetrics metrics) {
+        final FloatingViewManager.Options options = new FloatingViewManager.Options();
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        final boolean isUseLastPosition = sharedPref.getBoolean("settings_save_last_position", false);
+        if (isUseLastPosition) {
+            final int defaultX = options.floatingViewX;
+            final int defaultY = options.floatingViewY;
+            options.floatingViewX = sharedPref.getInt(PREF_KEY_LAST_POSITION_X, defaultX);
+            options.floatingViewY = sharedPref.getInt(PREF_KEY_LAST_POSITION_Y, defaultY);
+        } else {
+            int height = metrics.heightPixels;
+            options.floatingViewX = metrics.widthPixels;
+            options.floatingViewY = height - (height / 2);
+        }
+
+        return options;
     }
 }
