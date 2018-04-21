@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     tools:ignore="UselessParent">
@@ -12,7 +11,6 @@
         android:id="@+id/expanded_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardBackgroundColor="@android:color/white"
         card_view:cardCornerRadius="20dp"
         card_view:cardElevation="6dp"
         card_view:cardUseCompatPadding="true"
@@ -24,7 +22,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:background="@android:color/white"
             android:padding="8dp">
 
             <TextView
@@ -33,7 +30,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:textColor="@android:color/black"
                 android:text="@string/voicecall_volume"
                 android:visibility="gone"
                 card_view:layout_constraintStart_toStartOf="parent"
@@ -56,7 +52,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
-                    android:src="@drawable/ic_call_black_24dp"
                     tools:ignore="ContentDescription" />
 
                 <SeekBar
@@ -72,7 +67,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:textColor="@android:color/black"
                 android:text="@string/media_volume"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutVoiceCall"
                 card_view:layout_constraintStart_toStartOf="parent" />
@@ -93,7 +87,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
-                    android:src="@drawable/ic_volume_up_black_24dp"
                     tools:ignore="ContentDescription" />
 
                 <SeekBar
@@ -109,7 +102,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:textColor="@android:color/black"
                 android:text="@string/ringer_volume"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutMedia"
                 card_view:layout_constraintStart_toStartOf="parent" />
@@ -130,7 +122,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
-                    android:src="@drawable/ic_ring_volume_black_24dp"
                     tools:ignore="ContentDescription" />
 
                 <SeekBar
@@ -146,7 +137,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:textColor="@android:color/black"
                 android:text="@string/alarm_volume"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutRinger"
                 card_view:layout_constraintStart_toStartOf="parent" />
@@ -167,7 +157,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
-                    android:src="@drawable/ic_alarm_black_24dp"
                     tools:ignore="ContentDescription" />
 
                 <SeekBar
@@ -184,7 +173,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="50dp"
-                android:src="@drawable/ic_close_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/imageViewModeSwitch"

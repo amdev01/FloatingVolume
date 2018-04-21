@@ -12,6 +12,8 @@ import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -45,6 +47,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private static final String PREF_KEY_LAST_POSITION_X = "last_position_x";
     private static final String PREF_KEY_LAST_POSITION_Y = "last_position_y";
     private BroadcastReceiver RingerModeReceiver;
+    private boolean isDarkThemeEnabled;
 
     @Nullable
     @Override
@@ -73,6 +76,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
         mFloatingViewManager = new FloatingViewManager(this, this);
         mFloatingViewManager.setFixedTrashIconImage(R.drawable.ic_delete_white_24dp);
+        mFloatingViewManager.setDisplayMode(FloatingViewManager.DISPLAY_MODE_SHOW_ALWAYS);
         final FloatingViewManager.Options options = loadOptions(metrics);
         mFloatingViewManager.addViewToWindow(iconView, options);
 
@@ -82,7 +86,43 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private void expandView(LayoutInflater inflater) {
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+        isDarkThemeEnabled = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("enable_dark_mode_switch",false);
+
         addFloatingWidgetView(inflater);
+
+        CardView expanded_card_view = mFloatingWidgetView.findViewById(R.id.expanded_card_view);
+        expanded_card_view.setCardBackgroundColor(
+                ContextCompat.getColor(this, isDarkThemeEnabled ? android.R.color.black : android.R.color.white));
+
+        TextView textViewRinger = mFloatingWidgetView.findViewById(R.id.textViewRinger);
+        textViewRinger.setTextColor(ContextCompat.getColor(this, isDarkThemeEnabled ? android.R.color.white : android.R.color.black));
+
+        TextView textViewAlarm = mFloatingWidgetView.findViewById(R.id.textViewAlarm);
+        textViewAlarm.setTextColor(ContextCompat.getColor(this, isDarkThemeEnabled ? android.R.color.white : android.R.color.black));
+
+        TextView textViewMedia = mFloatingWidgetView.findViewById(R.id.textViewMedia);
+        textViewMedia.setTextColor(ContextCompat.getColor(this, isDarkThemeEnabled ? android.R.color.white : android.R.color.black));
+
+        TextView textViewVoiceCall = mFloatingWidgetView.findViewById(R.id.textViewVoiceCall);
+        textViewVoiceCall.setTextColor(ContextCompat.getColor(this, isDarkThemeEnabled ? android.R.color.white : android.R.color.black));
+
+        ImageView close_expanded_view = mFloatingWidgetView.findViewById(R.id.close_expanded_view);
+        close_expanded_view.setImageResource(isDarkThemeEnabled ? R.drawable.ic_close_white_24dp : R.drawable.ic_close_black_24dp);
+
+        ImageView imageRinger = mFloatingWidgetView.findViewById(R.id.ImageRinger);
+        imageRinger.setImageResource(isDarkThemeEnabled ? R.drawable.ic_ring_volume_white_24dp : R.drawable.ic_ring_volume_black_24dp);
+
+        ImageView imageMedia = mFloatingWidgetView.findViewById(R.id.ImageMedia);
+        imageMedia.setImageResource(isDarkThemeEnabled ? R.drawable.ic_volume_up_white_24dp : R.drawable.ic_volume_up_black_24dp);
+
+        ImageView imageAlarm = mFloatingWidgetView.findViewById(R.id.ImageAlarm);
+        imageAlarm.setImageResource(isDarkThemeEnabled ? R.drawable.ic_alarm_white_24dp : R.drawable.ic_alarm_black_24dp);
+
+        ImageView imageVoiceCall = mFloatingWidgetView.findViewById(R.id.ImageVoiceCall);
+        imageVoiceCall.setImageResource(isDarkThemeEnabled ? R.drawable.ic_call_white_24dp : R.drawable.ic_call_black_24dp);
+
         implementVolumeFeatures();
 
         mAudioVolumeObserverRinger = new AudioVolumeObserver(this);
@@ -227,11 +267,11 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private int getCurrentRingerModeDrawable() {
         switch (audioManager.getRingerMode()) {
             case AudioManager.RINGER_MODE_NORMAL:
-                return R.drawable.ic_volume_up_black_24dp;
+                return isDarkThemeEnabled ? R.drawable.ic_volume_up_white_24dp : R.drawable.ic_volume_up_black_24dp;
             case AudioManager.RINGER_MODE_VIBRATE:
-                return R.drawable.ic_vibration_black_24dp;
+                return isDarkThemeEnabled ? R.drawable.ic_vibration_white_24dp : R.drawable.ic_vibration_black_24dp;
             case AudioManager.RINGER_MODE_SILENT:
-                return R.drawable.ic_do_not_disturb_on_black_24dp;
+                return isDarkThemeEnabled ? R.drawable.ic_do_not_disturb_on_white_24dp : R.drawable.ic_do_not_disturb_on_black_24dp;
         }
         return -1;
     }
@@ -242,17 +282,17 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         switch (ringerMode) {
             case AudioManager.RINGER_MODE_NORMAL:
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                change_ringer_mode.setImageResource(R.drawable.ic_vibration_black_24dp);
+                change_ringer_mode.setImageResource(isDarkThemeEnabled ? R.drawable.ic_vibration_white_24dp : R.drawable.ic_vibration_black_24dp);
                 change_ringer_mode.startAnimation(fab_open);
                 break;
             case AudioManager.RINGER_MODE_VIBRATE:
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                change_ringer_mode.setImageResource(R.drawable.ic_do_not_disturb_on_black_24dp);
+                change_ringer_mode.setImageResource(isDarkThemeEnabled ? R.drawable.ic_do_not_disturb_on_white_24dp : R.drawable.ic_do_not_disturb_on_black_24dp);
                 change_ringer_mode.startAnimation(fab_open);
                 break;
             case AudioManager.RINGER_MODE_SILENT:
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                change_ringer_mode.setImageResource(R.drawable.ic_volume_up_black_24dp);
+                change_ringer_mode.setImageResource(isDarkThemeEnabled ? R.drawable.ic_volume_up_white_24dp : R.drawable.ic_volume_up_black_24dp);
                 change_ringer_mode.startAnimation(fab_open);
                 break;
         }
