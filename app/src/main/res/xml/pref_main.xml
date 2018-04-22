@@ -9,4 +9,15 @@
         android:key="settings_save_last_position"
         android:summary="@string/settings_summary_save_position"
         android:title="@string/settings_title_save_position"/>
+    <SwitchPreference
+        android:icon="?attr/fixed_ui_icon_color"
+        android:key="disable_fixed_ui"
+        android:title="@string/pref_disable_fixed_ui"
+        android:summary="@string/pref_disable_fixed_ui_summary"/>
+    <SwitchPreference
+        android:icon="?attr/bounce_icon_color"
+        android:key="enable_bounce_effect"
+        android:summary="@string/pref_enable_bounce_effect_summary"
+        android:title="@string/pref_enable_bounce_effect"
+        android:visibility="gone" />
 </PreferenceScreen>

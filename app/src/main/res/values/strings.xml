@@ -10,5 +10,9 @@
     <string name="pref_darkmode">Dark Mode</string>
     <string name="pref_darkmode_summary">Enable dark mode</string>
     <string name="settings_title_save_position">Save the last position</string>>
-    <string name="settings_summary_save_position">Place FloatingView in last saved position</string>
+    <string name="settings_summary_save_position">Place interface in last saved position</string>
+    <string name="pref_disable_fixed_ui">Disable fixed interface</string>
+    <string name="pref_disable_fixed_ui_summary">Enable to make volume control interface movable</string>
+    <string name="pref_enable_bounce_effect">Enable window bounce effect</string>
+    <string name="pref_enable_bounce_effect_summary">Volume control interface will bounce off the edge when dropped</string>
 </resources>

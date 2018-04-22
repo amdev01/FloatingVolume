@@ -7,8 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -17,6 +20,7 @@ import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -46,8 +50,14 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private SeekBar mediaControl, ringerControl, alarmControl, voiceCallControl;
     private static final String PREF_KEY_LAST_POSITION_X = "last_position_x";
     private static final String PREF_KEY_LAST_POSITION_Y = "last_position_y";
+    private static final String PREF_KEY_LAST_POSITION_X_EXPANDED = "last_position_x_expanded";
+    private static final String PREF_KEY_LAST_POSITION_Y_EXPANDED = "last_position_y_expanded";
     private BroadcastReceiver RingerModeReceiver;
-    private boolean isDarkThemeEnabled;
+    private boolean isDarkThemeEnabled, isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled;
+    private int x_init_cord, y_init_cord, x_init_margin, y_init_margin;
+    private final Point szWindow = new Point();
+    private SharedPreferences.Editor editor;
+    private SharedPreferences sharedPref;
 
     @Nullable
     @Override
@@ -62,6 +72,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             return START_STICKY;
         }
 
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         final DisplayMetrics metrics = new DisplayMetrics();
         final WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         Objects.requireNonNull(windowManager).getDefaultDisplay().getMetrics(metrics);
@@ -70,7 +81,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         iconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                expandView(inflater);
+                expandView(inflater, metrics);
             }
         });
 
@@ -83,14 +94,17 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         return START_REDELIVER_INTENT;
     }
 
-    private void expandView(LayoutInflater inflater) {
+    private void expandView(LayoutInflater inflater, DisplayMetrics displayMetrics) {
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        isDarkThemeEnabled = PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean("enable_dark_mode_switch",false);
+        isDarkThemeEnabled = sharedPref.getBoolean("enable_dark_mode_switch", false);
+        isDisableStaticUiEnabled = sharedPref.getBoolean("disable_fixed_ui", false);
+        isUseLastPosition = sharedPref.getBoolean("settings_save_last_position", false);
+        isBounceEnabled = sharedPref.getBoolean("enable_bounce_effect", false);
 
-        addFloatingWidgetView(inflater);
+        addFloatingWidgetView(inflater, displayMetrics);
+        if (isDisableStaticUiEnabled) implementTouchListenerToFloatingWidgetView(this);
 
         CardView expanded_card_view = mFloatingWidgetView.findViewById(R.id.expanded_card_view);
         expanded_card_view.setCardBackgroundColor(
@@ -142,7 +156,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     }
 
     @SuppressLint("InflateParams")
-    private void addFloatingWidgetView(LayoutInflater inflater) {
+    private void addFloatingWidgetView(LayoutInflater inflater, DisplayMetrics displayMetrics) {
+        getWindowManagerDefaultDisplay();
         mFloatingWidgetView = inflater.inflate(R.layout.floating_layout, null, false);
 
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -153,9 +168,21 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.CENTER;
-        params.x = 0;
-        params.y = 0;
+        if (isDisableStaticUiEnabled) {
+            params.gravity = Gravity.TOP | Gravity.START;
+            if (isUseLastPosition) {
+                params.x = sharedPref.getInt(PREF_KEY_LAST_POSITION_X_EXPANDED, 0);
+                params.y = sharedPref.getInt(PREF_KEY_LAST_POSITION_Y_EXPANDED, 0);
+            } else {
+                int height = displayMetrics.heightPixels;
+                params.x = displayMetrics.widthPixels - mFloatingWidgetView.getWidth();
+                params.y = (height / 4);
+            }
+        } else {
+            params.gravity = Gravity.CENTER;
+            params.x = 0;
+            params.y = 0;
+        }
         params.windowAnimations = android.R.style.Animation_Dialog;
 
         mWindowManager.addView(mFloatingWidgetView, params);
@@ -193,16 +220,16 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
         change_ringer_mode = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitch);
         final Animation fab_open = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
-        RingerModeReceiver =new BroadcastReceiver(){
+        RingerModeReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 change_ringer_mode.setImageResource(getCurrentRingerModeDrawable());
                 change_ringer_mode.startAnimation(fab_open);
             }
         };
-        IntentFilter filter=new IntentFilter(
+        IntentFilter filter = new IntentFilter(
                 AudioManager.RINGER_MODE_CHANGED_ACTION);
-        registerReceiver(RingerModeReceiver,filter);
+        registerReceiver(RingerModeReceiver, filter);
         change_ringer_mode.setOnClickListener(this);
     }
 
@@ -324,7 +351,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     @Override
     public void onTouchFinished(boolean isFinishing, int x, int y) {
         if (!isFinishing) {
-            final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+            editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
             editor.putInt(PREF_KEY_LAST_POSITION_X, x);
             editor.putInt(PREF_KEY_LAST_POSITION_Y, y);
             editor.apply();
@@ -364,7 +391,6 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         final FloatingViewManager.Options options = new FloatingViewManager.Options();
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        final boolean isUseLastPosition = sharedPref.getBoolean("settings_save_last_position", false);
         if (isUseLastPosition) {
             final int defaultX = options.floatingViewX;
             final int defaultY = options.floatingViewY;
@@ -377,5 +403,152 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         }
 
         return options;
+    }
+
+    private void implementTouchListenerToFloatingWidgetView(final Context context) {
+        mFloatingWidgetView.findViewById(R.id.root_container).setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
+
+                int x_cord = (int) event.getRawX();
+                int y_cord = (int) event.getRawY();
+
+                int x_cord_Destination, y_cord_Destination;
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+
+                        x_init_cord = x_cord;
+                        y_init_cord = y_cord;
+
+                        x_init_margin = layoutParams.x;
+                        y_init_margin = layoutParams.y;
+
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        boolean isClicked = false;
+                        int x_diff = x_cord - x_init_cord;
+                        int y_diff = y_cord - y_init_cord;
+
+                        if (Math.abs(x_diff) < 5 && Math.abs(y_diff) < 5) isClicked = true;
+
+                        y_cord_Destination = y_init_margin + y_diff;
+
+                        int barHeight = getStatusBarHeight();
+                        if (y_cord_Destination < 0) y_cord_Destination = 0;
+                        else if (y_cord_Destination + (mFloatingWidgetView.getHeight() + barHeight) > szWindow.y) {
+                            y_cord_Destination = szWindow.y - (mFloatingWidgetView.getHeight() + barHeight);
+                        }
+
+                        layoutParams.y = y_cord_Destination;
+
+                        if (!isClicked) resetPosition(x_cord);
+
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        int x_diff_move = x_cord - x_init_cord;
+                        int y_diff_move = y_cord - y_init_cord;
+
+                        x_cord_Destination = x_init_margin + x_diff_move;
+                        y_cord_Destination = y_init_margin + y_diff_move;
+
+                        layoutParams.x = x_cord_Destination;
+                        layoutParams.y = y_cord_Destination;
+
+                        mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
+                        editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+                        editor.putInt(PREF_KEY_LAST_POSITION_X_EXPANDED, layoutParams.x);
+                        editor.putInt(PREF_KEY_LAST_POSITION_Y_EXPANDED, layoutParams.y);
+                        editor.apply();
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void resetPosition(int x_cord_now) {
+        if (x_cord_now <= szWindow.x / 2) moveToLeft(x_cord_now);
+        else moveToRight(x_cord_now);
+    }
+
+    private void moveToLeft(final int current_x_cord) {
+        new CountDownTimer(500, 5) {
+            final WindowManager.LayoutParams mParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
+
+            public void onTick(long t) {
+                long step = (500 - t) / 5;
+
+                mParams.x = 0 - (int) (current_x_cord * current_x_cord * step);
+
+                if (isBounceEnabled)
+                    mParams.x = 0 - (int) (double) bounceValue(step, current_x_cord);
+
+                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
+            }
+
+            public void onFinish() {
+                mParams.x = 0;
+
+                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
+            }
+        }.start();
+    }
+
+    private void moveToRight(final int current_x_cord) {
+
+        new CountDownTimer(500, 5) {
+            final WindowManager.LayoutParams mParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
+
+            public void onTick(long t) {
+                long step = (500 - t) / 5;
+
+                mParams.x = (int) (szWindow.x + (current_x_cord * current_x_cord * step) - mFloatingWidgetView.getWidth());
+
+                if (isBounceEnabled)
+                    mParams.x = szWindow.x + (int) (double) bounceValue(step, current_x_cord) - mFloatingWidgetView.getWidth();
+
+                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
+            }
+
+            public void onFinish() {
+                mParams.x = szWindow.x - mFloatingWidgetView.getWidth();
+
+                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
+            }
+        }.start();
+    }
+
+    private int getStatusBarHeight() {
+        return (int) Math.ceil(25 * getApplicationContext().getResources().getDisplayMetrics().density);
+    }
+
+    private double bounceValue(long step, long scale) {
+        return scale * Math.exp(-0.055 * step) * Math.cos(0.08 * step);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        getWindowManagerDefaultDisplay();
+
+        WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (layoutParams.y + (mFloatingWidgetView.getHeight() + getStatusBarHeight()) > szWindow.y) {
+                layoutParams.y = szWindow.y - (mFloatingWidgetView.getHeight() + getStatusBarHeight());
+                mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
+            }
+            if (layoutParams.x != 0 && layoutParams.x < szWindow.x) resetPosition(szWindow.x);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (layoutParams.x > szWindow.x) resetPosition(szWindow.x);
+        }
+    }
+
+    private void getWindowManagerDefaultDisplay() {
+        mWindowManager.getDefaultDisplay().getSize(szWindow);
     }
 }
