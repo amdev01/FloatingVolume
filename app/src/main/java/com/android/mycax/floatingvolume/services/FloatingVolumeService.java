@@ -164,7 +164,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 Build.VERSION.SDK_INT < Build.VERSION_CODES.O ?
-                        WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY :
+                        WindowManager.LayoutParams.TYPE_PRIORITY_PHONE :
                         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);

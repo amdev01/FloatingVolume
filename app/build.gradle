@@ -1,3 +1,4 @@
+//noinspection GradleCompatible
 apply plugin: 'com.android.application'
 
 android {
@@ -6,8 +7,8 @@ android {
         applicationId "com.android.mycax.floatingvolume"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 4
-        versionName "1.0.3 beta"
+        versionCode 5
+        versionName "1.0.4 beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -25,8 +26,8 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     compile 'com.github.BaselHorany:DualButton:1.1.1'
     compile 'com.github.recruit-lifestyle:FloatingView:2.3.1'
 }
