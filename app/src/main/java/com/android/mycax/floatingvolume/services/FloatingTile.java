@@ -7,7 +7,6 @@ import android.os.Build;
 import android.provider.Settings;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
-import android.util.Log;
 
 import com.android.mycax.floatingvolume.utils.AppUtils;
 

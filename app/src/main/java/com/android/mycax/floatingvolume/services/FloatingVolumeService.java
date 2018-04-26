@@ -58,6 +58,25 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private final Point szWindow = new Point();
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPref;
+    private static int OVERLAY_TYPE;
+
+    static {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            for (String androidArch : Build.SUPPORTED_ABIS) {
+                switch (androidArch) {
+                    case "arm64-v8a":
+                        OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
+                        break;
+                    case "armeabi-v7a":
+                        OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_PRIORITY_PHONE;
+                        break;
+                }
+            }
+        }
+        else {
+            OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        }
+    }
 
     @Nullable
     @Override
@@ -163,9 +182,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                Build.VERSION.SDK_INT < Build.VERSION_CODES.O ?
-                        WindowManager.LayoutParams.TYPE_PRIORITY_PHONE :
-                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                OVERLAY_TYPE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         if (isDisableStaticUiEnabled) {
