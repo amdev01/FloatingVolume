@@ -1,9 +1,11 @@
 package com.android.mycax.floatingvolume;
 
+import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -38,22 +40,10 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         utils = new AppUtils(this);
         FloatingService = findViewById(R.id.dualBtn);
 
-        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Settings.canDrawOverlays(this) && Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
-            initializeView();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            checkPermissions();
         } else {
-            if (!Settings.canDrawOverlays(this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST);
-            }
-            if (!Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
-                Intent intent = new Intent(
-                        android.provider.Settings
-                                .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-
-                startActivityForResult(intent, NOTIFICATION_POLICY_PERMISSION_REQUEST);
-            }
+            initializeView();
         }
     }
 
@@ -100,6 +90,28 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         return true;
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
+    private void checkPermissions() {
+        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Settings.canDrawOverlays(this) && Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
+            initializeView();
+        } else {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST);
+            }
+            if (!Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
+                Intent intent = new Intent(
+                        android.provider.Settings
+                                .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+
+                startActivityForResult(intent, NOTIFICATION_POLICY_PERMISSION_REQUEST);
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == OVERLAY_PERMISSION_REQUEST || requestCode == NOTIFICATION_POLICY_PERMISSION_REQUEST) {

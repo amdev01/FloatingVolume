@@ -72,8 +72,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                         break;
                 }
             }
-        }
-        else {
+        } else {
             OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         }
     }
