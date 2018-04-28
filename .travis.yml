@@ -16,7 +16,7 @@ notifications:
   email:
     recipients:
       - mycaxd511@gmail.com
-    on_success: always
+    on_success: never
     on_failure: always
 sudo: false
 before_cache:
@@ -29,3 +29,8 @@ cache:
     - $HOME/.android/build-cache
 before_install:
   - yes | sdkmanager "platforms;android-27"
+  - >
+       echo "$PAGES_COMMIT_MESSAGE"
+       | grep -E  '\[(Pages)\]'
+       && echo "[Pages] has been found, exiting."
+       && exit 0 || true

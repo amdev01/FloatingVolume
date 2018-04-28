@@ -1,8 +1,8 @@
 # Floating Volume
-Floating Volume is a simple Android 6.0+ app that allows you to control media, ringer, alarm and in-call volume, and switch between ringer modes within the floating interface.
+Floating Volume is a simple Android 5.0+ app that allows you to control media, ringer, alarm and in-call volume, and switch between ringer modes within the floating interface.
 
 ## Screenshots
-![](./screenshots/floating-volume-showcase1.gif) ![](./screenshots/floating-volume-showcase2.gif) ![](./screenshots/floating-volume-showcase3.gif)
+<img src="./screenshots/floating-volume-showcase1.gif" width="200"><img src="./screenshots/floating-volume-showcase2.gif" width="200"><img src="./screenshots/floating-volume-showcase3.gif" width="200">
 
 ## Notice
 App is still in beta stage, some features are not yet implemented or might not be working correctly. Bug reports and feature requests welcome!
