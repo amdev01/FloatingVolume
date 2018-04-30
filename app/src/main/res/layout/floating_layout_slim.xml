@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/root_container"
     tools:ignore="UselessParent">
 
     <android.support.v7.widget.CardView
         android:id="@+id/expanded_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardCornerRadius="20dp"
-        card_view:cardElevation="6dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="3dp"
         card_view:cardUseCompatPadding="true"
-        card_view:contentPadding="10dp">
+        card_view:contentPadding="3dp">
 
         <!--   View while view is expanded   -->
         <android.support.constraint.ConstraintLayout
@@ -23,14 +23,37 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:padding="8dp">
+            android:paddingBottom="3dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="3dp"
+            android:paddingTop="3dp">
+
+            <!--  ImageView to Close Expanded View  -->
+            <ImageView
+                android:id="@+id/close_expanded_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/imageViewModeSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                app:layout_constraintRight_toRightOf="@id/close_expanded_view"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/textViewVoiceCall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="6dp"
                 android:text="@string/voicecall_volume"
                 android:visibility="gone"
                 card_view:layout_constraintStart_toStartOf="parent"
@@ -40,9 +63,9 @@
                 android:id="@+id/linearLayoutVoiceCall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -66,8 +89,8 @@
                 android:id="@+id/textViewMedia"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
                 android:text="@string/media_volume"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutVoiceCall"
                 card_view:layout_constraintStart_toStartOf="parent" />
@@ -76,9 +99,9 @@
                 android:id="@+id/linearLayoutMedia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewMedia">
@@ -101,8 +124,8 @@
                 android:id="@+id/textViewRinger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
                 android:text="@string/ringer_volume"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutMedia"
                 card_view:layout_constraintStart_toStartOf="parent" />
@@ -111,9 +134,9 @@
                 android:id="@+id/linearLayoutRinger"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewRinger">
@@ -136,8 +159,8 @@
                 android:id="@+id/textViewAlarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
                 android:text="@string/alarm_volume"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutRinger"
                 card_view:layout_constraintStart_toStartOf="parent" />
@@ -146,9 +169,11 @@
                 android:id="@+id/linearLayoutAlarm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewAlarm">
@@ -167,34 +192,6 @@
                     android:layout_weight="1" />
             </LinearLayout>
 
-            <!--  ImageView to Close Expanded View  -->
-            <ImageView
-                android:id="@+id/close_expanded_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="50dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageViewModeSwitch"
-                app:layout_constraintTop_toTopOf="@+id/linearLayoutAlarm"
-                card_view:layout_constraintBottom_toBottomOf="parent"
-                tools:ignore="ContentDescription"
-                tools:padding="4dp" />
-
-            <ImageView
-                android:id="@+id/imageViewModeSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="50dp"
-                app:layout_constraintEnd_toStartOf="@+id/close_expanded_view"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/linearLayoutAlarm"
-                card_view:layout_constraintBottom_toBottomOf="parent"
-                tools:ignore="ContentDescription"
-                tools:padding="4dp" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>

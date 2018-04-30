@@ -1,13 +1,53 @@
 //noinspection GradleCompatible
 apply plugin: 'com.android.application'
 
+def compile_sdk_version = 27
+def min_sdk_version = 21
+def support_library_version = "27.1.1"
+def build_tools_version = "27.0.3"
+def play_services_version = "15.0.0"
+def firebase_version = "15.0.0"
+def support_test_version = "1.0.1"
+def gson_version = "2.8.2"
+def glide_version = "3.8.0"
+
+
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        // Skip multidex because it follows a different versioning pattern.
+        if (!details.requested.name.startsWith("multidex")) {
+            switch (details.requested.group) {
+                case 'com.android.support':
+                    details.useVersion "$support_library_version"
+                    break
+                case 'com.google.android.gms':
+                    details.useVersion "$play_services_version"
+                    break
+                case 'com.google.firebase':
+                    details.useVersion "$firebase_version"
+                    break
+                case 'com.android.support.test':
+                    details.useVersion "$support_test_version"
+                    break
+                case 'com.google.code.gson':
+                    details.useVersion "$gson_version"
+                    break
+                case 'com.github.bumptech.glide':
+                    details.useVersion "$glide_version"
+                    break
+            }
+        }
+    }
+}
+
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion compile_sdk_version
+    buildToolsVersion build_tools_version
     defaultConfig {
         applicationId "com.android.mycax.floatingvolume"
-        minSdkVersion 21
-        targetSdkVersion 27
+        minSdkVersion min_sdk_version
+        targetSdkVersion compile_sdk_version
         versionCode 6
         versionName "1.0.5 beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -22,13 +62,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    implementation "com.android.support:appcompat-v7:${support_library_version}"
+    implementation "com.android.support.constraint:constraint-layout:1.1.0"
+    implementation "com.android.support:cardview-v7:${support_library_version}"
+    implementation "com.android.support:support-v4:${support_library_version}"
+    androidTestImplementation 'junit:junit:4.12'
+    androidTestImplementation "com.android.support.test:runner:${support_test_version}"
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compile 'com.github.BaselHorany:DualButton:1.1.1'
-    compile 'com.github.recruit-lifestyle:FloatingView:2.3.1'
+    implementation 'com.github.BaselHorany:DualButton:1.1.1'
+    implementation 'com.github.recruit-lifestyle:FloatingView:2.3.1'
 }

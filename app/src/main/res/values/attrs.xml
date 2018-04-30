@@ -12,5 +12,6 @@
         <attr name="save_icon_color" format="reference" />
         <attr name="fixed_ui_icon_color" format="reference" />
         <attr name="bounce_icon_color" format="reference" />
+        <attr name="slim_dialog_icon_color" format="reference" />
     </declare-styleable>
 </resources>
