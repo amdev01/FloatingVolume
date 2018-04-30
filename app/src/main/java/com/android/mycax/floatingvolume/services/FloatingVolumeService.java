@@ -11,7 +11,6 @@ import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
@@ -28,8 +27,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -39,6 +36,7 @@ import com.android.mycax.floatingvolume.audio.OnAudioVolumeChangedListener;
 import com.android.mycax.floatingvolume.utils.Constants;
 
 import java.util.Objects;
+import java.util.Set;
 
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
@@ -51,16 +49,13 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private FloatingViewManager mFloatingViewManager;
     private AudioVolumeObserver mAudioVolumeObserverMedia, mAudioVolumeObserverVoiceCall, mAudioVolumeObserverRinger, mAudioVolumeObserverAlarm;
     private SeekBar mediaControl, ringerControl, alarmControl, voiceCallControl;
-    private static final String PREF_KEY_LAST_POSITION_X = "last_position_x";
-    private static final String PREF_KEY_LAST_POSITION_Y = "last_position_y";
-    private static final String PREF_KEY_LAST_POSITION_X_EXPANDED = "last_position_x_expanded";
-    private static final String PREF_KEY_LAST_POSITION_Y_EXPANDED = "last_position_y_expanded";
     private BroadcastReceiver RingerModeReceiver;
     private boolean isDarkThemeEnabled, isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled;
     private int x_init_cord, y_init_cord, x_init_margin, y_init_margin;
     private final Point szWindow = new Point();
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPref;
+    private Set<String> seekbarSelections;
     private static int OVERLAY_TYPE;
 
     static {
@@ -123,6 +118,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         isDisableStaticUiEnabled = sharedPref.getBoolean("disable_fixed_ui", false);
         isUseLastPosition = sharedPref.getBoolean("settings_save_last_position", false);
         isBounceEnabled = sharedPref.getBoolean("enable_bounce_effect", false);
+        seekbarSelections = sharedPref.getStringSet("items_to_show_in_dialog_pref", null);
 
         addFloatingWidgetView(inflater, displayMetrics);
         if (isDisableStaticUiEnabled) implementTouchListenerToFloatingWidgetView(this);
@@ -160,20 +156,6 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
         implementVolumeFeatures();
 
-        checkBarsSettings();
-
-        mAudioVolumeObserverRinger = new AudioVolumeObserver(this);
-        mAudioVolumeObserverRinger.register(AudioManager.STREAM_RING, this);
-
-        mAudioVolumeObserverMedia = new AudioVolumeObserver(this);
-        mAudioVolumeObserverMedia.register(AudioManager.STREAM_MUSIC, this);
-
-        mAudioVolumeObserverVoiceCall = new AudioVolumeObserver(this);
-        mAudioVolumeObserverVoiceCall.register(AudioManager.STREAM_VOICE_CALL, this);
-
-        mAudioVolumeObserverAlarm = new AudioVolumeObserver(this);
-        mAudioVolumeObserverAlarm.register(AudioManager.STREAM_ALARM, this);
-
         mFloatingWidgetView.findViewById(R.id.close_expanded_view).setOnClickListener(this);
         iconView.setVisibility(View.GONE);
     }
@@ -192,8 +174,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         if (isDisableStaticUiEnabled) {
             params.gravity = Gravity.TOP | Gravity.START;
             if (isUseLastPosition) {
-                params.x = sharedPref.getInt(PREF_KEY_LAST_POSITION_X_EXPANDED, 0);
-                params.y = sharedPref.getInt(PREF_KEY_LAST_POSITION_Y_EXPANDED, 0);
+                params.x = sharedPref.getInt(Constants.PREF_KEY_LAST_POSITION_X_EXPANDED, 0);
+                params.y = sharedPref.getInt(Constants.PREF_KEY_LAST_POSITION_Y_EXPANDED, 0);
             } else {
                 int height = displayMetrics.heightPixels;
                 params.x = displayMetrics.widthPixels - mFloatingWidgetView.getWidth();
@@ -210,33 +192,56 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     }
 
     private void implementVolumeFeatures() {
-        mediaControl = mFloatingWidgetView.findViewById(R.id.SeekBarMedia);
-        mediaControl.setMax(Objects.requireNonNull(audioManager).getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        mediaControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-        mediaControl.setOnSeekBarChangeListener(this);
-
-        ringerControl = mFloatingWidgetView.findViewById(R.id.SeekBarRinger);
-        ringerControl.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
-        ringerControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_RING));
-        ringerControl.setOnSeekBarChangeListener(this);
-
-        alarmControl = mFloatingWidgetView.findViewById(R.id.SeekBarAlarm);
-        alarmControl.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
-        alarmControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_ALARM));
-        alarmControl.setOnSeekBarChangeListener(this);
-
-        LinearLayout linearLayoutInCall = mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall);
-        TextView textViewInCall = mFloatingWidgetView.findViewById(R.id.textViewVoiceCall);
-        if (audioManager.getMode() == AudioManager.MODE_IN_CALL) {
-            linearLayoutInCall.setVisibility(View.VISIBLE);
-            textViewInCall.setVisibility(View.VISIBLE);
-            voiceCallControl = mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCall);
-            voiceCallControl.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL));
-            voiceCallControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
-            voiceCallControl.setOnSeekBarChangeListener(this);
+        if (seekbarSelections.contains("1")) {
+            mediaControl = mFloatingWidgetView.findViewById(R.id.SeekBarMedia);
+            mediaControl.setMax(Objects.requireNonNull(audioManager).getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+            mediaControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+            mediaControl.setOnSeekBarChangeListener(this);
+            mAudioVolumeObserverMedia = new AudioVolumeObserver(this);
+            mAudioVolumeObserverMedia.register(AudioManager.STREAM_MUSIC, this);
         } else {
-            linearLayoutInCall.setVisibility(View.GONE);
-            textViewInCall.setVisibility(View.GONE);
+            mFloatingWidgetView.findViewById(R.id.textViewMedia).setVisibility(View.GONE);
+            mFloatingWidgetView.findViewById(R.id.linearLayoutMedia).setVisibility(View.GONE);
+        }
+
+        if (seekbarSelections.contains("2")) {
+            ringerControl = mFloatingWidgetView.findViewById(R.id.SeekBarRinger);
+            ringerControl.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
+            ringerControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_RING));
+            ringerControl.setOnSeekBarChangeListener(this);
+            mAudioVolumeObserverRinger = new AudioVolumeObserver(this);
+            mAudioVolumeObserverRinger.register(AudioManager.STREAM_RING, this);
+        } else {
+            mFloatingWidgetView.findViewById(R.id.textViewRinger).setVisibility(View.GONE);
+            mFloatingWidgetView.findViewById(R.id.linearLayoutRinger).setVisibility(View.GONE);
+        }
+
+        if (seekbarSelections.contains("3")) {
+            alarmControl = mFloatingWidgetView.findViewById(R.id.SeekBarAlarm);
+            alarmControl.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
+            alarmControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_ALARM));
+            alarmControl.setOnSeekBarChangeListener(this);
+            mAudioVolumeObserverAlarm = new AudioVolumeObserver(this);
+            mAudioVolumeObserverAlarm.register(AudioManager.STREAM_ALARM, this);
+        } else {
+            mFloatingWidgetView.findViewById(R.id.textViewAlarm).setVisibility(View.GONE);
+            mFloatingWidgetView.findViewById(R.id.linearLayoutAlarm).setVisibility(View.GONE);
+        }
+
+        if (seekbarSelections.contains("4")) {
+            mAudioVolumeObserverVoiceCall = new AudioVolumeObserver(this);
+            mAudioVolumeObserverVoiceCall.register(AudioManager.STREAM_VOICE_CALL, this);
+            if (audioManager.getMode() == AudioManager.MODE_IN_CALL) {
+                mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.VISIBLE);
+                mFloatingWidgetView.findViewById(R.id.textViewVoiceCall).setVisibility(View.VISIBLE);
+                voiceCallControl = mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCall);
+                voiceCallControl.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL));
+                voiceCallControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
+                voiceCallControl.setOnSeekBarChangeListener(this);
+            } else {
+                mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.GONE);
+                mFloatingWidgetView.findViewById(R.id.textViewVoiceCall).setVisibility(View.GONE);
+            }
         }
 
         change_ringer_mode = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitch);
@@ -352,10 +357,18 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             case R.id.close_expanded_view:
                 removeExpandedView();
                 iconView.setVisibility(View.VISIBLE);
-                mAudioVolumeObserverRinger.unregister();
-                mAudioVolumeObserverMedia.unregister();
-                mAudioVolumeObserverVoiceCall.unregister();
-                mAudioVolumeObserverAlarm.unregister();
+                if (seekbarSelections.contains("1")) {
+                    mAudioVolumeObserverMedia.unregister();
+                }
+                if (seekbarSelections.contains("2")) {
+                    mAudioVolumeObserverRinger.unregister();
+                }
+                if (seekbarSelections.contains("3")) {
+                    mAudioVolumeObserverAlarm.unregister();
+                }
+                if (seekbarSelections.contains("4")) {
+                    mAudioVolumeObserverVoiceCall.unregister();
+                }
                 unregisterReceiver(RingerModeReceiver);
                 break;
             case R.id.imageViewModeSwitch:
@@ -373,8 +386,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     public void onTouchFinished(boolean isFinishing, int x, int y) {
         if (!isFinishing) {
             editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-            editor.putInt(PREF_KEY_LAST_POSITION_X, x);
-            editor.putInt(PREF_KEY_LAST_POSITION_Y, y);
+            editor.putInt(Constants.PREF_KEY_LAST_POSITION_X, x);
+            editor.putInt(Constants.PREF_KEY_LAST_POSITION_Y, y);
             editor.apply();
         }
     }
@@ -415,8 +428,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         if (isUseLastPosition) {
             final int defaultX = options.floatingViewX;
             final int defaultY = options.floatingViewY;
-            options.floatingViewX = sharedPref.getInt(PREF_KEY_LAST_POSITION_X, defaultX);
-            options.floatingViewY = sharedPref.getInt(PREF_KEY_LAST_POSITION_Y, defaultY);
+            options.floatingViewX = sharedPref.getInt(Constants.PREF_KEY_LAST_POSITION_X, defaultX);
+            options.floatingViewY = sharedPref.getInt(Constants.PREF_KEY_LAST_POSITION_Y, defaultY);
         } else {
             int height = metrics.heightPixels;
             options.floatingViewX = metrics.widthPixels;
@@ -482,8 +495,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
                         mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
                         editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                        editor.putInt(PREF_KEY_LAST_POSITION_X_EXPANDED, layoutParams.x);
-                        editor.putInt(PREF_KEY_LAST_POSITION_Y_EXPANDED, layoutParams.y);
+                        editor.putInt(Constants.PREF_KEY_LAST_POSITION_X_EXPANDED, layoutParams.x);
+                        editor.putInt(Constants.PREF_KEY_LAST_POSITION_Y_EXPANDED, layoutParams.y);
                         editor.apply();
                         return true;
                 }
@@ -556,43 +569,25 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        getWindowManagerDefaultDisplay();
+        if (mFloatingWidgetView != null) {
+            getWindowManagerDefaultDisplay();
 
-        WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
+            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
 
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (layoutParams.y + (mFloatingWidgetView.getHeight() + getStatusBarHeight()) > szWindow.y) {
-                layoutParams.y = szWindow.y - (mFloatingWidgetView.getHeight() + getStatusBarHeight());
-                mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (layoutParams.y + (mFloatingWidgetView.getHeight() + getStatusBarHeight()) > szWindow.y) {
+                    layoutParams.y = szWindow.y - (mFloatingWidgetView.getHeight() + getStatusBarHeight());
+                    mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
+                }
+                if (layoutParams.x != 0 && layoutParams.x < szWindow.x) resetPosition(szWindow.x);
+            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                if (layoutParams.x > szWindow.x) resetPosition(szWindow.x);
             }
-            if (layoutParams.x != 0 && layoutParams.x < szWindow.x) resetPosition(szWindow.x);
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if (layoutParams.x > szWindow.x) resetPosition(szWindow.x);
         }
     }
 
     private void getWindowManagerDefaultDisplay() {
         mWindowManager.getDefaultDisplay().getSize(szWindow);
-    }
-
-    private void checkBarsSettings() {
-        try {
-            /**/
-            mFloatingWidgetView.findViewById(R.id.textViewMedia).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_MEDIA_BAR, true) ? View.VISIBLE : View.GONE);
-            mFloatingWidgetView.findViewById(R.id.linearLayoutMedia).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_MEDIA_BAR, true) ? View.VISIBLE : View.GONE);
-            /**/
-            /**/
-            mFloatingWidgetView.findViewById(R.id.textViewAlarm).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_ALARM_BAR, true) ? View.VISIBLE : View.GONE);
-            mFloatingWidgetView.findViewById(R.id.linearLayoutAlarm).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_ALARM_BAR, true) ? View.VISIBLE : View.GONE);
-            /**/
-            /**/
-            mFloatingWidgetView.findViewById(R.id.textViewRinger).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_RINGER_BAR, true) ? View.VISIBLE : View.GONE);
-            mFloatingWidgetView.findViewById(R.id.linearLayoutRinger).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_RINGER_BAR, true) ? View.VISIBLE : View.GONE);
-            /**/
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
     }
 
     private int getDialogLayout() {
@@ -605,7 +600,4 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         }
         return R.layout.floating_layout;
     }
-
-
-
 }

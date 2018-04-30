@@ -179,7 +179,8 @@
                 app:layout_constraintStart_toEndOf="@+id/imageViewModeSwitch"
                 app:layout_constraintTop_toTopOf="@+id/linearLayoutAlarm"
                 card_view:layout_constraintBottom_toBottomOf="parent"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                tools:padding="4dp" />
 
             <ImageView
                 android:id="@+id/imageViewModeSwitch"
@@ -192,7 +193,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/linearLayoutAlarm"
                 card_view:layout_constraintBottom_toBottomOf="parent"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                tools:padding="4dp" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>

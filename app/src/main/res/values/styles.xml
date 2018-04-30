@@ -14,6 +14,7 @@
         <item name="save_icon_color">@drawable/ic_save_black_24dp</item>
         <item name="fixed_ui_icon_color">@drawable/ic_touch_app_black_24dp</item>
         <item name="bounce_icon_color">@drawable/ic_bounce_black_24dp</item>
+        <item name="slim_dialog_icon_color">@drawable/ic_slim_dialog_black_24dp</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
@@ -32,6 +33,7 @@
         <item name="save_icon_color">@drawable/ic_save_white_24dp</item>
         <item name="fixed_ui_icon_color">@drawable/ic_touch_app_white_24dp</item>
         <item name="bounce_icon_color">@drawable/ic_bounce_white_24dp</item>
+        <item name="slim_dialog_icon_color">@drawable/ic_slim_dialog_white_24dp</item>
     </style>
 
     <style name="AppTheme.Dark.Small" parent="AppTheme.Dark">

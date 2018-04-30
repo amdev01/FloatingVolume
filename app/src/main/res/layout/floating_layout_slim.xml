@@ -6,7 +6,6 @@
     android:id="@+id/root_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:background="@color/colorPrimaryP"
     tools:ignore="UselessParent">
 
     <android.support.v7.widget.CardView
@@ -25,8 +24,8 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:paddingBottom="3dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="3dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="3dp"
             android:paddingTop="3dp">
 
             <!--  ImageView to Close Expanded View  -->
@@ -38,8 +37,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                tools:ignore="ContentDescription"
-                tools:src="@drawable/ic_close_black_24dp" />
+                tools:ignore="ContentDescription" />
 
             <ImageView
                 android:id="@+id/imageViewModeSwitch"
@@ -48,15 +46,14 @@
                 android:layout_marginEnd="40dp"
                 app:layout_constraintRight_toRightOf="@id/close_expanded_view"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription"
-                tools:src="@drawable/ic_alarm_black_24dp" />
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/textViewVoiceCall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="6dp"
                 android:text="@string/voicecall_volume"
                 android:visibility="gone"
                 card_view:layout_constraintStart_toStartOf="parent"
@@ -66,9 +63,9 @@
                 android:id="@+id/linearLayoutVoiceCall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -112,10 +109,9 @@
                 <ImageView
                     android:id="@+id/ImageMedia"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:padding="0dp"
-                    tools:ignore="ContentDescription"
-                    tools:src="@drawable/ic_volume_up_black_24dp" />
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    tools:ignore="ContentDescription" />
 
                 <SeekBar
                     android:id="@+id/SeekBarMedia"
@@ -148,10 +144,9 @@
                 <ImageView
                     android:id="@+id/ImageRinger"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:padding="0dp"
-                    tools:ignore="ContentDescription"
-                    tools:src="@drawable/ic_ring_volume_black_24dp" />
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    tools:ignore="ContentDescription" />
 
                 <SeekBar
                     android:id="@+id/SeekBarRinger"
@@ -174,9 +169,11 @@
                 android:id="@+id/linearLayoutAlarm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
                 android:layout_marginEnd="3dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewAlarm">
@@ -184,10 +181,9 @@
                 <ImageView
                     android:id="@+id/ImageAlarm"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:padding="0dp"
-                    tools:ignore="ContentDescription"
-                    tools:src="@drawable/ic_alarm_black_24dp" />
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    tools:ignore="ContentDescription" />
 
                 <SeekBar
                     android:id="@+id/SeekBarAlarm"

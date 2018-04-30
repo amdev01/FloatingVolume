@@ -20,22 +20,22 @@ configurations.all {
             switch (details.requested.group) {
                 case 'com.android.support':
                     details.useVersion "$support_library_version"
-                    break;
+                    break
                 case 'com.google.android.gms':
                     details.useVersion "$play_services_version"
-                    break;
+                    break
                 case 'com.google.firebase':
                     details.useVersion "$firebase_version"
-                    break;
+                    break
                 case 'com.android.support.test':
                     details.useVersion "$support_test_version"
-                    break;
+                    break
                 case 'com.google.code.gson':
                     details.useVersion "$gson_version"
-                    break;
+                    break
                 case 'com.github.bumptech.glide':
                     details.useVersion "$glide_version"
-                    break;
+                    break
             }
         }
     }
