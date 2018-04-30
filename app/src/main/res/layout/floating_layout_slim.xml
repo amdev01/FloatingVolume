@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:background="@color/colorPrimaryP"
+    tools:ignore="UselessParent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/expanded_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="3dp"
+        card_view:cardUseCompatPadding="true"
+        card_view:contentPadding="3dp">
+
+        <!--   View while view is expanded   -->
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="3dp"
+            android:paddingTop="3dp">
+
+            <!--  ImageView to Close Expanded View  -->
+            <ImageView
+                android:id="@+id/close_expanded_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="ContentDescription"
+                tools:src="@drawable/ic_close_black_24dp" />
+
+            <ImageView
+                android:id="@+id/imageViewModeSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                app:layout_constraintRight_toRightOf="@id/close_expanded_view"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription"
+                tools:src="@drawable/ic_alarm_black_24dp" />
+
+            <TextView
+                android:id="@+id/textViewVoiceCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:text="@string/voicecall_volume"
+                android:visibility="gone"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutVoiceCall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewVoiceCall">
+
+                <ImageView
+                    android:id="@+id/ImageVoiceCall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    tools:ignore="ContentDescription" />
+
+                <SeekBar
+                    android:id="@+id/SeekBarVoiceCall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewMedia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
+                android:text="@string/media_volume"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutVoiceCall"
+                card_view:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutMedia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewMedia">
+
+                <ImageView
+                    android:id="@+id/ImageMedia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="0dp"
+                    tools:ignore="ContentDescription"
+                    tools:src="@drawable/ic_volume_up_black_24dp" />
+
+                <SeekBar
+                    android:id="@+id/SeekBarMedia"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewRinger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
+                android:text="@string/ringer_volume"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutMedia"
+                card_view:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutRinger"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewRinger">
+
+                <ImageView
+                    android:id="@+id/ImageRinger"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="0dp"
+                    tools:ignore="ContentDescription"
+                    tools:src="@drawable/ic_ring_volume_black_24dp" />
+
+                <SeekBar
+                    android:id="@+id/SeekBarRinger"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewAlarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
+                android:text="@string/alarm_volume"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutRinger"
+                card_view:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutAlarm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewAlarm">
+
+                <ImageView
+                    android:id="@+id/ImageAlarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="0dp"
+                    tools:ignore="ContentDescription"
+                    tools:src="@drawable/ic_alarm_black_24dp" />
+
+                <SeekBar
+                    android:id="@+id/SeekBarAlarm"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

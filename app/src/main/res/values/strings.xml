@@ -15,4 +15,14 @@
     <string name="pref_disable_fixed_ui_summary">Enable to make volume control interface movable</string>
     <string name="pref_enable_bounce_effect">Enable window bounce effect</string>
     <string name="pref_enable_bounce_effect_summary">Volume control interface will bounce off the edge when dropped</string>
+    <string name="show_media_bar">Show Media Bar</string>
+    <string name="show_ringer_bar">Show Ringer Bar</string>
+    <string name="show_alarm_bar">Show Alarm Bar</string>
+    <string name="floating_dialog_settings">Floating Dialog Settings</string>
+    <string name="show_media_bar_in_floating_dialog">Show media bar in floating dialog</string>
+    <string name="show_ringer_bar_in_floating_dialog">Show ringer bar in floating dialog</string>
+    <string name="show_alarm_bar_in_floating_dialog">Show alarm bar in floating dialog</string>
+    <string name="use_slim_dialog">Use slim dialog</string>
+    <string name="use_slim_dialog_with_small_icons_nested_of_the_default_dialog">Use slim dialog with small icons nested of the default dialog</string>
+
 </resources>

@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
@@ -27,13 +29,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.media.AudioManager;
 
 import com.android.mycax.floatingvolume.R;
 import com.android.mycax.floatingvolume.audio.AudioVolumeObserver;
 import com.android.mycax.floatingvolume.audio.OnAudioVolumeChangedListener;
+import com.android.mycax.floatingvolume.utils.Constants;
 
 import java.util.Objects;
 
@@ -157,6 +160,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
         implementVolumeFeatures();
 
+        checkBarsSettings();
+
         mAudioVolumeObserverRinger = new AudioVolumeObserver(this);
         mAudioVolumeObserverRinger.register(AudioManager.STREAM_RING, this);
 
@@ -176,7 +181,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     @SuppressLint("InflateParams")
     private void addFloatingWidgetView(LayoutInflater inflater, DisplayMetrics displayMetrics) {
         getWindowManagerDefaultDisplay();
-        mFloatingWidgetView = inflater.inflate(R.layout.floating_layout, null, false);
+        mFloatingWidgetView = inflater.inflate(getDialogLayout(), null, false);
 
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -418,6 +423,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             options.floatingViewY = height - (height / 2);
         }
 
+        options.moveDirection=FloatingViewManager.MOVE_DIRECTION_NONE;
+
         return options;
     }
 
@@ -567,4 +574,38 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private void getWindowManagerDefaultDisplay() {
         mWindowManager.getDefaultDisplay().getSize(szWindow);
     }
+
+    private void checkBarsSettings() {
+        try {
+            /**/
+            mFloatingWidgetView.findViewById(R.id.textViewMedia).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_MEDIA_BAR, true) ? View.VISIBLE : View.GONE);
+            mFloatingWidgetView.findViewById(R.id.linearLayoutMedia).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_MEDIA_BAR, true) ? View.VISIBLE : View.GONE);
+            /**/
+            /**/
+            mFloatingWidgetView.findViewById(R.id.textViewAlarm).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_ALARM_BAR, true) ? View.VISIBLE : View.GONE);
+            mFloatingWidgetView.findViewById(R.id.linearLayoutAlarm).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_ALARM_BAR, true) ? View.VISIBLE : View.GONE);
+            /**/
+            /**/
+            mFloatingWidgetView.findViewById(R.id.textViewRinger).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_RINGER_BAR, true) ? View.VISIBLE : View.GONE);
+            mFloatingWidgetView.findViewById(R.id.linearLayoutRinger).setVisibility(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.SHOW_RINGER_BAR, true) ? View.VISIBLE : View.GONE);
+            /**/
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    private int getDialogLayout() {
+        try {
+            if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.USE_SLIM_DIALOG, false))
+                return R.layout.floating_layout_slim;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        return R.layout.floating_layout;
+    }
+
+
+
 }

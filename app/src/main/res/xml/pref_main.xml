@@ -8,16 +8,44 @@
         android:icon="?attr/save_icon_color"
         android:key="settings_save_last_position"
         android:summary="@string/settings_summary_save_position"
-        android:title="@string/settings_title_save_position"/>
+        android:title="@string/settings_title_save_position" />
     <SwitchPreference
         android:icon="?attr/fixed_ui_icon_color"
         android:key="disable_fixed_ui"
-        android:title="@string/pref_disable_fixed_ui"
-        android:summary="@string/pref_disable_fixed_ui_summary"/>
+        android:summary="@string/pref_disable_fixed_ui_summary"
+        android:title="@string/pref_disable_fixed_ui" />
     <SwitchPreference
         android:icon="?attr/bounce_icon_color"
         android:key="enable_bounce_effect"
         android:summary="@string/pref_enable_bounce_effect_summary"
         android:title="@string/pref_enable_bounce_effect"
         android:visibility="gone" />
+
+    <PreferenceCategory android:title="@string/floating_dialog_settings">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="?attr/media_icon_color"
+            android:key="show_media_bar"
+            android:summary="@string/show_media_bar_in_floating_dialog"
+            android:title="@string/show_media_bar" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="?attr/ringer_icon_color"
+            android:key="show_ringer_bar"
+            android:summary="@string/show_ringer_bar_in_floating_dialog"
+            android:title="@string/show_ringer_bar" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="?attr/alarm_icon_color"
+            android:key="show_alarm_bar"
+            android:summary="@string/show_alarm_bar_in_floating_dialog"
+            android:title="@string/show_alarm_bar" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="use_slim_dialog"
+            android:summary="@string/use_slim_dialog_with_small_icons_nested_of_the_default_dialog"
+            android:title="@string/use_slim_dialog" />
+
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -33,4 +33,16 @@
         <item name="fixed_ui_icon_color">@drawable/ic_touch_app_white_24dp</item>
         <item name="bounce_icon_color">@drawable/ic_bounce_white_24dp</item>
     </style>
+
+    <style name="AppTheme.Dark.Small" parent="AppTheme.Dark">
+
+
+    </style>
+
+
+    <style name="AppTheme.Small" parent="AppTheme">
+
+
+    </style>
+
 </resources>
