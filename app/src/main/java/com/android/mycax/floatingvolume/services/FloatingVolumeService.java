@@ -51,7 +51,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private SeekBar mediaControl, ringerControl, alarmControl, voiceCallControl;
     private BroadcastReceiver RingerModeReceiver;
     private boolean isDarkThemeEnabled, isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled;
-    private int x_init_cord, y_init_cord, x_init_margin, y_init_margin;
+    private int x_init_cord, y_init_cord, x_init_margin, y_init_margin, style;
     private final Point szWindow = new Point();
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPref;
@@ -62,10 +62,10 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             for (String androidArch : Build.SUPPORTED_ABIS) {
                 switch (androidArch) {
-                    case "arm64-v8a":
+                    case Constants.ARM64V8A:
                         OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
                         break;
-                    case "armeabi-v7a":
+                    case Constants.ARMEABIV7A:
                         OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_PRIORITY_PHONE;
                         break;
                 }
@@ -114,45 +114,16 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        isDarkThemeEnabled = sharedPref.getBoolean("enable_dark_mode_switch", false);
-        isDisableStaticUiEnabled = sharedPref.getBoolean("disable_fixed_ui", false);
-        isUseLastPosition = sharedPref.getBoolean("settings_save_last_position", false);
-        isBounceEnabled = sharedPref.getBoolean("enable_bounce_effect", false);
-        seekbarSelections = sharedPref.getStringSet("items_to_show_in_dialog_pref", null);
+        isDarkThemeEnabled = sharedPref.getBoolean(Constants.PREF_ENABLE_DARK_MODE, false);
+        isDisableStaticUiEnabled = sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false);
+        isUseLastPosition = sharedPref.getBoolean(Constants.PREF_SAVE_LAST_POSITION, false);
+        isBounceEnabled = sharedPref.getBoolean(Constants.PREF_ENABLE_BOUNCE, false);
+        seekbarSelections = sharedPref.getStringSet(Constants.PREF_ITEMS_TO_SHOW, null);
+
+        setTheme(isDarkThemeEnabled ? R.style.AppTheme_Dark_Dialog : R.style.AppTheme_Dialog);
 
         addFloatingWidgetView(inflater, displayMetrics);
         if (isDisableStaticUiEnabled) implementTouchListenerToFloatingWidgetView(this);
-
-        CardView expanded_card_view = mFloatingWidgetView.findViewById(R.id.expanded_card_view);
-        expanded_card_view.setCardBackgroundColor(
-                ContextCompat.getColor(this, isDarkThemeEnabled ? android.R.color.black : android.R.color.white));
-
-        TextView textViewRinger = mFloatingWidgetView.findViewById(R.id.textViewRinger);
-        textViewRinger.setTextColor(ContextCompat.getColor(this, isDarkThemeEnabled ? android.R.color.white : android.R.color.black));
-
-        TextView textViewAlarm = mFloatingWidgetView.findViewById(R.id.textViewAlarm);
-        textViewAlarm.setTextColor(ContextCompat.getColor(this, isDarkThemeEnabled ? android.R.color.white : android.R.color.black));
-
-        TextView textViewMedia = mFloatingWidgetView.findViewById(R.id.textViewMedia);
-        textViewMedia.setTextColor(ContextCompat.getColor(this, isDarkThemeEnabled ? android.R.color.white : android.R.color.black));
-
-        TextView textViewVoiceCall = mFloatingWidgetView.findViewById(R.id.textViewVoiceCall);
-        textViewVoiceCall.setTextColor(ContextCompat.getColor(this, isDarkThemeEnabled ? android.R.color.white : android.R.color.black));
-
-        ImageView close_expanded_view = mFloatingWidgetView.findViewById(R.id.close_expanded_view);
-        close_expanded_view.setImageResource(isDarkThemeEnabled ? R.drawable.ic_close_white_24dp : R.drawable.ic_close_black_24dp);
-
-        ImageView imageRinger = mFloatingWidgetView.findViewById(R.id.ImageRinger);
-        imageRinger.setImageResource(isDarkThemeEnabled ? R.drawable.ic_ring_volume_white_24dp : R.drawable.ic_ring_volume_black_24dp);
-
-        ImageView imageMedia = mFloatingWidgetView.findViewById(R.id.ImageMedia);
-        imageMedia.setImageResource(isDarkThemeEnabled ? R.drawable.ic_volume_up_white_24dp : R.drawable.ic_volume_up_black_24dp);
-
-        ImageView imageAlarm = mFloatingWidgetView.findViewById(R.id.ImageAlarm);
-        imageAlarm.setImageResource(isDarkThemeEnabled ? R.drawable.ic_alarm_white_24dp : R.drawable.ic_alarm_black_24dp);
-
-        ImageView imageVoiceCall = mFloatingWidgetView.findViewById(R.id.ImageVoiceCall);
-        imageVoiceCall.setImageResource(isDarkThemeEnabled ? R.drawable.ic_call_white_24dp : R.drawable.ic_call_black_24dp);
 
         implementVolumeFeatures();
 
@@ -200,8 +171,14 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             mAudioVolumeObserverMedia = new AudioVolumeObserver(this);
             mAudioVolumeObserverMedia.register(AudioManager.STREAM_MUSIC, this);
         } else {
-            mFloatingWidgetView.findViewById(R.id.textViewMedia).setVisibility(View.GONE);
-            mFloatingWidgetView.findViewById(R.id.linearLayoutMedia).setVisibility(View.GONE);
+            if (style == 3) {
+                mFloatingWidgetView.findViewById(R.id.textViewMedia).setVisibility(View.GONE);
+                mFloatingWidgetView.findViewById(R.id.SeekBarMediaRotator).setVisibility(View.GONE);
+                mFloatingWidgetView.findViewById(R.id.ImageMedia).setVisibility(View.GONE);
+            } else {
+                mFloatingWidgetView.findViewById(R.id.textViewMedia).setVisibility(View.GONE);
+                mFloatingWidgetView.findViewById(R.id.linearLayoutMedia).setVisibility(View.GONE);
+            }
         }
 
         if (seekbarSelections.contains("2")) {
@@ -212,8 +189,14 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             mAudioVolumeObserverRinger = new AudioVolumeObserver(this);
             mAudioVolumeObserverRinger.register(AudioManager.STREAM_RING, this);
         } else {
-            mFloatingWidgetView.findViewById(R.id.textViewRinger).setVisibility(View.GONE);
-            mFloatingWidgetView.findViewById(R.id.linearLayoutRinger).setVisibility(View.GONE);
+            if (style == 3) {
+                mFloatingWidgetView.findViewById(R.id.textViewRinger).setVisibility(View.GONE);
+                mFloatingWidgetView.findViewById(R.id.SeekBarRingerRotator).setVisibility(View.GONE);
+                mFloatingWidgetView.findViewById(R.id.ImageRinger).setVisibility(View.GONE);
+            } else {
+                mFloatingWidgetView.findViewById(R.id.textViewRinger).setVisibility(View.GONE);
+                mFloatingWidgetView.findViewById(R.id.linearLayoutRinger).setVisibility(View.GONE);
+            }
         }
 
         if (seekbarSelections.contains("3")) {
@@ -224,23 +207,41 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             mAudioVolumeObserverAlarm = new AudioVolumeObserver(this);
             mAudioVolumeObserverAlarm.register(AudioManager.STREAM_ALARM, this);
         } else {
-            mFloatingWidgetView.findViewById(R.id.textViewAlarm).setVisibility(View.GONE);
-            mFloatingWidgetView.findViewById(R.id.linearLayoutAlarm).setVisibility(View.GONE);
+            if (style == 3) {
+                mFloatingWidgetView.findViewById(R.id.textViewAlarm).setVisibility(View.GONE);
+                mFloatingWidgetView.findViewById(R.id.SeekBarAlarmRotator).setVisibility(View.GONE);
+                mFloatingWidgetView.findViewById(R.id.ImageAlarm).setVisibility(View.GONE);
+            } else {
+                mFloatingWidgetView.findViewById(R.id.textViewAlarm).setVisibility(View.GONE);
+                mFloatingWidgetView.findViewById(R.id.linearLayoutAlarm).setVisibility(View.GONE);
+            }
         }
 
         if (seekbarSelections.contains("4")) {
             mAudioVolumeObserverVoiceCall = new AudioVolumeObserver(this);
             mAudioVolumeObserverVoiceCall.register(AudioManager.STREAM_VOICE_CALL, this);
             if (audioManager.getMode() == AudioManager.MODE_IN_CALL) {
-                mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.VISIBLE);
-                mFloatingWidgetView.findViewById(R.id.textViewVoiceCall).setVisibility(View.VISIBLE);
+                if (style == 3) {
+                    mFloatingWidgetView.findViewById(R.id.textViewVoiceCall).setVisibility(View.VISIBLE);
+                    mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).setVisibility(View.VISIBLE);
+                    mFloatingWidgetView.findViewById(R.id.ImageVoiceCall).setVisibility(View.VISIBLE);
+                } else {
+                    mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.VISIBLE);
+                    mFloatingWidgetView.findViewById(R.id.textViewVoiceCall).setVisibility(View.VISIBLE);
+                }
                 voiceCallControl = mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCall);
                 voiceCallControl.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL));
                 voiceCallControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
                 voiceCallControl.setOnSeekBarChangeListener(this);
             } else {
-                mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.GONE);
-                mFloatingWidgetView.findViewById(R.id.textViewVoiceCall).setVisibility(View.GONE);
+                if (style == 3) {
+                    mFloatingWidgetView.findViewById(R.id.textViewVoiceCall).setVisibility(View.GONE);
+                    mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).setVisibility(View.GONE);
+                    mFloatingWidgetView.findViewById(R.id.ImageVoiceCall).setVisibility(View.GONE);
+                } else {
+                    mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.GONE);
+                    mFloatingWidgetView.findViewById(R.id.textViewVoiceCall).setVisibility(View.GONE);
+                }
             }
         }
 
@@ -591,12 +592,14 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     }
 
     private int getDialogLayout() {
-        try {
-            if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.USE_SLIM_DIALOG, false))
+        style = Integer.valueOf(sharedPref.getString(Constants.PREF_DIALOG_STYLE, "1"));
+        switch (style) {
+            case 1:
+                return R.layout.floating_layout;
+            case 2:
                 return R.layout.floating_layout_slim;
-        } catch (Exception e) {
-            e.printStackTrace();
-
+            case 3:
+                return R.layout.floating_layout_vertical;
         }
         return R.layout.floating_layout;
     }

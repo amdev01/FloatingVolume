@@ -22,7 +22,7 @@
     <string name="items_to_show_in_dialog">Items to show in floating dialog</string>
     <string name="items_to_show_in_dialog_summary">Select which seek bars to show in the floating dialog</string>
     <string name="floating_dialog_settings">Floating Dialog Settings</string>
-    <string name="use_slim_dialog">Use slim dialog</string>
-    <string name="use_slim_dialog_with_small_icons_nested_of_the_default_dialog">Use slim dialog with small icons nested of the default dialog</string>
-
+    <string name="dialog_style_title">Dialog style settings</string>
+    <string name="dialog_style_dtext">Choose your preferred style</string>
+    <string name="dialog_default_style">1</string>
 </resources>

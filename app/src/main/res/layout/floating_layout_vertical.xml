@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:ignore="UselessParent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/expanded_card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="6dp"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="10dp"
+        app:cardBackgroundColor="?attr/card_color">
+
+        <!--   View while view is expanded   -->
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="8dp">
+
+            <!-- Voice call -->
+            <ImageView
+                android:id="@+id/ImageVoiceCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+                app:layout_constraintEnd_toStartOf="@+id/ImageMedia"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/SeekBarVoiceCallRotator"
+                android:visibility="gone"
+                tools:ignore="ContentDescription"
+                android:src="?attr/voicecall_icon_color"/>
+
+            <TextView
+                android:id="@+id/textViewVoiceCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/voicecall_volume"
+                android:textColor="?attr/txt_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textViewMedia"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/horizontal_guideline"
+                android:visibility="gone"/>
+
+            <com.android.musicfx.SeekBarRotator
+                android:id="@+id/SeekBarVoiceCallRotator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/ImageVoiceCall"
+                app:layout_constraintEnd_toStartOf="@+id/SeekBarMediaRotator"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone">
+
+                <SeekBar
+                    android:id="@+id/SeekBarVoiceCall"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </com.android.musicfx.SeekBarRotator>
+
+            <!-- Media -->
+            <ImageView
+                android:id="@+id/ImageMedia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+                app:layout_constraintEnd_toStartOf="@+id/ImageRinger"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/ImageVoiceCall"
+                app:layout_constraintTop_toBottomOf="@+id/SeekBarMediaRotator"
+                tools:ignore="ContentDescription"
+                android:src="?attr/media_icon_color"/>
+
+            <TextView
+                android:id="@+id/textViewMedia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/media_volume"
+                android:textColor="?attr/txt_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textViewRinger"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/textViewVoiceCall"
+                app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
+
+            <com.android.musicfx.SeekBarRotator
+                android:id="@+id/SeekBarMediaRotator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/ImageMedia"
+                app:layout_constraintEnd_toStartOf="@+id/SeekBarRingerRotator"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/SeekBarVoiceCallRotator"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <SeekBar
+                    android:id="@+id/SeekBarMedia"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </com.android.musicfx.SeekBarRotator>
+
+            <!-- Ringer -->
+            <ImageView
+                android:id="@+id/ImageRinger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+                app:layout_constraintEnd_toStartOf="@+id/ImageAlarm"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/ImageMedia"
+                app:layout_constraintTop_toBottomOf="@+id/SeekBarRingerRotator"
+                tools:ignore="ContentDescription"
+                android:src="?attr/ringer_icon_color"/>
+
+            <TextView
+                android:id="@+id/textViewRinger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/ringer_volume"
+                android:textColor="?attr/txt_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textViewAlarm"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/textViewMedia"
+                app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
+
+            <com.android.musicfx.SeekBarRotator
+                android:id="@+id/SeekBarRingerRotator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/ImageRinger"
+                app:layout_constraintEnd_toStartOf="@+id/SeekBarAlarmRotator"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/SeekBarMediaRotator"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <SeekBar
+                    android:id="@+id/SeekBarRinger"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </com.android.musicfx.SeekBarRotator>
+
+            <!-- Alarm -->
+            <ImageView
+                android:id="@+id/ImageAlarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+                app:layout_constraintEnd_toEndOf="@id/vertical_guideline"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/ImageRinger"
+                app:layout_constraintTop_toBottomOf="@+id/SeekBarAlarmRotator"
+                tools:ignore="ContentDescription"
+                android:src="?attr/alarm_icon_color"/>
+
+            <TextView
+                android:id="@+id/textViewAlarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/alarm_volume"
+                android:textColor="?attr/txt_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/vertical_guideline"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/textViewRinger"
+                app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
+
+            <com.android.musicfx.SeekBarRotator
+                android:id="@+id/SeekBarAlarmRotator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/ImageAlarm"
+                app:layout_constraintEnd_toEndOf="@id/vertical_guideline"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/SeekBarRingerRotator"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <SeekBar
+                    android:id="@+id/SeekBarAlarm"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </com.android.musicfx.SeekBarRotator>
+
+            <!-- Buttons -->
+            <ImageView
+                android:id="@+id/close_expanded_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/vertical_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewModeSwitch"
+                tools:ignore="ContentDescription"
+                tools:padding="4dp"
+                android:src="?attr/close_icon_color"/>
+
+            <ImageView
+                android:id="@+id/imageViewModeSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/close_expanded_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/vertical_guideline"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription"
+                tools:padding="4dp" />
+
+            <!--Guidelines -->
+            <android.support.constraint.Guideline
+                android:id="@+id/vertical_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.85" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/horizontal_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.85" />
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

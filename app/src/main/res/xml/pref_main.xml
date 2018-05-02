@@ -20,12 +20,18 @@
             android:key="enable_bounce_effect"
             android:summary="@string/pref_enable_bounce_effect_summary"
             android:title="@string/pref_enable_bounce_effect" />
-        <SwitchPreference
+        <ListPreference
             android:icon="?attr/slim_dialog_icon_color"
-            android:key="use_slim_dialog"
-            android:summary="@string/use_slim_dialog_with_small_icons_nested_of_the_default_dialog"
-            android:title="@string/use_slim_dialog" />
+            android:defaultValue="@string/dialog_default_style"
+            android:dialogTitle="@string/dialog_style_dtext"
+            android:entries="@array/dialog_style_entries"
+            android:entryValues="@array/dialog_style_values"
+            android:key="pref_dialog_style"
+            android:paddingStart="24dp"
+            android:summary="%s"
+            android:title="@string/dialog_style_title" />
         <MultiSelectListPreference
+            android:icon="?attr/enable_bars_icon_color"
             android:defaultValue="@array/show_bars_multipreference_values_default"
             android:entries="@array/show_bars_multipreference_entries"
             android:entryValues="@array/show_bars_multipreference_values"

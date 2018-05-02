@@ -3,18 +3,12 @@
         <item name="colorPrimary">@color/colorPrimaryP</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkP</item>
         <item name="colorAccent">@color/colorAccentP</item>
-        <item name="txt_color">@android:color/black</item>
-        <item name="card_color">@android:color/white</item>
-        <item name="media_icon_color">@drawable/ic_volume_up_black_24dp</item>
-        <item name="ringer_icon_color">@drawable/ic_ring_volume_black_24dp</item>
-        <item name="alarm_icon_color">@drawable/ic_alarm_black_24dp</item>
-        <item name="close_icon_color">@drawable/ic_close_black_24dp</item>
         <item name="theme_icon_color">@drawable/ic_color_lens_black_24dp</item>
-        <item name="voicecall_icon_color">@drawable/ic_call_black_24dp</item>
         <item name="save_icon_color">@drawable/ic_save_black_24dp</item>
         <item name="fixed_ui_icon_color">@drawable/ic_touch_app_black_24dp</item>
         <item name="bounce_icon_color">@drawable/ic_bounce_black_24dp</item>
         <item name="slim_dialog_icon_color">@drawable/ic_slim_dialog_black_24dp</item>
+        <item name="enable_bars_icon_color">@drawable/ic_star_half_black_24dp</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
@@ -22,29 +16,33 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkInverse</item>
         <item name="colorAccent">@color/colorAccentInverse</item>
         <item name="android:windowBackground">@color/colorPrimaryDarkInverse</item>
+        <item name="theme_icon_color">@drawable/ic_color_lens_white_24dp</item>
+        <item name="save_icon_color">@drawable/ic_save_white_24dp</item>
+        <item name="fixed_ui_icon_color">@drawable/ic_touch_app_white_24dp</item>
+        <item name="bounce_icon_color">@drawable/ic_bounce_white_24dp</item>
+        <item name="slim_dialog_icon_color">@drawable/ic_slim_dialog_white_24dp</item>
+        <item name="enable_bars_icon_color">@drawable/ic_star_half_white_24dp</item>
+    </style>
+
+    <style name="AppTheme.Dialog" parent="AppTheme">
+        <item name="txt_color">@android:color/black</item>
+        <item name="card_color">@android:color/white</item>
+        <item name="media_icon_color">@drawable/ic_volume_up_black_24dp</item>
+        <item name="ringer_icon_color">@drawable/ic_ring_volume_black_24dp</item>
+        <item name="alarm_icon_color">@drawable/ic_alarm_black_24dp</item>
+        <item name="close_icon_color">@drawable/ic_close_black_24dp</item>
+        <item name="voicecall_icon_color">@drawable/ic_call_black_24dp</item>
+    </style>
+
+
+    <style name="AppTheme.Dark.Dialog" parent="AppTheme.Dark">
         <item name="txt_color">@android:color/white</item>
         <item name="card_color">@android:color/black</item>
         <item name="media_icon_color">@drawable/ic_volume_up_white_24dp</item>
         <item name="ringer_icon_color">@drawable/ic_ring_volume_white_24dp</item>
         <item name="alarm_icon_color">@drawable/ic_alarm_white_24dp</item>
         <item name="close_icon_color">@drawable/ic_close_white_24dp</item>
-        <item name="theme_icon_color">@drawable/ic_color_lens_white_24dp</item>
         <item name="voicecall_icon_color">@drawable/ic_call_white_24dp</item>
-        <item name="save_icon_color">@drawable/ic_save_white_24dp</item>
-        <item name="fixed_ui_icon_color">@drawable/ic_touch_app_white_24dp</item>
-        <item name="bounce_icon_color">@drawable/ic_bounce_white_24dp</item>
-        <item name="slim_dialog_icon_color">@drawable/ic_slim_dialog_white_24dp</item>
-    </style>
-
-    <style name="AppTheme.Dark.Small" parent="AppTheme.Dark">
-
-
-    </style>
-
-
-    <style name="AppTheme.Small" parent="AppTheme">
-
-
     </style>
 
 </resources>
