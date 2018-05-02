@@ -48,8 +48,8 @@ android {
         applicationId "com.android.mycax.floatingvolume"
         minSdkVersion min_sdk_version
         targetSdkVersion compile_sdk_version
-        versionCode 7
-        versionName "1.0.6 beta"
+        versionCode 8
+        versionName "1.0.7 beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

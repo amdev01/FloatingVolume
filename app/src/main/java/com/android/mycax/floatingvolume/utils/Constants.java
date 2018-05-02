@@ -13,6 +13,10 @@ public interface Constants {
     String PREF_ITEMS_TO_SHOW = "items_to_show_in_dialog_pref";
     String ARM64V8A = "arm64-v8a";
     String ARMEABIV7A = "armeabi-v7a";
+    String SEEKBAR_MEDIA = "1";
+    String SEEKBAR_RINGER = "2";
+    String SEEKBAR_ALARM = "3";
+    String SEEKBAR_VOICE_CALL = "4";
     int OVERLAY_PERMISSION_REQUEST = 1;
     int NOTIFICATION_POLICY_PERMISSION_REQUEST = 2;
 }
