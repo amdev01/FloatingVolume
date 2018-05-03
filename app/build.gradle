@@ -71,4 +71,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.github.BaselHorany:DualButton:1.1.1'
     implementation 'com.github.recruit-lifestyle:FloatingView:2.3.1'
+    implementation 'com.github.jrvansuita:MaterialAbout:0.2.3'
 }

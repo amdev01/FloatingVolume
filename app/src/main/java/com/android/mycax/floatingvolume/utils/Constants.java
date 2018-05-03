@@ -11,6 +11,7 @@ public interface Constants {
     String PREF_ENABLE_BOUNCE = "enable_bounce_effect";
     String PREF_DISABLE_FIXED_UI = "disable_fixed_ui";
     String PREF_ITEMS_TO_SHOW = "items_to_show_in_dialog_pref";
+    String PREF_ABOUT = "pref_about";
     String ARM64V8A = "arm64-v8a";
     String ARMEABIV7A = "armeabi-v7a";
     String SEEKBAR_MEDIA = "1";

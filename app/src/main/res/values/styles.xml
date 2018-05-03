@@ -1,4 +1,5 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimaryP</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkP</item>
@@ -9,12 +10,14 @@
         <item name="bounce_icon_color">@drawable/ic_bounce_black_24dp</item>
         <item name="slim_dialog_icon_color">@drawable/ic_slim_dialog_black_24dp</item>
         <item name="enable_bars_icon_color">@drawable/ic_star_half_black_24dp</item>
+        <item name="about_icon_color">@drawable/ic_info_black_24dp</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/colorPrimaryInverse</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkInverse</item>
-        <item name="colorAccent">@color/colorAccentInverse</item>
+        <item name="colorAccent">@color/colorPixelBlue</item>
         <item name="android:windowBackground">@color/colorPrimaryDarkInverse</item>
         <item name="theme_icon_color">@drawable/ic_color_lens_white_24dp</item>
         <item name="save_icon_color">@drawable/ic_save_white_24dp</item>
@@ -22,6 +25,8 @@
         <item name="bounce_icon_color">@drawable/ic_bounce_white_24dp</item>
         <item name="slim_dialog_icon_color">@drawable/ic_slim_dialog_white_24dp</item>
         <item name="enable_bars_icon_color">@drawable/ic_star_half_white_24dp</item>
+        <item name="about_icon_color">@drawable/ic_info_white_24dp</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="AppTheme">
@@ -43,6 +48,12 @@
         <item name="alarm_icon_color">@drawable/ic_alarm_white_24dp</item>
         <item name="close_icon_color">@drawable/ic_close_white_24dp</item>
         <item name="voicecall_icon_color">@drawable/ic_call_white_24dp</item>
+    </style>
+
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:statusBarColor">@color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
 </resources>

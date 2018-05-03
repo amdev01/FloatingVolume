@@ -21,7 +21,7 @@ import com.basel.DualButton.DualButton;
 import java.util.Objects;
 
 @SuppressWarnings("deprecation")
-public class MainActivity extends AppCompatPreferenceActivity implements SwitchPreference.OnPreferenceChangeListener, DualButton.OnDualClickListener {
+public class MainActivity extends AppCompatPreferenceActivity implements SwitchPreference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, DualButton.OnDualClickListener {
     private DualButton FloatingService;
     private SwitchPreference bounceEffect;
     private AppUtils utils;
@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         }
         SwitchPreference disableFixedUI = (SwitchPreference) findPreference(Constants.PREF_DISABLE_FIXED_UI);
         disableFixedUI.setOnPreferenceChangeListener(this);
+        Preference aboutPreference = findPreference(Constants.PREF_ABOUT);
+        aboutPreference.setOnPreferenceClickListener(this);
     }
 
     private void initializeView() {
@@ -117,5 +119,13 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
                 Toast.makeText(this, R.string.app_permission_denied, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if(preference == findPreference(Constants.PREF_ABOUT)) {
+            startActivity(new Intent(this, AboutActivity.class));
+        }
+        return false;
     }
 }

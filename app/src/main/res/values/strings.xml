@@ -25,4 +25,9 @@
     <string name="dialog_style_title">Dialog style settings</string>
     <string name="dialog_style_dtext">Choose your preferred style</string>
     <string name="dialog_default_style">1</string>
+    <string name="about_app">About app</string>
+    <string name="about_app_summary">Version, contact</string>
+    <string name="dev_name">Adam Myczkowski</string>
+    <string name="dev_sub">Computer Science student</string>
+    <string name="git_project">Project\'s repo</string>
 </resources>

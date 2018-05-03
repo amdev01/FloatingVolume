@@ -38,5 +38,10 @@
             android:key="items_to_show_in_dialog_pref"
             android:summary="@string/items_to_show_in_dialog_summary"
             android:title="@string/items_to_show_in_dialog" />
+        <Preference
+            android:icon="?attr/about_icon_color"
+            android:key="pref_about"
+            android:title="@string/about_app"
+            android:summary="@string/about_app_summary" />
     </PreferenceCategory>
 </PreferenceScreen>

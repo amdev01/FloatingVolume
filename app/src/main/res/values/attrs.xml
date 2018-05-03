@@ -14,5 +14,6 @@
         <attr name="bounce_icon_color" format="reference" />
         <attr name="slim_dialog_icon_color" format="reference" />
         <attr name="enable_bars_icon_color" format="reference" />
+        <attr name="about_icon_color" format="reference" />
     </declare-styleable>
 </resources>

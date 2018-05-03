@@ -6,5 +6,9 @@
 
     <color name="colorPrimaryInverse">#000000</color>
     <color name="colorPrimaryDarkInverse">#000000</color>
-    <color name="colorAccentInverse">#4285F4</color>
+    <color name="colorPixelBlue">#4285F4</color>
+
+    <color name="colorGrey">#455C65</color>
+    <color name="colorLightGrey">#f5f5f5</color>
+    <color name="transparent">#00000000</color>
 </resources>
