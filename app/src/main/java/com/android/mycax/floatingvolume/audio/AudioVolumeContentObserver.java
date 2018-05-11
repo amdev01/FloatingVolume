@@ -14,7 +14,7 @@ class AudioVolumeContentObserver extends ContentObserver {
     private int mLastVolume;
     private final AudioVolumeObserver audioVolumeObserver;
 
-    public AudioVolumeContentObserver(
+    AudioVolumeContentObserver(
             @NonNull Handler handler,
             @NonNull AudioManager audioManager,
             int audioStreamType,

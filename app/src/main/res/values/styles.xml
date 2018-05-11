@@ -37,6 +37,9 @@
         <item name="alarm_icon_color">@drawable/ic_alarm_black_24dp</item>
         <item name="close_icon_color">@drawable/ic_close_black_24dp</item>
         <item name="voicecall_icon_color">@drawable/ic_call_black_24dp</item>
+        <item name="ringer_normal">@drawable/ic_volume_up_black_24dp</item>
+        <item name="ringer_vibrate">@drawable/ic_vibration_black_24dp</item>
+        <item name="ringer_silent">@drawable/ic_do_not_disturb_on_black_24dp</item>
     </style>
 
 
@@ -48,6 +51,9 @@
         <item name="alarm_icon_color">@drawable/ic_alarm_white_24dp</item>
         <item name="close_icon_color">@drawable/ic_close_white_24dp</item>
         <item name="voicecall_icon_color">@drawable/ic_call_white_24dp</item>
+        <item name="ringer_normal">@drawable/ic_volume_up_white_24dp</item>
+        <item name="ringer_vibrate">@drawable/ic_vibration_white_24dp</item>
+        <item name="ringer_silent">@drawable/ic_do_not_disturb_on_white_24dp</item>
     </style>
 
     <style name="AppTheme.Launcher">

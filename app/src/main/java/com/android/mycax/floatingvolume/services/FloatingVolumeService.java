@@ -1,5 +1,7 @@
 package com.android.mycax.floatingvolume.services;
 
+import android.Manifest;
+import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -7,7 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.media.AudioManager;
@@ -16,16 +20,20 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.android.mycax.floatingvolume.R;
 import com.android.mycax.floatingvolume.audio.AudioVolumeObserver;
@@ -46,13 +54,15 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private FloatingViewManager mFloatingViewManager;
     private AudioVolumeObserver mAudioVolumeObserverMedia, mAudioVolumeObserverVoiceCall, mAudioVolumeObserverRinger, mAudioVolumeObserverAlarm;
     private SeekBar mediaControl, ringerControl, alarmControl, voiceCallControl;
-    private BroadcastReceiver RingerModeReceiver;
-    private boolean isDarkThemeEnabled, isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled;
+    private BroadcastReceiver RingerModeReceiver, InCallModeReceiver;
+    private TelephonyManager telephonyManager;
+    private boolean isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled, isVoiceCallRecieverRegistered;
     private int x_init_cord, y_init_cord, x_init_margin, y_init_margin, style;
     private final Point szWindow = new Point();
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPref;
     private Set<String> seekbarSelections;
+    private Animation fab_open_0_to_1, fab_close_1_to_0;
     private static int OVERLAY_TYPE;
 
     static {
@@ -85,6 +95,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             return START_STICKY;
         }
 
+        fab_open_0_to_1 = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
+        fab_close_1_to_0 = AnimationUtils.loadAnimation(this, R.anim.fab_close_1_to_0);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         final DisplayMetrics metrics = new DisplayMetrics();
         final WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
@@ -110,8 +122,9 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private void expandView(LayoutInflater inflater, DisplayMetrics displayMetrics) {
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 
-        isDarkThemeEnabled = sharedPref.getBoolean(Constants.PREF_ENABLE_DARK_MODE, false);
+        boolean isDarkThemeEnabled = sharedPref.getBoolean(Constants.PREF_ENABLE_DARK_MODE, false);
         isDisableStaticUiEnabled = sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false);
         isUseLastPosition = sharedPref.getBoolean(Constants.PREF_SAVE_LAST_POSITION, false);
         isBounceEnabled = sharedPref.getBoolean(Constants.PREF_ENABLE_BOUNCE, false);
@@ -132,6 +145,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private void addFloatingWidgetView(LayoutInflater inflater, DisplayMetrics displayMetrics) {
         getWindowManagerDefaultDisplay();
         mFloatingWidgetView = inflater.inflate(getDialogLayout(), null, false);
+        ((ViewGroup) mFloatingWidgetView.findViewById(R.id.root_container)).getLayoutTransition()
+                .enableTransitionType(LayoutTransition.CHANGING);
 
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -181,17 +196,57 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                 R.id.SeekBarVoiceCallRotator, R.id.ImageVoiceCall, R.id.linearLayoutVoiceCall);
 
         change_ringer_mode = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitch);
-        final Animation fab_open = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
+
         RingerModeReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 change_ringer_mode.setImageResource(getCurrentRingerModeDrawable());
-                change_ringer_mode.startAnimation(fab_open);
+                change_ringer_mode.startAnimation(fab_open_0_to_1);
             }
         };
-        IntentFilter filter = new IntentFilter(
+        final IntentFilter filterRingerChanged = new IntentFilter(
                 AudioManager.RINGER_MODE_CHANGED_ACTION);
-        registerReceiver(RingerModeReceiver, filter);
+        registerReceiver(RingerModeReceiver, filterRingerChanged);
+
+        InCallModeReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                assert telephonyManager != null;
+                TextView textViewVoiceCall = mFloatingWidgetView.findViewById(R.id.textViewVoiceCall);
+                if (seekbarSelections.contains(Constants.SEEKBAR_VOICE_CALL) && telephonyManager.getCallState() == TelephonyManager.CALL_STATE_OFFHOOK) {
+                    textViewVoiceCall.setVisibility(View.VISIBLE);
+                    textViewVoiceCall.startAnimation(fab_open_0_to_1);
+                    if (style == 3) {
+                        mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).setVisibility(View.VISIBLE);
+                        mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).startAnimation(fab_open_0_to_1);
+                        mFloatingWidgetView.findViewById(R.id.ImageVoiceCall).setVisibility(View.VISIBLE);
+                        mFloatingWidgetView.findViewById(R.id.ImageVoiceCall).startAnimation(fab_open_0_to_1);
+                    } else {
+                        mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.VISIBLE);
+                        mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).startAnimation(fab_open_0_to_1);
+                    }
+                } else {
+                    textViewVoiceCall.setVisibility(View.GONE);
+                    textViewVoiceCall.startAnimation(fab_close_1_to_0);
+                    if (style == 3) {
+                        mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).setVisibility(View.GONE);
+                        mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).startAnimation(fab_close_1_to_0);
+                        mFloatingWidgetView.findViewById(R.id.ImageVoiceCall).setVisibility(View.GONE);
+                        mFloatingWidgetView.findViewById(R.id.ImageVoiceCall).startAnimation(fab_close_1_to_0);
+                    } else {
+                        mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.GONE);
+                        mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).startAnimation(fab_close_1_to_0);
+                    }
+                }
+            }
+        };
+        final IntentFilter filterPhoneStateChanged = new IntentFilter(
+                TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            registerReceiver(InCallModeReceiver, filterPhoneStateChanged);
+            isVoiceCallRecieverRegistered = true;
+        } else isVoiceCallRecieverRegistered = false;
+
         change_ringer_mode.setOnClickListener(this);
     }
 
@@ -288,35 +343,32 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     }
 
     private int getCurrentRingerModeDrawable() {
+        TypedArray attrs;
         switch (audioManager.getRingerMode()) {
             case AudioManager.RINGER_MODE_NORMAL:
-                return isDarkThemeEnabled ? R.drawable.ic_volume_up_white_24dp : R.drawable.ic_volume_up_black_24dp;
+                attrs = getTheme().obtainStyledAttributes(new int[]{R.attr.ringer_normal});
+                return attrs.getResourceId(0, 0);
             case AudioManager.RINGER_MODE_VIBRATE:
-                return isDarkThemeEnabled ? R.drawable.ic_vibration_white_24dp : R.drawable.ic_vibration_black_24dp;
+                attrs = getTheme().obtainStyledAttributes(new int[]{R.attr.ringer_vibrate});
+                return attrs.getResourceId(0, 0);
             case AudioManager.RINGER_MODE_SILENT:
-                return isDarkThemeEnabled ? R.drawable.ic_do_not_disturb_on_white_24dp : R.drawable.ic_do_not_disturb_on_black_24dp;
+                attrs = getTheme().obtainStyledAttributes(new int[]{R.attr.ringer_silent});
+                return attrs.getResourceId(0, 0);
         }
         return -1;
     }
 
     private void setNewRingerMode() {
         int ringerMode = audioManager.getRingerMode();
-        Animation fab_open = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
         switch (ringerMode) {
             case AudioManager.RINGER_MODE_NORMAL:
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                change_ringer_mode.setImageResource(isDarkThemeEnabled ? R.drawable.ic_vibration_white_24dp : R.drawable.ic_vibration_black_24dp);
-                change_ringer_mode.startAnimation(fab_open);
                 break;
             case AudioManager.RINGER_MODE_VIBRATE:
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                change_ringer_mode.setImageResource(isDarkThemeEnabled ? R.drawable.ic_do_not_disturb_on_white_24dp : R.drawable.ic_do_not_disturb_on_black_24dp);
-                change_ringer_mode.startAnimation(fab_open);
                 break;
             case AudioManager.RINGER_MODE_SILENT:
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                change_ringer_mode.setImageResource(isDarkThemeEnabled ? R.drawable.ic_volume_up_white_24dp : R.drawable.ic_volume_up_black_24dp);
-                change_ringer_mode.startAnimation(fab_open);
                 break;
         }
     }
@@ -340,6 +392,10 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                     mAudioVolumeObserverVoiceCall.unregister();
                 }
                 unregisterReceiver(RingerModeReceiver);
+                if (isVoiceCallRecieverRegistered) {
+                    unregisterReceiver(InCallModeReceiver);
+                    isVoiceCallRecieverRegistered = false;
+                }
                 break;
             case R.id.imageViewModeSwitch:
                 setNewRingerMode();

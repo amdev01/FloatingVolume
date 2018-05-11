@@ -1,5 +1,7 @@
 package com.android.mycax.floatingvolume;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -17,9 +19,16 @@ import android.widget.Toast;
 import com.android.mycax.floatingvolume.utils.AppUtils;
 import com.android.mycax.floatingvolume.utils.Constants;
 import com.basel.DualButton.DualButton;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.Objects;
 
+@SuppressLint("ExportedPreferenceActivity")
 @SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatPreferenceActivity implements SwitchPreference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, DualButton.OnDualClickListener {
     private DualButton FloatingService;
@@ -107,6 +116,18 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
                 startActivityForResult(intent, Constants.NOTIFICATION_POLICY_PERMISSION_REQUEST);
             }
         }
+
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.READ_PHONE_STATE)
+                .withListener(new PermissionListener() {
+                    @Override public void onPermissionGranted(PermissionGrantedResponse response) {/* ... */}
+                    @Override public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(getApplicationContext(), R.string.app_permission_denied, Toast.LENGTH_SHORT).show();
+                    }
+                    @Override public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).check();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -116,7 +137,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
             if (Settings.canDrawOverlays(this) && Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
                 initializeView();
             } else {
-                Toast.makeText(this, R.string.app_permission_denied, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.app_permission_denied, Toast.LENGTH_LONG).show();
             }
         }
     }

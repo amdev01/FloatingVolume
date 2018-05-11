@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="AppTheme.Dark">
+        <attr name="ringer_normal" format="reference" />
+        <attr name="ringer_vibrate" format="reference" />
+        <attr name="ringer_silent" format="reference" />
         <attr name="card_color" format="color" />
         <attr name="txt_color" format="color" />
         <attr name="media_icon_color" format="reference" />

@@ -48,8 +48,8 @@ android {
         applicationId "com.android.mycax.floatingvolume"
         minSdkVersion min_sdk_version
         targetSdkVersion compile_sdk_version
-        versionCode 8
-        versionName "1.0.7 beta"
+        versionCode 9
+        versionName "1.0.8 beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -72,4 +72,5 @@ dependencies {
     implementation 'com.github.BaselHorany:DualButton:1.1.1'
     implementation 'com.github.recruit-lifestyle:FloatingView:2.3.1'
     implementation 'com.github.jrvansuita:MaterialAbout:0.2.3'
+    implementation 'com.karumi:dexter:4.2.0'
 }
