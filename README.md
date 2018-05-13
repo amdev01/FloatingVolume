@@ -1,8 +1,18 @@
 # Floating Volume
 Floating Volume is a simple Android 5.0+ app that allows you to control media, ringer, alarm and in-call volume, and switch between ringer modes within the floating interface.
 
-## Screenshots
-<img src="./screenshots/floating-volume-showcase1.gif" width="200"><img src="./screenshots/floating-volume-showcase2.gif" width="200"><img src="./screenshots/floating-volume-showcase3.gif" width="200">
+## Features
+* Dark mode
+* Save last position of floating interface (head and volume interface positions are independent)
+* Start/stop service directly from quick settings tile
+* Volume control interface can be movable or fixed in centre
+* Show and hide dialog controls
+* Choose between 3 different dialog styles
+
+## Gallery
+<img src="./screenshots/floating-volume-showcase1.gif" width="400"><img src="./screenshots/floating-volume-showcase2.gif" width="400"><img src="./screenshots/floating-volume-showcase3.gif" width="400"><img src="./screenshots/fv_showcase1.png" width="400">
+<img src="./screenshots/fv_showcase2.png" width="400"><img src="./screenshots/fv_showcase3.png" width="400"><img src="./screenshots/fv_showcase4.png" width="400"><img src="./screenshots/fv_showcase5.png" width="400">
+<img src="./screenshots/fv_showcase6.png" width="400"><img src="./screenshots/fv_showcase7.png" width="400"><img src="./screenshots/fv_showcase8.png" width="400"><img src="./screenshots/fv_showcase9.png" width="400">
 
 ## Notice
 App is still in beta stage, some features are not yet implemented or might not be working correctly. Bug reports and feature requests welcome!
