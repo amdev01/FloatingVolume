@@ -1,47 +1,68 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/floating_dialog_settings">
-        <SwitchPreference
-            android:icon="?attr/theme_icon_color"
-            android:key="enable_dark_mode_switch"
-            android:summary="@string/pref_darkmode_summary"
-            android:title="@string/pref_darkmode" />
-        <SwitchPreference
-            android:icon="?attr/save_icon_color"
-            android:key="settings_save_last_position"
-            android:summary="@string/settings_summary_save_position"
-            android:title="@string/settings_title_save_position" />
-        <SwitchPreference
-            android:icon="?attr/fixed_ui_icon_color"
-            android:key="disable_fixed_ui"
-            android:summary="@string/pref_disable_fixed_ui_summary"
-            android:title="@string/pref_disable_fixed_ui" />
-        <SwitchPreference
-            android:icon="?attr/bounce_icon_color"
-            android:key="enable_bounce_effect"
-            android:summary="@string/pref_enable_bounce_effect_summary"
-            android:title="@string/pref_enable_bounce_effect" />
+    <PreferenceCategory android:title="@string/theme_settings_category">
         <ListPreference
-            android:icon="?attr/slim_dialog_icon_color"
+            android:defaultValue="@string/dialog_default_theme"
+            android:dialogTitle="@string/dialog_theme_dtext"
+            android:entries="@array/dialog_theme_entries"
+            android:entryValues="@array/dialog_theme_values"
+            android:icon="@drawable/ic_color_lens_24dp"
+            android:key="pref_themes_value"
+            android:summary="%s"
+            android:title="@string/pref_themes" />
+
+        <Preference
+            android:icon="@drawable/ic_format_color_fill_24dp"
+            android:key="custom_theme_pref"
+            android:summary="@string/pref_custom_theme_summary"
+            android:title="@string/pref_custom_theme" />
+
+        <ListPreference
             android:defaultValue="@string/dialog_default_style"
             android:dialogTitle="@string/dialog_style_dtext"
             android:entries="@array/dialog_style_entries"
             android:entryValues="@array/dialog_style_values"
+            android:icon="@drawable/ic_slim_dialog_24dp"
             android:key="pref_dialog_style"
-            android:paddingStart="24dp"
             android:summary="%s"
             android:title="@string/dialog_style_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/floating_dialog_settings_category">
+        <SwitchPreference
+            android:icon="@drawable/ic_save_24dp"
+            android:key="settings_save_last_position"
+            android:summary="@string/settings_summary_save_position"
+            android:title="@string/settings_title_save_position" />
+        <SwitchPreference
+            android:icon="@drawable/ic_touch_app_24dp"
+            android:key="disable_fixed_ui"
+            android:summary="@string/pref_disable_fixed_ui_summary"
+            android:title="@string/pref_disable_fixed_ui" />
+        <SwitchPreference
+            android:icon="@drawable/ic_bounce_24dp"
+            android:key="enable_bounce_effect"
+            android:summary="@string/pref_enable_bounce_effect_summary"
+            android:title="@string/pref_enable_bounce_effect" />
         <MultiSelectListPreference
-            android:icon="?attr/enable_bars_icon_color"
             android:defaultValue="@array/show_bars_multipreference_values_default"
             android:entries="@array/show_bars_multipreference_entries"
             android:entryValues="@array/show_bars_multipreference_values"
+            android:icon="@drawable/ic_star_half_24dp"
             android:key="items_to_show_in_dialog_pref"
             android:summary="@string/items_to_show_in_dialog_summary"
             android:title="@string/items_to_show_in_dialog" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/about_category">
         <Preference
-            android:icon="?attr/about_icon_color"
-            android:key="pref_about"
-            android:title="@string/about_app"
-            android:summary="@string/about_app_summary" />
+            android:icon="@drawable/ic_open_source_24dp"
+            android:key="pref_opensource"
+            android:summary="@string/pref_opensource_libs"
+            android:title="@string/pref_opensources_libs_summary" />
+        <Preference
+            android:icon="@drawable/ic_info_24dp"
+            android:key="pref_about_me"
+            android:summary="@string/about_me_summary"
+            android:title="@string/about_me" />
     </PreferenceCategory>
 </PreferenceScreen>

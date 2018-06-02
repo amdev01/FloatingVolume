@@ -1,36 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-    <com.basel.DualButton.DualButton
-        android:id="@+id/dualBtn"
-        android:layout_width="200dp"
-        android:layout_height="63dp"
-        android:layout_margin="8dp"
-        app:backgroundColorFirst="@color/colorPixelBlue"
-        app:backgroundColorSecond="@color/colorGrey"
-        app:drawableLeftFirst="@drawable/ic_done_white_24dp"
-        app:drawableLeftSecond="@drawable/ic_close_white_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/button_start_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:paddingTop="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/button_stop_service"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:textColorFirst="@android:color/white"
-        app:textColorSecond="@android:color/white"
-        app:textFirst="@string/start_service"
-        app:textSecond="@string/stop_service" />
+        fancy:fb_textColor = "?attr/button_drawable_text_color"
+        fancy:fb_defaultColor="?attr/colorAccent"
+        fancy:fb_focusColor="@color/colorGrey"
+        fancy:fb_iconPosition="left"
+        fancy:fb_iconResource="@drawable/ic_done_white_24dp"
+        fancy:fb_radius="30dp"
+        fancy:fb_text="@string/start_service" />
+
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/button_stop_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:paddingTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_start_service"
+        app:layout_constraintTop_toTopOf="parent"
+        fancy:fb_textColor = "?attr/button_drawable_text_color"
+        fancy:fb_defaultColor="?attr/colorAccent"
+        fancy:fb_focusColor="@color/colorGrey"
+        fancy:fb_iconPosition="left"
+        fancy:fb_iconResource="@drawable/ic_close_white_24dp"
+        fancy:fb_radius="30dp"
+        fancy:fb_text="@string/stop_service" />
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dualBtn" />
-</android.support.v7.widget.LinearLayoutCompat>
+        app:layout_constraintTop_toBottomOf="@+id/button_start_service" />
+</android.support.constraint.ConstraintLayout>

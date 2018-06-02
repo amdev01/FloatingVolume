@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.media.AudioManager;
@@ -23,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.android.mycax.floatingvolume.R;
 import com.android.mycax.floatingvolume.audio.AudioVolumeObserver;
 import com.android.mycax.floatingvolume.audio.OnAudioVolumeChangedListener;
+import com.android.mycax.floatingvolume.utils.AppUtils;
 import com.android.mycax.floatingvolume.utils.Constants;
 
 import java.util.Objects;
@@ -57,12 +58,17 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private BroadcastReceiver RingerModeReceiver, InCallModeReceiver;
     private TelephonyManager telephonyManager;
     private boolean isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled, isVoiceCallRecieverRegistered;
-    private int x_init_cord, y_init_cord, x_init_margin, y_init_margin, style;
+    private int x_init_cord;
+    private int y_init_cord;
+    private int x_init_margin;
+    private int y_init_margin;
+    private int style;
     private final Point szWindow = new Point();
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPref;
     private Set<String> seekbarSelections;
     private Animation fab_open_0_to_1, fab_close_1_to_0;
+    private AppUtils appUtils;
     private static int OVERLAY_TYPE;
 
     static {
@@ -97,6 +103,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
         fab_open_0_to_1 = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
         fab_close_1_to_0 = AnimationUtils.loadAnimation(this, R.anim.fab_close_1_to_0);
+        appUtils = new AppUtils(this);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         final DisplayMetrics metrics = new DisplayMetrics();
         final WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
@@ -122,15 +129,28 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private void expandView(LayoutInflater inflater, DisplayMetrics displayMetrics) {
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-        boolean isDarkThemeEnabled = sharedPref.getBoolean(Constants.PREF_ENABLE_DARK_MODE, false);
         isDisableStaticUiEnabled = sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false);
         isUseLastPosition = sharedPref.getBoolean(Constants.PREF_SAVE_LAST_POSITION, false);
         isBounceEnabled = sharedPref.getBoolean(Constants.PREF_ENABLE_BOUNCE, false);
         seekbarSelections = sharedPref.getStringSet(Constants.PREF_ITEMS_TO_SHOW, null);
+        int theme = Integer.valueOf(sharedPref.getString(Constants.PREF_THEME_VALUE, "1"));
 
-        setTheme(isDarkThemeEnabled ? R.style.AppTheme_Dark_Dialog : R.style.AppTheme_Dialog);
+        switch (theme) {
+            case Constants.THEME_LIGHT:
+                getTheme().applyStyle(R.style.AppTheme, true);
+                break;
+            case Constants.THEME_DARK:
+                getTheme().applyStyle(R.style.AppTheme_Dark, true);
+                break;
+            case Constants.THEME_CUSTOM:
+                getTheme().applyStyle(appUtils.getDrawableColor(), true);
+                getTheme().applyStyle(appUtils.getAccentColor(), true);
+                getTheme().applyStyle(appUtils.getDialogColor(), true);
+                break;
+
+        }
 
         addFloatingWidgetView(inflater, displayMetrics);
         if (isDisableStaticUiEnabled) implementTouchListenerToFloatingWidgetView(this);
@@ -266,11 +286,13 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                 seekBar.setProgress(audioManager.getStreamVolume(streamType));
                 seekBar.setOnSeekBarChangeListener(this);
                 audioVolumeObserver.register(streamType, this);
+                mFloatingWidgetView.findViewById(imageView).setOnClickListener(this);
             } else {
                 seekBar.setMax(Objects.requireNonNull(audioManager).getStreamMaxVolume(streamType));
                 seekBar.setProgress(audioManager.getStreamVolume(streamType));
                 seekBar.setOnSeekBarChangeListener(this);
                 audioVolumeObserver.register(streamType, this);
+                mFloatingWidgetView.findViewById(imageView).setOnClickListener(this);
             }
         } else {
             if (style == 3) {
@@ -326,6 +348,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
     @Override
     public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
+        Log.d("FLOT", String.valueOf(arg1));
         switch (arg0.getId()) {
             case R.id.SeekBarMedia:
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, arg1, 0);
@@ -343,17 +366,13 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     }
 
     private int getCurrentRingerModeDrawable() {
-        TypedArray attrs;
         switch (audioManager.getRingerMode()) {
             case AudioManager.RINGER_MODE_NORMAL:
-                attrs = getTheme().obtainStyledAttributes(new int[]{R.attr.ringer_normal});
-                return attrs.getResourceId(0, 0);
+                return R.drawable.ic_volume_up_24dp;
             case AudioManager.RINGER_MODE_VIBRATE:
-                attrs = getTheme().obtainStyledAttributes(new int[]{R.attr.ringer_vibrate});
-                return attrs.getResourceId(0, 0);
+                return R.drawable.ic_vibration_24dp;
             case AudioManager.RINGER_MODE_SILENT:
-                attrs = getTheme().obtainStyledAttributes(new int[]{R.attr.ringer_silent});
-                return attrs.getResourceId(0, 0);
+                return R.drawable.ic_do_not_disturb_on_24dp;
         }
         return -1;
     }
@@ -400,7 +419,32 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             case R.id.imageViewModeSwitch:
                 setNewRingerMode();
                 break;
+            case R.id.ImageRinger:
+                handleImageClick(R.id.ImageRinger, AudioManager.STREAM_RING);
+                break;
+            case R.id.ImageMedia:
+                handleImageClick(R.id.ImageMedia, AudioManager.STREAM_MUSIC);
+                break;
+            case R.id.ImageAlarm:
+                handleImageClick(R.id.ImageAlarm, AudioManager.STREAM_ALARM);
+                break;
+            case R.id.ImageVoiceCall:
+                handleImageClick(R.id.ImageVoiceCall, AudioManager.STREAM_VOICE_CALL);
+                break;
         }
+    }
+
+    private void handleImageClick(int imageViewId, int streamType) {
+        if (audioManager.getStreamVolume(streamType) == 0) {
+            audioManager.setStreamVolume(streamType, 1, 0);
+        } else {
+            audioManager.setStreamVolume(streamType, 0, 0);
+        }
+        Animation fab_1_13 = AnimationUtils.loadAnimation(this, R.anim.fab_open_1_to_13);
+        Animation fab_13_1 = AnimationUtils.loadAnimation(this, R.anim.fab_close_13_to_1);
+        ImageView imageView = mFloatingWidgetView.findViewById(imageViewId);
+        imageView.startAnimation(fab_1_13);
+        imageView.startAnimation(fab_13_1);
     }
 
     @Override
@@ -449,7 +493,6 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
     private FloatingViewManager.Options loadOptions(DisplayMetrics metrics) {
         final FloatingViewManager.Options options = new FloatingViewManager.Options();
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (isUseLastPosition) {
             final int defaultX = options.floatingViewX;

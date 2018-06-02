@@ -18,6 +18,7 @@
         <item>3</item>
         <item>4</item>
     </string-array>
+
     <string-array name="dialog_style_entries">
         <item>Default style</item>
         <item>Slim style</item>
@@ -28,4 +29,41 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+
+    <string-array name="dialog_theme_entries">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>Custom</item>
+    </string-array>
+    <string-array name="dialog_theme_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <array name="spectrum_colors">
+        <item>@color/white</item>
+        <item>@color/red</item>
+        <item>@color/pink</item>
+        <item>@color/purple</item>
+        <item>@color/deep_purple</item>
+        <item>@color/indigo</item>
+        <item>@color/blue</item>
+        <item>@color/light_blue</item>
+        <item>@color/cyan</item>
+        <item>@color/teal</item>
+        <item>@color/green</item>
+        <item>@color/light_green</item>
+        <item>@color/lime</item>
+        <item>@color/yellow</item>
+        <item>@color/amber</item>
+        <item>@color/orange</item>
+        <item>@color/deep_orange</item>
+        <item>@color/brown</item>
+        <item>@color/grey</item>
+        <item>@color/grey_900</item>
+        <item>@color/blue_grey</item>
+        <item>@color/blue_grey_900</item>
+        <item>@color/black</item>
+    </array>
 </resources>

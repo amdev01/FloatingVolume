@@ -1,23 +1,44 @@
 package com.android.mycax.floatingvolume;
 
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
+import com.android.mycax.floatingvolume.utils.AppUtils;
 import com.android.mycax.floatingvolume.utils.Constants;
 import com.vansuita.materialabout.builder.AboutBuilder;
 import com.vansuita.materialabout.views.AboutView;
 
 public class AboutActivity extends AppCompatActivity {
+    private int theme;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(Constants.PREF_ENABLE_DARK_MODE, false) ? R.style.AppTheme_Dark : R.style.AppTheme);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        AppUtils utils = new AppUtils(this);
+        theme = Integer.valueOf(sharedPref.getString(Constants.PREF_THEME_VALUE, "1"));
+        utils.onActivityCreateSetTheme(this, theme);
+        if (theme == 3) {
+            utils.setActionBarTextColor(getSupportActionBar());
+        }
         setContentView(R.layout.activity_about);
         loadAbout();
+    }
+
+    private int setCardBackgroundColor() {
+        switch (theme) {
+            case 1:
+                return getResources().getColor(R.color.white);
+            case 2:
+                return getResources().getColor(R.color.black);
+            case 3:
+                sharedPref.getInt(Constants.PREF_COLOR_BACKGROUND, -1);
+        }
+        return getResources().getColor(R.color.white);
     }
 
     private void loadAbout() {

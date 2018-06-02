@@ -39,7 +39,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
                 tools:ignore="ContentDescription"
-                android:src="?attr/close_icon_color"/>
+                android:src="@drawable/ic_close_24dp"/>
 
             <ImageView
                 android:id="@+id/imageViewModeSwitch"
@@ -58,7 +58,7 @@
                 android:layout_marginTop="6dp"
                 android:text="@string/voicecall_volume"
                 android:visibility="gone"
-                android:textColor="?attr/txt_color"
+                android:textColor="?attr/colorAccent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     tools:ignore="ContentDescription"
-                    android:src="?attr/voicecall_icon_color"/>
+                    android:src="@drawable/ic_call_24dp"/>
 
                 <SeekBar
                     android:id="@+id/SeekBarVoiceCall"
@@ -96,7 +96,7 @@
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="3dp"
                 android:text="@string/media_volume"
-                android:textColor="?attr/txt_color"
+                android:textColor="?attr/colorAccent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutVoiceCall"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     tools:ignore="ContentDescription"
-                    android:src="?attr/media_icon_color"/>
+                    android:src="@drawable/ic_volume_up_24dp"/>
 
                 <SeekBar
                     android:id="@+id/SeekBarMedia"
@@ -133,7 +133,7 @@
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="3dp"
                 android:text="@string/ringer_volume"
-                android:textColor="?attr/txt_color"
+                android:textColor="?attr/colorAccent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutMedia"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -154,7 +154,7 @@
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     tools:ignore="ContentDescription"
-                    android:src="?attr/ringer_icon_color"/>
+                    android:src="@drawable/ic_ring_volume_24dp"/>
 
                 <SeekBar
                     android:id="@+id/SeekBarRinger"
@@ -170,7 +170,7 @@
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="3dp"
                 android:text="@string/alarm_volume"
-                android:textColor="?attr/txt_color"
+                android:textColor="?attr/colorAccent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutRinger"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -193,7 +193,7 @@
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     tools:ignore="ContentDescription"
-                    android:src="?attr/alarm_icon_color"/>
+                    android:src="@drawable/ic_alarm_24dp"/>
 
                 <SeekBar
                     android:id="@+id/SeekBarAlarm"

@@ -43,7 +43,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/SeekBarVoiceCallRotator"
                 android:visibility="gone"
                 tools:ignore="ContentDescription"
-                android:src="?attr/voicecall_icon_color"/>
+                android:src="@drawable/ic_call_24dp"/>
 
             <TextView
                 android:id="@+id/textViewVoiceCall"
@@ -52,7 +52,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/voicecall_volume"
-                android:textColor="?attr/txt_color"
+                android:textColor="?attr/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textViewMedia"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -94,7 +94,7 @@
                 app:layout_constraintStart_toEndOf="@+id/ImageVoiceCall"
                 app:layout_constraintTop_toBottomOf="@+id/SeekBarMediaRotator"
                 tools:ignore="ContentDescription"
-                android:src="?attr/media_icon_color"/>
+                android:src="@drawable/ic_volume_up_24dp"/>
 
             <TextView
                 android:id="@+id/textViewMedia"
@@ -103,7 +103,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/media_volume"
-                android:textColor="?attr/txt_color"
+                android:textColor="?attr/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textViewRinger"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -143,7 +143,7 @@
                 app:layout_constraintStart_toEndOf="@+id/ImageMedia"
                 app:layout_constraintTop_toBottomOf="@+id/SeekBarRingerRotator"
                 tools:ignore="ContentDescription"
-                android:src="?attr/ringer_icon_color"/>
+                android:src="@drawable/ic_ring_volume_24dp"/>
 
             <TextView
                 android:id="@+id/textViewRinger"
@@ -152,7 +152,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/ringer_volume"
-                android:textColor="?attr/txt_color"
+                android:textColor="?attr/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textViewAlarm"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -192,7 +192,7 @@
                 app:layout_constraintStart_toEndOf="@+id/ImageRinger"
                 app:layout_constraintTop_toBottomOf="@+id/SeekBarAlarmRotator"
                 tools:ignore="ContentDescription"
-                android:src="?attr/alarm_icon_color"/>
+                android:src="@drawable/ic_alarm_24dp"/>
 
             <TextView
                 android:id="@+id/textViewAlarm"
@@ -201,7 +201,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/alarm_volume"
-                android:textColor="?attr/txt_color"
+                android:textColor="?attr/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/vertical_guideline"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -241,7 +241,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageViewModeSwitch"
                 tools:ignore="ContentDescription"
                 tools:padding="4dp"
-                android:src="?attr/close_icon_color"/>
+                android:src="@drawable/ic_close_24dp"/>
 
             <ImageView
                 android:id="@+id/imageViewModeSwitch"

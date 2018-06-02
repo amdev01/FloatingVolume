@@ -1,65 +1,657 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Predefined themes -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimaryP</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkP</item>
         <item name="colorAccent">@color/colorAccentP</item>
-        <item name="theme_icon_color">@drawable/ic_color_lens_black_24dp</item>
-        <item name="save_icon_color">@drawable/ic_save_black_24dp</item>
-        <item name="fixed_ui_icon_color">@drawable/ic_touch_app_black_24dp</item>
-        <item name="bounce_icon_color">@drawable/ic_bounce_black_24dp</item>
-        <item name="slim_dialog_icon_color">@drawable/ic_slim_dialog_black_24dp</item>
-        <item name="enable_bars_icon_color">@drawable/ic_star_half_black_24dp</item>
-        <item name="about_icon_color">@drawable/ic_info_black_24dp</item>
+        <item name="drawable_color">@color/black</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:navigationBarColor">?attr/colorPrimaryDark</item>
+        <item name="card_color">@color/white</item>
+        <item name="button_drawable_text_color">@color/white</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/colorPrimaryInverse</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkInverse</item>
         <item name="colorAccent">@color/colorPixelBlue</item>
+        <item name="drawable_color">@color/white</item>
         <item name="android:windowBackground">@color/colorPrimaryDarkInverse</item>
-        <item name="theme_icon_color">@drawable/ic_color_lens_white_24dp</item>
-        <item name="save_icon_color">@drawable/ic_save_white_24dp</item>
-        <item name="fixed_ui_icon_color">@drawable/ic_touch_app_white_24dp</item>
-        <item name="bounce_icon_color">@drawable/ic_bounce_white_24dp</item>
-        <item name="slim_dialog_icon_color">@drawable/ic_slim_dialog_white_24dp</item>
-        <item name="enable_bars_icon_color">@drawable/ic_star_half_white_24dp</item>
-        <item name="about_icon_color">@drawable/ic_info_white_24dp</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:navigationBarColor">?attr/colorPrimaryDark</item>
+        <item name="card_color">@color/black</item>
+        <item name="button_drawable_text_color">@color/white</item>
+    </style>
+    <!-- End predefined themes -->
+
+
+    <!-- Text color -->
+    <style name="TextColor" />
+
+    <style name="TextColor.White">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
-    <style name="AppTheme.Dialog" parent="AppTheme">
-        <item name="txt_color">@android:color/black</item>
-        <item name="card_color">@android:color/white</item>
-        <item name="media_icon_color">@drawable/ic_volume_up_black_24dp</item>
-        <item name="ringer_icon_color">@drawable/ic_ring_volume_black_24dp</item>
-        <item name="alarm_icon_color">@drawable/ic_alarm_black_24dp</item>
-        <item name="close_icon_color">@drawable/ic_close_black_24dp</item>
-        <item name="voicecall_icon_color">@drawable/ic_call_black_24dp</item>
-        <item name="ringer_normal">@drawable/ic_volume_up_black_24dp</item>
-        <item name="ringer_vibrate">@drawable/ic_vibration_black_24dp</item>
-        <item name="ringer_silent">@drawable/ic_do_not_disturb_on_black_24dp</item>
+    <style name="TextColor.Black">
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+    </style>
+
+    <style name="ButtonTextColor" />
+
+    <style name="ButtonTextColor.White">
+        <item name="button_drawable_text_color">@color/white</item>
+    </style>
+
+    <style name="ButtonTextColor.Black">
+        <item name="button_drawable_text_color">@color/black</item>
+    </style>
+
+    <!-- Custom primary themes -->
+    <style name="Primary"/>
+
+    <style name="Primary.White">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
+    </style>
+
+    <style name="Primary.Red">
+        <item name="colorPrimary">@color/red</item>
+        <item name="colorPrimaryDark">@color/red</item>
+    </style>
+
+    <style name="Primary.Pink">
+        <item name="colorPrimary">@color/pink</item>
+        <item name="colorPrimaryDark">@color/pink</item>
+    </style>
+
+    <style name="Primary.Purple">
+        <item name="colorPrimary">@color/purple</item>
+        <item name="colorPrimaryDark">@color/purple</item>
+    </style>
+
+    <style name="Primary.Deep_Purple">
+        <item name="colorPrimary">@color/deep_purple</item>
+        <item name="colorPrimaryDark">@color/deep_purple</item>
+    </style>
+
+    <style name="Primary.Indigo">
+        <item name="colorPrimary">@color/indigo</item>
+        <item name="colorPrimaryDark">@color/indigo</item>
+    </style>
+
+    <style name="Primary.Blue">
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/blue</item>
+    </style>
+
+    <style name="Primary.Light_Blue">
+        <item name="colorPrimary">@color/light_blue</item>
+        <item name="colorPrimaryDark">@color/light_blue</item>
+    </style>
+
+    <style name="Primary.Cyan">
+        <item name="colorPrimary">@color/cyan</item>
+        <item name="colorPrimaryDark">@color/cyan</item>
+    </style>
+
+    <style name="Primary.Teal">
+        <item name="colorPrimary">@color/teal</item>
+        <item name="colorPrimaryDark">@color/teal</item>
+    </style>
+
+    <style name="Primary.Green">
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorPrimaryDark">@color/green</item>
+    </style>
+
+    <style name="Primary.Light_Green">
+        <item name="colorPrimary">@color/light_green</item>
+        <item name="colorPrimaryDark">@color/light_green</item>
+    </style>
+
+    <style name="Primary.Lime">
+        <item name="colorPrimary">@color/lime</item>
+        <item name="colorPrimaryDark">@color/lime</item>
+    </style>
+
+    <style name="Primary.Yellow">
+        <item name="colorPrimary">@color/yellow</item>
+        <item name="colorPrimaryDark">@color/yellow</item>
+    </style>
+
+    <style name="Primary.Amber">
+        <item name="colorPrimary">@color/amber</item>
+        <item name="colorPrimaryDark">@color/amber</item>
+    </style>
+
+    <style name="Primary.Orange">
+        <item name="colorPrimary">@color/orange</item>
+        <item name="colorPrimaryDark">@color/orange</item>
+    </style>
+
+    <style name="Primary.Deep_Orange">
+        <item name="colorPrimary">@color/deep_orange</item>
+        <item name="colorPrimaryDark">@color/deep_orange</item>
+    </style>
+
+    <style name="Primary.Brown">
+        <item name="colorPrimary">@color/brown</item>
+        <item name="colorPrimaryDark">@color/brown</item>
+    </style>
+
+    <style name="Primary.Grey">
+        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimaryDark">@color/grey</item>
+    </style>
+
+    <style name="Primary.Grey_900">
+        <item name="colorPrimary">@color/grey_900</item>
+        <item name="colorPrimaryDark">@color/grey_900</item>
+    </style>
+
+    <style name="Primary.Blue_Grey">
+        <item name="colorPrimary">@color/blue_grey</item>
+        <item name="colorPrimaryDark">@color/blue_grey</item>
+    </style>
+
+    <style name="Primary.Blue_Grey_900">
+        <item name="colorPrimary">@color/blue_grey_900</item>
+        <item name="colorPrimaryDark">@color/blue_grey_900</item>
+    </style>
+
+    <style name="Primary.Black">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black</item>
     </style>
 
 
-    <style name="AppTheme.Dark.Dialog" parent="AppTheme.Dark">
-        <item name="txt_color">@android:color/white</item>
-        <item name="card_color">@android:color/black</item>
-        <item name="media_icon_color">@drawable/ic_volume_up_white_24dp</item>
-        <item name="ringer_icon_color">@drawable/ic_ring_volume_white_24dp</item>
-        <item name="alarm_icon_color">@drawable/ic_alarm_white_24dp</item>
-        <item name="close_icon_color">@drawable/ic_close_white_24dp</item>
-        <item name="voicecall_icon_color">@drawable/ic_call_white_24dp</item>
-        <item name="ringer_normal">@drawable/ic_volume_up_white_24dp</item>
-        <item name="ringer_vibrate">@drawable/ic_vibration_white_24dp</item>
-        <item name="ringer_silent">@drawable/ic_do_not_disturb_on_white_24dp</item>
+    <!-- Custom alert dialog themes -->
+    <style name="AlertDialog" />
+
+    <style name="AlertDialog.White" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/white</item>
     </style>
 
+    <style name="AlertDialog.Red" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/red</item>
+    </style>
+
+    <style name="AlertDialog.Pink" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/pink</item>
+    </style>
+
+    <style name="AlertDialog.Purple" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/purple</item>
+    </style>
+
+    <style name="AlertDialog.Deep_Purple" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/deep_purple</item>
+    </style>
+
+    <style name="AlertDialog.Indigo" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/indigo</item>
+    </style>
+
+    <style name="AlertDialog.Blue" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/blue</item>
+    </style>
+
+    <style name="AlertDialog.Light_Blue" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/light_blue</item>
+    </style>
+
+    <style name="AlertDialog.Cyan" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/cyan</item>
+    </style>
+
+    <style name="AlertDialog.Teal" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/teal</item>
+    </style>
+
+    <style name="AlertDialog.Green" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/green</item>
+    </style>
+
+    <style name="AlertDialog.Light_Green" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/light_green</item>
+    </style>
+
+    <style name="AlertDialog.Lime" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/lime</item>
+    </style>
+
+    <style name="AlertDialog.Yellow" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/yellow</item>
+    </style>
+
+    <style name="AlertDialog.Amber" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/amber</item>
+    </style>
+
+    <style name="AlertDialog.Orange" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/orange</item>
+    </style>
+
+    <style name="AlertDialog.Deep_Orange" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/deep_orange</item>
+    </style>
+
+    <style name="AlertDialog.Brown" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/brown</item>
+    </style>
+
+    <style name="AlertDialog.Grey" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/grey</item>
+    </style>
+
+    <style name="AlertDialog.Grey_900" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/grey_900</item>
+    </style>
+
+    <style name="AlertDialog.Blue_Grey" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/blue_grey</item>
+    </style>
+
+    <style name="AlertDialog.Blue_Grey_900" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/blue_grey_900</item>
+    </style>
+
+    <style name="AlertDialog.Black" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/black</item>
+    </style>
+
+    <style name="AlertDialogStyle" />
+
+    <style name="AlertDialogStyle.White">
+        <item name="android:alertDialogTheme">@style/AlertDialog.White</item>
+    </style>
+
+    <style name="AlertDialogStyle.Red">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Red</item>
+    </style>
+
+    <style name="AlertDialogStyle.Pink">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Pink</item>
+    </style>
+
+    <style name="AlertDialogStyle.Purple">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Purple</item>
+    </style>
+
+    <style name="AlertDialogStyle.Deep_Purple">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Deep_Purple</item>
+    </style>
+
+    <style name="AlertDialogStyle.Indigo">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Indigo</item>
+    </style>
+
+    <style name="AlertDialogStyle.Blue">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Blue</item>
+    </style>
+
+    <style name="AlertDialogStyle.Light_Blue">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Light_Blue</item>
+    </style>
+
+    <style name="AlertDialogStyle.Cyan">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Cyan</item>
+    </style>
+
+    <style name="AlertDialogStyle.Teal">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Teal</item>
+    </style>
+
+    <style name="AlertDialogStyle.Green">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Green</item>
+    </style>
+
+    <style name="AlertDialogStyle.Light_Green">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Light_Green</item>
+    </style>
+
+    <style name="AlertDialogStyle.Lime">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Lime</item>
+    </style>
+
+    <style name="AlertDialogStyle.Yellow">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Yellow</item>
+    </style>
+
+    <style name="AlertDialogStyle.Amber">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Amber</item>
+    </style>
+
+    <style name="AlertDialogStyle.Orange">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Orange</item>
+    </style>
+
+    <style name="AlertDialogStyle.Deep_Orange">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Deep_Orange</item>
+    </style>
+
+    <style name="AlertDialogStyle.Brown">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Brown</item>
+    </style>
+
+    <style name="AlertDialogStyle.Grey">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Grey</item>
+    </style>
+
+    <style name="AlertDialogStyle.Grey_900">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Grey_900</item>
+    </style>
+
+    <style name="AlertDialogStyle.Blue_Grey">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Blue_Grey</item>
+    </style>
+
+    <style name="AlertDialogStyle.Blue_Grey_900">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Blue_Grey_900</item>
+    </style>
+
+    <style name="AlertDialogStyle.Black">
+        <item name="android:alertDialogTheme">@style/AlertDialog.Black</item>
+    </style>
+
+
+    <!-- Custom accent themes -->
+    <style name="Accent" />
+
+    <style name="Accent.White" >
+        <item name="colorAccent">@color/white</item>
+    </style>
+
+    <style name="Accent.Red" >
+        <item name="colorAccent">@color/red</item>
+    </style>
+
+    <style name="Accent.Pink" >
+        <item name="colorAccent">@color/pink</item>
+    </style>
+
+    <style name="Accent.Purple" >
+        <item name="colorAccent">@color/purple</item>
+    </style>
+
+    <style name="Accent.Deep_Purple" >
+        <item name="colorAccent">@color/deep_purple</item>
+    </style>
+
+    <style name="Accent.Indigo" >
+        <item name="colorAccent">@color/indigo</item>
+    </style>
+
+    <style name="Accent.Blue" >
+        <item name="colorAccent">@color/blue</item>
+    </style>
+
+    <style name="Accent.Light_Blue" >
+        <item name="colorAccent">@color/light_blue</item>
+    </style>
+
+    <style name="Accent.Cyan" >
+        <item name="colorAccent">@color/cyan</item>
+    </style>
+
+    <style name="Accent.Teal" >
+        <item name="colorAccent">@color/teal</item>
+    </style>
+
+    <style name="Accent.Green" >
+        <item name="colorAccent">@color/green</item>
+    </style>
+
+    <style name="Accent.Light_Green" >
+        <item name="colorAccent">@color/light_green</item>
+    </style>
+
+    <style name="Accent.Lime" >
+        <item name="colorAccent">@color/lime</item>
+    </style>
+
+    <style name="Accent.Yellow" >
+        <item name="colorAccent">@color/yellow</item>
+    </style>
+
+    <style name="Accent.Amber" >
+        <item name="colorAccent">@color/amber</item>
+    </style>
+
+    <style name="Accent.Orange" >
+        <item name="colorAccent">@color/orange</item>
+    </style>
+
+    <style name="Accent.Deep_Orange" >
+        <item name="colorAccent">@color/deep_orange</item>
+    </style>
+
+    <style name="Accent.Brown" >
+        <item name="colorAccent">@color/brown</item>
+    </style>
+
+    <style name="Accent.Grey" >
+        <item name="colorAccent">@color/grey</item>
+    </style>
+
+    <style name="Accent.Grey_900" >
+        <item name="colorAccent">@color/grey_900</item>
+    </style>
+
+    <style name="Accent.Blue_Grey" >
+        <item name="colorAccent">@color/blue_grey</item>
+    </style>
+
+    <style name="Accent.Blue_Grey_900" >
+        <item name="colorAccent">@color/blue_grey_900</item>
+    </style>
+
+    <style name="Accent.Black" >
+        <item name="colorAccent">@color/black</item>
+    </style>
+
+
+    <!-- Custom drawable themes -->
+    <style name="Drawables" />
+
+    <style name="Drawables.White" >
+        <item name="drawable_color">@color/white</item>
+    </style>
+
+    <style name="Drawables.Red" >
+        <item name="drawable_color">@color/red</item>
+    </style>
+
+    <style name="Drawables.Pink" >
+        <item name="drawable_color">@color/pink</item>
+    </style>
+
+    <style name="Drawables.Purple" >
+        <item name="drawable_color">@color/purple</item>
+    </style>
+
+    <style name="Drawables.Deep_Purple" >
+        <item name="drawable_color">@color/deep_purple</item>
+    </style>
+
+    <style name="Drawables.Indigo" >
+        <item name="drawable_color">@color/indigo</item>
+    </style>
+
+    <style name="Drawables.Blue" >
+        <item name="drawable_color">@color/blue</item>
+    </style>
+
+    <style name="Drawables.Light_Blue" >
+        <item name="drawable_color">@color/light_blue</item>
+    </style>
+
+    <style name="Drawables.Cyan" >
+        <item name="drawable_color">@color/cyan</item>
+    </style>
+
+    <style name="Drawables.Teal" >
+        <item name="drawable_color">@color/teal</item>
+    </style>
+
+    <style name="Drawables.Green" >
+        <item name="drawable_color">@color/green</item>
+    </style>
+
+    <style name="Drawables.Light_Green" >
+        <item name="drawable_color">@color/light_green</item>
+    </style>
+
+    <style name="Drawables.Lime" >
+        <item name="drawable_color">@color/lime</item>
+    </style>
+
+    <style name="Drawables.Yellow" >
+        <item name="drawable_color">@color/yellow</item>
+    </style>
+
+    <style name="Drawables.Amber" >
+        <item name="drawable_color">@color/amber</item>
+    </style>
+
+    <style name="Drawables.Orange" >
+        <item name="drawable_color">@color/orange</item>
+    </style>
+
+    <style name="Drawables.Deep_Orange" >
+        <item name="drawable_color">@color/deep_orange</item>
+    </style>
+
+    <style name="Drawables.Brown" >
+        <item name="drawable_color">@color/brown</item>
+    </style>
+
+    <style name="Drawables.Grey" >
+        <item name="drawable_color">@color/grey</item>
+    </style>
+
+    <style name="Drawables.Grey_900" >
+        <item name="drawable_color">@color/grey_900</item>
+    </style>
+
+    <style name="Drawables.Blue_Grey" >
+        <item name="drawable_color">@color/blue_grey</item>
+    </style>
+
+    <style name="Drawables.Blue_Grey_900" >
+        <item name="drawable_color">@color/blue_grey_900</item>
+    </style>
+
+    <style name="Drawables.Black" >
+        <item name="drawable_color">@color/black</item>
+    </style>
+
+
+    <!-- Dialog themes -->
+    <style name="Dialog" />
+
+    <style name="Dialog.White">
+        <item name="card_color">@color/white</item>
+    </style>
+
+    <style name="Dialog.Red">
+        <item name="card_color">@color/red</item>
+    </style>
+
+    <style name="Dialog.Pink">
+        <item name="card_color">@color/pink</item>
+    </style>
+
+    <style name="Dialog.Purple">
+        <item name="card_color">@color/purple</item>
+    </style>
+
+    <style name="Dialog.Deep_Purple">
+        <item name="card_color">@color/deep_purple</item>
+    </style>
+
+    <style name="Dialog.Indigo">
+        <item name="card_color">@color/indigo</item>
+    </style>
+
+    <style name="Dialog.Blue">
+        <item name="card_color">@color/blue</item>
+    </style>
+
+    <style name="Dialog.Light_Blue" >
+        <item name="card_color">@color/light_blue</item>
+    </style>
+
+    <style name="Dialog.Cyan" >
+        <item name="card_color">@color/cyan</item>
+    </style>
+
+    <style name="Dialog.Teal" >
+        <item name="card_color">@color/teal</item>
+    </style>
+
+    <style name="Dialog.Green" >
+        <item name="card_color">@color/green</item>
+    </style>
+
+    <style name="Dialog.Light_Green" >
+        <item name="card_color">@color/light_green</item>
+    </style>
+
+    <style name="Dialog.Lime" >
+        <item name="card_color">@color/lime</item>
+    </style>
+
+    <style name="Dialog.Yellow" >
+        <item name="card_color">@color/yellow</item>
+    </style>
+
+    <style name="Dialog.Amber" >
+        <item name="card_color">@color/amber</item>
+    </style>
+
+    <style name="Dialog.Orange" >
+        <item name="card_color">@color/orange</item>
+    </style>
+
+    <style name="Dialog.Deep_Orange" >
+        <item name="card_color">@color/deep_orange</item>
+    </style>
+
+    <style name="Dialog.Brown" >
+        <item name="card_color">@color/brown</item>
+    </style>
+
+    <style name="Dialog.Grey" >
+        <item name="card_color">@color/grey</item>
+    </style>
+
+    <style name="Dialog.Grey_900" >
+        <item name="card_color">@color/grey_900</item>
+    </style>
+
+    <style name="Dialog.Blue_Grey" >
+        <item name="card_color">@color/blue_grey</item>
+    </style>
+
+    <style name="Dialog.Blue_Grey_900" >
+        <item name="card_color">@color/blue_grey_900</item>
+    </style>
+
+    <style name="Dialog.Black" >
+        <item name="card_color">@color/black</item>
+    </style>
+
+
+    <!-- Splash screen -->
     <style name="AppTheme.Launcher">
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
     </style>
 
 </resources>

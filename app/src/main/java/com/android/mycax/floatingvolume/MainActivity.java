@@ -6,44 +6,57 @@ import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
-import android.widget.Button;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.mycax.floatingvolume.utils.AppUtils;
 import com.android.mycax.floatingvolume.utils.Constants;
-import com.basel.DualButton.DualButton;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 
 import java.util.Objects;
 
+import mehdi.sakout.fancybuttons.FancyButton;
+
 @SuppressLint("ExportedPreferenceActivity")
 @SuppressWarnings("deprecation")
-public class MainActivity extends AppCompatPreferenceActivity implements SwitchPreference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, DualButton.OnDualClickListener {
-    private DualButton FloatingService;
+public class MainActivity extends AppCompatPreferenceActivity implements SwitchPreference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, FancyButton.OnClickListener {
+    private FancyButton FloatingServiceStart;
+    private FancyButton FloatingServiceStop;
     private SwitchPreference bounceEffect;
     private AppUtils utils;
     private NotificationManager notificationManager;
+    private SharedPreferences sharedPref;
+    private int theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(Constants.PREF_ENABLE_DARK_MODE, false) ? R.style.AppTheme_Dark : R.style.AppTheme);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        utils = new AppUtils(this);
+        theme = Integer.valueOf(sharedPref.getString(Constants.PREF_THEME_VALUE, "1"));
+        utils.onActivityCreateSetTheme(this, theme);
+        if (theme == 3) {
+            utils.setActionBarTextColor(getSupportActionBar());
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        utils = new AppUtils(this);
-        FloatingService = findViewById(R.id.dualBtn);
+        FloatingServiceStart = findViewById(R.id.button_start_service);
+        FloatingServiceStop = findViewById(R.id.button_stop_service);
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             checkPermissions();
@@ -56,43 +69,41 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_main);
-        SwitchPreference darkMode = (SwitchPreference) findPreference(Constants.PREF_ENABLE_DARK_MODE);
-        darkMode.setOnPreferenceChangeListener(this);
+        ListPreference themePreference = (ListPreference) findPreference(Constants.PREF_THEME_VALUE);
+        themePreference.setOnPreferenceChangeListener(this);
+        Preference customThemePreference = findPreference(Constants.PREF_CUSTOM_THEME);
+        if (theme == Constants.THEME_CUSTOM) {
+            customThemePreference.setEnabled(true);
+            customThemePreference.setOnPreferenceClickListener(this);
+        } else {
+            customThemePreference.setEnabled(false);
+        }
         bounceEffect = (SwitchPreference) findPreference(Constants.PREF_ENABLE_BOUNCE);
-        if (!PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(Constants.PREF_DISABLE_FIXED_UI, false)) {
+        if (!sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false)) {
             bounceEffect.setEnabled(false);
         }
         SwitchPreference disableFixedUI = (SwitchPreference) findPreference(Constants.PREF_DISABLE_FIXED_UI);
         disableFixedUI.setOnPreferenceChangeListener(this);
-        Preference aboutPreference = findPreference(Constants.PREF_ABOUT);
+        Preference aboutPreference = findPreference(Constants.PREF_ABOUT_ME);
         aboutPreference.setOnPreferenceClickListener(this);
+        Preference openSourcePreference = findPreference((Constants.PREF_OPENSOURCE));
+        openSourcePreference.setOnPreferenceClickListener(this);
     }
 
     private void initializeView() {
-        FloatingService.setDualClickListener(this);
-    }
-
-    @Override
-    public void onClickFirst(Button btn) {
-        utils.manageService(true);
-    }
-
-    @Override
-    public void onClickSecond(Button btn) {
-        utils.manageService(false);
+        FloatingServiceStart.setOnClickListener(this);
+        FloatingServiceStop.setOnClickListener(this);
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object object) {
-        if (preference == findPreference(Constants.PREF_ENABLE_DARK_MODE)) {
-            finish();
-            final Intent intent = getIntent();
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        } else if (preference == findPreference(Constants.PREF_DISABLE_FIXED_UI)) {
-            bounceEffect.setEnabled(!PreferenceManager.getDefaultSharedPreferences(this)
-                    .getBoolean(Constants.PREF_DISABLE_FIXED_UI, false));
+        switch (preference.getKey()) {
+            case Constants.PREF_DISABLE_FIXED_UI:
+                bounceEffect.setEnabled(!sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false));
+                break;
+            case Constants.PREF_THEME_VALUE:
+                utils.applyTheme(this);
+                break;
         }
         return true;
     }
@@ -139,14 +150,51 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
             } else {
                 Toast.makeText(this, R.string.app_permission_denied, Toast.LENGTH_LONG).show();
             }
+        } else if (requestCode == Constants.THEME_PREFRENCES_REQUEST) {
+            utils.applyTheme(this);
         }
     }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        if(preference == findPreference(Constants.PREF_ABOUT)) {
-            startActivity(new Intent(this, AboutActivity.class));
+        switch (preference.getKey()) {
+            case Constants.PREF_ABOUT_ME:
+                startActivity(new Intent(this, AboutActivity.class));
+                break;
+            case Constants.PREF_CUSTOM_THEME:
+                startActivityForResult(new Intent(this, ThemeSettingsActivity.class), Constants.THEME_PREFRENCES_REQUEST);
+                break;
+            case Constants.PREF_OPENSOURCE:
+                new LibsBuilder()
+                        .withActivityStyle(getActivityStyle())
+                        .withAboutIconShown(true)
+                        .start(this);
+                break;
         }
         return false;
+    }
+
+    private com.mikepenz.aboutlibraries.Libs.ActivityStyle getActivityStyle() {
+        switch(theme) {
+            case Constants.THEME_LIGHT:
+                return Libs.ActivityStyle.LIGHT;
+            case Constants.THEME_DARK:
+                return Libs.ActivityStyle.DARK;
+            case Constants.THEME_CUSTOM:
+                return Libs.ActivityStyle.LIGHT;
+        }
+        return Libs.ActivityStyle.LIGHT;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.button_start_service:
+                utils.manageService(true);
+                break;
+            case R.id.button_stop_service:
+                utils.manageService(false);
+                break;
+        }
     }
 }
