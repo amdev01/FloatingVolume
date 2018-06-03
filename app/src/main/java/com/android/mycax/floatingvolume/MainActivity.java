@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         FloatingServiceStart = findViewById(R.id.button_start_service);
         FloatingServiceStop = findViewById(R.id.button_stop_service);
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
             checkPermissions();
         } else {
             initializeView();

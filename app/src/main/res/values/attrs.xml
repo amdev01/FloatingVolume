@@ -4,5 +4,6 @@
         <attr name="card_color" format="color" />
         <attr name="drawable_color" format="color" />
         <attr name="button_drawable_text_color" format="color" />
+        <attr name="dialog_accent_color" format="color" />
     </declare-styleable>
 </resources>

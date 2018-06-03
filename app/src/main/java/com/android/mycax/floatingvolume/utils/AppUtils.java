@@ -62,6 +62,7 @@ public class AppUtils {
                 break;
             case Constants.THEME_CUSTOM:
                 activity.getWindow().getDecorView().setBackgroundColor(sharedPref.getInt(Constants.PREF_COLOR_BACKGROUND, -1));
+                activity.getTheme().applyStyle(getAlertDialogAccentColor(), true); /* Alert dialog accent */
                 activity.getTheme().applyStyle(getAlertDialogColor(), true); /* Alert dialog */
                 activity.getTheme().applyStyle(getPrimaryColor(), true); /* Primary */
                 activity.getTheme().applyStyle(getAccentColor(), true); /* Accent */
@@ -358,6 +359,110 @@ public class AppUtils {
             return R.style.AlertDialogStyle_Black;
         }
         return R.style.AlertDialogStyle_White;
+    }
+
+    private int getAlertDialogAccentColor() {
+        int color = sharedPref.getInt(Constants.PREF_COLOR_ACCENT, -1499549);
+        if (color == getColorInt(R.color.white)) {
+            return R.style.AlertDialogAccent_White;
+        } else if (color == getColorInt(R.color.red)) {
+            return R.style.AlertDialogAccent_Red;
+        } else if (color == getColorInt(R.color.pink)) {
+            return R.style.AlertDialogAccent_Pink;
+        } else if (color == getColorInt(R.color.purple)) {
+            return R.style.AlertDialogAccent_Purple;
+        } else if (color == getColorInt(R.color.deep_purple)) {
+            return R.style.AlertDialogAccent_Deep_Purple;
+        } else if (color == getColorInt(R.color.indigo)) {
+            return R.style.AlertDialogAccent_Indigo;
+        } else if (color == getColorInt(R.color.blue)) {
+            return R.style.AlertDialogAccent_Blue;
+        } else if (color == getColorInt(R.color.light_blue)) {
+            return R.style.AlertDialogAccent_Light_Blue;
+        } else if (color == getColorInt(R.color.cyan)) {
+            return R.style.AlertDialogAccent_Cyan;
+        } else if (color == getColorInt(R.color.teal)) {
+            return R.style.AlertDialogAccent_Teal;
+        } else if (color == getColorInt(R.color.green)) {
+            return R.style.AlertDialogAccent_Green;
+        }else if (color == getColorInt(R.color.light_green)) {
+            return R.style.AlertDialogAccent_Light_Green;
+        } else if (color == getColorInt(R.color.lime)) {
+            return R.style.AlertDialogAccent_Lime;
+        } else if (color == getColorInt(R.color.yellow)) {
+            return R.style.AlertDialogAccent_Yellow;
+        } else if (color == getColorInt(R.color.amber)) {
+            return R.style.AlertDialogAccent_Amber;
+        } else if (color == getColorInt(R.color.orange)) {
+            return R.style.AlertDialogAccent_Orange;
+        } else if (color == getColorInt(R.color.deep_orange)) {
+            return R.style.AlertDialogAccent_Deep_Orange;
+        } else if (color == getColorInt(R.color.brown)) {
+            return R.style.AlertDialogAccent_Brown;
+        } else if (color == getColorInt(R.color.grey)) {
+            return R.style.AlertDialogAccent_Grey;
+        } else if (color == getColorInt(R.color.grey_900)) {
+            return R.style.AlertDialogAccent_Grey_900;
+        } else if (color == getColorInt(R.color.blue_grey)) {
+            return R.style.AlertDialogAccent_Blue_Grey;
+        } else if (color == getColorInt(R.color.blue_grey_900)) {
+            return R.style.AlertDialogAccent_Blue_Grey_900;
+        } else if (color == getColorInt(R.color.black)) {
+            return R.style.AlertDialogAccent_Black;
+        }
+        return R.style.AlertDialogAccent_White;
+    }
+
+    public int getCardBackgroundColor() {
+        int color = sharedPref.getInt(Constants.PREF_COLOR_BACKGROUND, -1);
+        if (color == getColorInt(R.color.white)) {
+            return R.color.white;
+        } else if (color == getColorInt(R.color.red)) {
+            return R.color.red;
+        } else if (color == getColorInt(R.color.pink)) {
+            return R.color.pink;
+        } else if (color == getColorInt(R.color.purple)) {
+            return R.color.purple;
+        } else if (color == getColorInt(R.color.deep_purple)) {
+            return R.color.deep_purple;
+        } else if (color == getColorInt(R.color.indigo)) {
+            return R.color.indigo;
+        } else if (color == getColorInt(R.color.blue)) {
+            return R.color.blue;
+        } else if (color == getColorInt(R.color.light_blue)) {
+            return R.color.light_blue;
+        } else if (color == getColorInt(R.color.cyan)) {
+            return R.color.cyan;
+        } else if (color == getColorInt(R.color.teal)) {
+            return R.color.teal;
+        } else if (color == getColorInt(R.color.green)) {
+            return R.color.green;
+        }else if (color == getColorInt(R.color.light_green)) {
+            return R.color.light_green;
+        } else if (color == getColorInt(R.color.lime)) {
+            return R.color.lime;
+        } else if (color == getColorInt(R.color.yellow)) {
+            return R.color.yellow;
+        } else if (color == getColorInt(R.color.amber)) {
+            return R.color.amber;
+        } else if (color == getColorInt(R.color.orange)) {
+            return R.color.orange;
+        } else if (color == getColorInt(R.color.deep_orange)) {
+            return R.color.deep_orange;
+        } else if (color == getColorInt(R.color.brown)) {
+            return R.color.brown;
+        } else if (color == getColorInt(R.color.grey)) {
+            return R.color.grey;
+        } else if (color == getColorInt(R.color.grey_900)) {
+            return R.color.grey_900;
+        } else if (color == getColorInt(R.color.blue_grey)) {
+            return R.color.blue_grey;
+        } else if (color == getColorInt(R.color.blue_grey_900)) {
+            return R.color.blue_grey_900;
+        } else if (color == getColorInt(R.color.black)) {
+            return R.color.black;
+        }
+        return R.color.white;
     }
 
     private int getColorInt(@ColorRes int color) {

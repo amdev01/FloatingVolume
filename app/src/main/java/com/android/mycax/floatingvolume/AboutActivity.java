@@ -13,13 +13,13 @@ import com.vansuita.materialabout.views.AboutView;
 
 public class AboutActivity extends AppCompatActivity {
     private int theme;
-    private SharedPreferences sharedPref;
+    private AppUtils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        AppUtils utils = new AppUtils(this);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        utils = new AppUtils(this);
         theme = Integer.valueOf(sharedPref.getString(Constants.PREF_THEME_VALUE, "1"));
         utils.onActivityCreateSetTheme(this, theme);
         if (theme == 3) {
@@ -32,13 +32,13 @@ public class AboutActivity extends AppCompatActivity {
     private int setCardBackgroundColor() {
         switch (theme) {
             case 1:
-                return getResources().getColor(R.color.white);
+                return R.color.white;
             case 2:
-                return getResources().getColor(R.color.black);
+                return R.color.black;
             case 3:
-                sharedPref.getInt(Constants.PREF_COLOR_BACKGROUND, -1);
+                return utils.getCardBackgroundColor();
         }
-        return getResources().getColor(R.color.white);
+        return R.color.white;
     }
 
     private void loadAbout() {
@@ -67,7 +67,9 @@ public class AboutActivity extends AppCompatActivity {
                 .addShareAction(R.string.app_name, R.string.url_xdalabs_link)
                 .setActionsColumnsCount(2)
                 .addFeedbackAction(R.string.name_email)
+                .setBackgroundColor(setCardBackgroundColor())
                 .setWrapScrollView(true)
+                .setLinksAnimated(true)
                 .setShowAsCard(true);
 
         AboutView view = builder.build();

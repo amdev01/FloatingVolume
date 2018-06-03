@@ -22,7 +22,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -348,7 +347,6 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
     @Override
     public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-        Log.d("FLOT", String.valueOf(arg1));
         switch (arg0.getId()) {
             case R.id.SeekBarMedia:
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, arg1, 0);
