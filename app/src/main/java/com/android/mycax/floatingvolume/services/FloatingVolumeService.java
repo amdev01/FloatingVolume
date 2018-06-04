@@ -52,8 +52,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private ImageView change_ringer_mode, ImageToAnimate, iconView;
     private AudioManager audioManager;
     private FloatingViewManager mFloatingViewManager;
-    private AudioVolumeObserver mAudioVolumeObserverMedia, mAudioVolumeObserverVoiceCall, mAudioVolumeObserverRinger, mAudioVolumeObserverAlarm;
-    private SeekBar mediaControl, ringerControl, alarmControl, voiceCallControl;
+    private AudioVolumeObserver mAudioVolumeObserverMedia, mAudioVolumeObserverVoiceCall, mAudioVolumeObserverRinger, mAudioVolumeObserverAlarm, mAudioVolumeObserverNotification;
+    private SeekBar mediaControl, ringerControl, alarmControl, voiceCallControl, notificationControl;
     private BroadcastReceiver RingerModeReceiver, InCallModeReceiver;
     private TelephonyManager telephonyManager;
     private boolean isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled, isVoiceCallRecieverRegistered;
@@ -74,10 +74,12 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             for (String androidArch : Build.SUPPORTED_ABIS) {
                 switch (androidArch) {
-                    case Constants.ARM64V8A:
+                    case Constants.X86_64:
+                    case Constants.ARM64_V8A:
                         OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
                         break;
-                    case Constants.ARMEABIV7A:
+                    case Constants.X86:
+                    case Constants.ARMEABI_V7A:
                         OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_PRIORITY_PHONE;
                         break;
                 }
@@ -214,6 +216,11 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         seekbarSetup(Constants.SEEKBAR_VOICE_CALL, voiceCallControl, AudioManager.STREAM_VOICE_CALL, mAudioVolumeObserverVoiceCall, R.id.textViewVoiceCall,
                 R.id.SeekBarVoiceCallRotator, R.id.ImageVoiceCall, R.id.linearLayoutVoiceCall);
 
+        mAudioVolumeObserverNotification = new AudioVolumeObserver(this);
+        notificationControl = mFloatingWidgetView.findViewById(R.id.SeekBarNotification);
+        seekbarSetup(Constants.SEEKBAR_NOTICIATION, notificationControl, AudioManager.STREAM_NOTIFICATION, mAudioVolumeObserverNotification, R.id.textViewNotification,
+                R.id.SeekBarNotificationRotator, R.id.ImageNotification, R.id.linearLayoutNotification);
+
         change_ringer_mode = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitch);
 
         RingerModeReceiver = new BroadcastReceiver() {
@@ -321,6 +328,9 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             case R.id.SeekBarVoiceCall:
                 ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageVoiceCall);
                 break;
+            case R.id.SeekBarNotification:
+                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageNotification);
+                break;
         }
         ImageToAnimate.startAnimation(animation);
     }
@@ -341,6 +351,9 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             case R.id.SeekBarVoiceCall:
                 ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageVoiceCall);
                 break;
+            case R.id.SeekBarNotification:
+                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageNotification);
+                break;
         }
         ImageToAnimate.startAnimation(animation);
     }
@@ -359,6 +372,9 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                 break;
             case R.id.SeekBarVoiceCall:
                 audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, arg1, 0);
+                break;
+            case R.id.SeekBarNotification:
+                audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, arg1, 0);
                 break;
         }
     }
@@ -408,6 +424,9 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                 if (seekbarSelections.contains(Constants.SEEKBAR_VOICE_CALL)) {
                     mAudioVolumeObserverVoiceCall.unregister();
                 }
+                if (seekbarSelections.contains(Constants.SEEKBAR_NOTICIATION)) {
+                    mAudioVolumeObserverNotification.unregister();
+                }
                 unregisterReceiver(RingerModeReceiver);
                 if (isVoiceCallRecieverRegistered) {
                     unregisterReceiver(InCallModeReceiver);
@@ -428,6 +447,9 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                 break;
             case R.id.ImageVoiceCall:
                 handleImageClick(R.id.ImageVoiceCall, AudioManager.STREAM_VOICE_CALL);
+                break;
+            case R.id.ImageNotification:
+                handleImageClick(R.id.ImageNotification, AudioManager.STREAM_NOTIFICATION);
                 break;
         }
     }
@@ -487,6 +509,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             voiceCallControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
         else if (audioVolumeObserver.equals(mAudioVolumeObserverAlarm))
             alarmControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_ALARM));
+        else if (audioVolumeObserver.equals(mAudioVolumeObserverNotification))
+            notificationControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION));
     }
 
     private FloatingViewManager.Options loadOptions(DisplayMetrics metrics) {

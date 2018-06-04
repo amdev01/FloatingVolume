@@ -164,6 +164,44 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/textViewNotification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
+                android:text="@string/notification_volume"
+                android:textColor="?attr/colorAccent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutRinger"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutNotification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewNotification">
+
+                <ImageView
+                    android:id="@+id/ImageNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    tools:ignore="ContentDescription"
+                    android:src="@drawable/ic_notifications_24dp"/>
+
+                <SeekBar
+                    android:id="@+id/SeekBarNotification"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <TextView
                 android:id="@+id/textViewAlarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -171,7 +209,7 @@
                 android:layout_marginTop="3dp"
                 android:text="@string/alarm_volume"
                 android:textColor="?attr/colorAccent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutRinger"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutNotification"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <LinearLayout

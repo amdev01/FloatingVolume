@@ -138,7 +138,7 @@
                 android:layout_marginTop="8dp"
                 android:padding="4dp"
                 app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
-                app:layout_constraintEnd_toStartOf="@+id/ImageAlarm"
+                app:layout_constraintEnd_toStartOf="@+id/ImageNotification"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/ImageMedia"
                 app:layout_constraintTop_toBottomOf="@+id/SeekBarRingerRotator"
@@ -154,7 +154,7 @@
                 android:text="@string/ringer_volume"
                 android:textColor="?attr/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textViewAlarm"
+                app:layout_constraintEnd_toStartOf="@+id/textViewNotification"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/textViewMedia"
                 app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
@@ -166,13 +166,62 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/ImageRinger"
-                app:layout_constraintEnd_toStartOf="@+id/SeekBarAlarmRotator"
+                app:layout_constraintEnd_toStartOf="@+id/SeekBarNotificationRotator"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/SeekBarMediaRotator"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <SeekBar
                     android:id="@+id/SeekBarRinger"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </com.android.musicfx.SeekBarRotator>
+
+            <!-- Notification -->
+            <ImageView
+                android:id="@+id/ImageNotification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+                app:layout_constraintEnd_toStartOf="@+id/ImageAlarm"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/ImageRinger"
+                app:layout_constraintTop_toBottomOf="@+id/SeekBarNotificationRotator"
+                tools:ignore="ContentDescription"
+                android:src="@drawable/ic_notifications_24dp"/>
+
+            <TextView
+                android:id="@+id/textViewNotification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/notification_volume"
+                android:textColor="?attr/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textViewAlarm"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/textViewRinger"
+                app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
+
+            <com.android.musicfx.SeekBarRotator
+                android:id="@+id/SeekBarNotificationRotator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/ImageNotification"
+                app:layout_constraintEnd_toStartOf="@+id/SeekBarAlarmRotator"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/SeekBarRingerRotator"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <SeekBar
+                    android:id="@+id/SeekBarNotification"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
@@ -189,7 +238,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
                 app:layout_constraintEnd_toEndOf="@id/vertical_guideline"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/ImageRinger"
+                app:layout_constraintStart_toEndOf="@+id/ImageNotification"
                 app:layout_constraintTop_toBottomOf="@+id/SeekBarAlarmRotator"
                 tools:ignore="ContentDescription"
                 android:src="@drawable/ic_alarm_24dp"/>
@@ -205,7 +254,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/vertical_guideline"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textViewRinger"
+                app:layout_constraintStart_toEndOf="@+id/textViewNotification"
                 app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
 
             <com.android.musicfx.SeekBarRotator
@@ -217,7 +266,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/ImageAlarm"
                 app:layout_constraintEnd_toEndOf="@id/vertical_guideline"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/SeekBarRingerRotator"
+                app:layout_constraintStart_toEndOf="@+id/SeekBarNotificationRotator"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <SeekBar

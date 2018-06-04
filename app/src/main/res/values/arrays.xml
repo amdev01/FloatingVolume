@@ -5,12 +5,14 @@
         <item>@string/show_ringer_bar</item>
         <item>@string/show_alarm_bar</item>
         <item>@string/show_voicecall_bar</item>
+        <item>@string/show_notification_bar</item>
     </string-array>
     <string-array name="show_bars_multipreference_values">
         <item>1</item>
         <item>2</item>
         <item>3</item>
         <item>4</item>
+        <item>5</item>
     </string-array>
     <string-array name="show_bars_multipreference_values_default">
         <item>1</item>

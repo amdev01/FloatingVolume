@@ -27,12 +27,15 @@ public interface Constants {
     String PREF_COLOR_BACKGROUND = "pref_color_background";
     String PREF_COLOR_ICONS = "pref_color_icons";
     /* end */
-    String ARM64V8A = "arm64-v8a";
-    String ARMEABIV7A = "armeabi-v7a";
+    String ARM64_V8A = "arm64-v8a";
+    String ARMEABI_V7A = "armeabi-v7a";
+    String X86 = "x86";
+    String X86_64 = "x86_64";
     String SEEKBAR_MEDIA = "1";
     String SEEKBAR_RINGER = "2";
     String SEEKBAR_ALARM = "3";
     String SEEKBAR_VOICE_CALL = "4";
+    String SEEKBAR_NOTICIATION = "5";
     int OVERLAY_PERMISSION_REQUEST = 1;
     int NOTIFICATION_POLICY_PERMISSION_REQUEST = 2;
     int THEME_PREFRENCES_REQUEST = 3;

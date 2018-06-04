@@ -5,6 +5,7 @@
     <string name="stop_service">Stop</string>
     <string name="media_volume">Media</string>
     <string name="ringer_volume">Ringer</string>
+    <string name="notification_volume">Notification</string>
     <string name="alarm_volume">Alarm</string>
     <string name="voicecall_volume">Voice Call</string>
     <string name="pref_themes">Themes</string>
@@ -20,6 +21,7 @@
     <string name="pref_opensources_libs_summary">Libraries used in this project</string>
     <string name="show_media_bar">Media Bar</string>
     <string name="show_ringer_bar">Ringer Bar</string>
+    <string name="show_notification_bar">Notification Bar</string>
     <string name="show_alarm_bar">Alarm Bar</string>
     <string name="show_voicecall_bar">Voice Call Bar</string>
     <string name="items_to_show_in_dialog">Items to show in floating dialog</string>
