@@ -62,6 +62,8 @@ public class AppUtils {
                 break;
             case Constants.THEME_CUSTOM:
                 activity.getWindow().getDecorView().setBackgroundColor(sharedPref.getInt(Constants.PREF_COLOR_BACKGROUND, -1));
+                activity.getTheme().applyStyle(setTextColor(sharedPref.getInt(Constants.PREF_COLOR_BACKGROUND, -1),
+                        R.style.AlertDialogTextColor_Black, R.style.AlertDialogTextColor_White), true); /* alert dialog text color */
                 activity.getTheme().applyStyle(getAlertDialogAccentColor(), true); /* Alert dialog accent */
                 activity.getTheme().applyStyle(getAlertDialogColor(), true); /* Alert dialog */
                 activity.getTheme().applyStyle(getPrimaryColor(), true); /* Primary */

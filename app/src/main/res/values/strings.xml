@@ -3,6 +3,7 @@
     <string name="app_permission_denied">App permissions have not been granted, please grant them manually.</string>
     <string name="start_service">Start</string>
     <string name="stop_service">Stop</string>
+    <string name="service_runnig">Service is running</string>
     <string name="media_volume">Media</string>
     <string name="ringer_volume">Ringer</string>
     <string name="notification_volume">Notification</string>

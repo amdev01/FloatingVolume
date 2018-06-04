@@ -31,6 +31,7 @@ public interface Constants {
     String ARMEABI_V7A = "armeabi-v7a";
     String X86 = "x86";
     String X86_64 = "x86_64";
+    String CHANNEL_ID = "Floating Volume Channel";
     String SEEKBAR_MEDIA = "1";
     String SEEKBAR_RINGER = "2";
     String SEEKBAR_ALARM = "3";
@@ -39,6 +40,7 @@ public interface Constants {
     int OVERLAY_PERMISSION_REQUEST = 1;
     int NOTIFICATION_POLICY_PERMISSION_REQUEST = 2;
     int THEME_PREFRENCES_REQUEST = 3;
+    int NOTIFICATION_ID = 27;
     int THEME_LIGHT = 1;
     int THEME_DARK = 2;
     int THEME_CUSTOM = 3;

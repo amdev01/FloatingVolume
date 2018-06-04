@@ -3,6 +3,11 @@ package com.android.mycax.floatingvolume.services;
 import android.Manifest;
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.android.mycax.floatingvolume.MainActivity;
 import com.android.mycax.floatingvolume.R;
 import com.android.mycax.floatingvolume.audio.AudioVolumeObserver;
 import com.android.mycax.floatingvolume.audio.OnAudioVolumeChangedListener;
@@ -102,6 +108,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             return START_STICKY;
         }
 
+        runAsForeground();
         fab_open_0_to_1 = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
         fab_close_1_to_0 = AnimationUtils.loadAnimation(this, R.anim.fab_close_1_to_0);
         appUtils = new AppUtils(this);
@@ -125,6 +132,35 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         mFloatingViewManager.addViewToWindow(iconView, options);
 
         return START_REDELIVER_INTENT;
+    }
+
+    private void runAsForeground(){
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                notificationIntent, 0);
+
+        Notification.Builder notificationBuilder = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.ic_music_note_white_24dp)
+                .setContentText(getString(R.string.service_runnig))
+                .setContentIntent(pendingIntent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationBuilder.setChannelId(Constants.CHANNEL_ID);
+            createNotificationChannel();
+        }
+
+        Notification notification = notificationBuilder.build();
+
+        startForeground(Constants.NOTIFICATION_ID, notification);
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private void createNotificationChannel() {
+        NotificationChannel channel = new NotificationChannel(Constants.CHANNEL_ID, getString(R.string.service_runnig), NotificationManager.IMPORTANCE_NONE);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        assert notificationManager != null;
+        notificationManager.createNotificationChannel(channel);
     }
 
     private void expandView(LayoutInflater inflater, DisplayMetrics displayMetrics) {
