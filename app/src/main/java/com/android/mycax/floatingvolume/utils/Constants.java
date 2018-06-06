@@ -14,6 +14,7 @@ public interface Constants {
     String PREF_ITEMS_TO_SHOW = "items_to_show_in_dialog_pref";
     String PREF_ABOUT_ME = "pref_about_me";
     String PREF_OPENSOURCE = "pref_opensource";
+    String PREF_HEAD_OPACITY = "pref_head_opacity";
     /* Spectrum */
     String PREF_SPECTRUM_COLOR_PRIMARY = "pref_spectrum_color_primary";
     String PREF_SPECTRUM_COLOR_ACCENT = "pref_spectrum_color_accent";

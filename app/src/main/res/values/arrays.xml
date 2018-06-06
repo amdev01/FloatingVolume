@@ -43,6 +43,31 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="head_opacity_entries">
+        <item>10%</item>
+        <item>20%</item>
+        <item>30%</item>
+        <item>40%</item>
+        <item>50%</item>
+        <item>60%</item>
+        <item>70%</item>
+        <item>80%</item>
+        <item>90%</item>
+        <item>100%</item>
+    </string-array>
+    <string-array name="head_opacity_values">
+        <item>0.1f</item>
+        <item>0.2f</item>
+        <item>0.3f</item>
+        <item>0.4f</item>
+        <item>0.5f</item>
+        <item>0.6f</item>
+        <item>0.7f</item>
+        <item>0.8f</item>
+        <item>0.9f</item>
+        <item>1f</item>
+    </string-array>
+
     <array name="spectrum_colors">
         <item>@color/white</item>
         <item>@color/red</item>

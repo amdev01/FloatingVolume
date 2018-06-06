@@ -18,6 +18,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.mycax.floatingvolume.services.FloatingVolumeService;
 import com.android.mycax.floatingvolume.utils.AppUtils;
 import com.android.mycax.floatingvolume.utils.Constants;
 import com.karumi.dexter.Dexter;
@@ -78,6 +79,8 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         } else {
             customThemePreference.setEnabled(false);
         }
+        ListPreference headOpacityPreference = (ListPreference) findPreference(Constants.PREF_HEAD_OPACITY);
+        headOpacityPreference.setOnPreferenceChangeListener(this);
         bounceEffect = (SwitchPreference) findPreference(Constants.PREF_ENABLE_BOUNCE);
         if (!sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false)) {
             bounceEffect.setEnabled(false);
@@ -104,6 +107,11 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
             case Constants.PREF_THEME_VALUE:
                 utils.applyTheme(this);
                 break;
+            case Constants.PREF_HEAD_OPACITY:
+                if (utils.isServiceRunning(FloatingVolumeService.class)) {
+                    utils.manageService(false);
+                    utils.manageService(true);
+                }
         }
         return true;
     }

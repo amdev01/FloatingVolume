@@ -43,6 +43,15 @@
             android:key="enable_bounce_effect"
             android:summary="@string/pref_enable_bounce_effect_summary"
             android:title="@string/pref_enable_bounce_effect" />
+        <ListPreference
+            android:defaultValue="@string/pref_head_default_value"
+            android:dialogTitle="@string/pref_head_opacity_dtext"
+            android:entries="@array/head_opacity_entries"
+            android:entryValues="@array/head_opacity_values"
+            android:icon="@drawable/ic_opacity_24dp"
+            android:key="pref_head_opacity"
+            android:summary="%s"
+            android:title="@string/pref_head_opacity_title" />
         <MultiSelectListPreference
             android:defaultValue="@array/show_bars_multipreference_values_default"
             android:entries="@array/show_bars_multipreference_entries"

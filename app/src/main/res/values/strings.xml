@@ -20,6 +20,9 @@
     <string name="pref_enable_bounce_effect_summary">Volume control interface will bounce off the edge when dropped</string>
     <string name="pref_opensource_libs">Open source</string>
     <string name="pref_opensources_libs_summary">Libraries used in this project</string>
+    <string name="pref_head_opacity_title">Floating icon opacity</string>
+    <string name="pref_head_default_value">1f</string>
+    <string name="pref_head_opacity_dtext">Choose preferred opacity</string>
     <string name="show_media_bar">Media Bar</string>
     <string name="show_ringer_bar">Ringer Bar</string>
     <string name="show_notification_bar">Notification Bar</string>

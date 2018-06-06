@@ -118,6 +118,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         Objects.requireNonNull(windowManager).getDefaultDisplay().getMetrics(metrics);
         final LayoutInflater inflater = LayoutInflater.from(this);
         iconView = (ImageView) inflater.inflate(R.layout.floating_head, null, false);
+        iconView.setAlpha(Float.valueOf(sharedPref.getString(Constants.PREF_HEAD_OPACITY, "1f")));
+        iconView.startAnimation(fab_open_0_to_1);
         iconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
