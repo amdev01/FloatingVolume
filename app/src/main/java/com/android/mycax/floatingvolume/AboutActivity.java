@@ -45,7 +45,7 @@ public class AboutActivity extends AppCompatActivity {
         final FrameLayout flHolder = findViewById(R.id.about);
 
         AboutBuilder builder = AboutBuilder.with(this)
-                .setAppIcon(R.drawable.ic_floating_head)
+                .setAppIcon(R.drawable.splash_screen_icon)
                 .setAppName(R.string.app_name)
                 .setPhoto(R.drawable.icon_profile)
                 .setCover(R.mipmap.profile_cover)

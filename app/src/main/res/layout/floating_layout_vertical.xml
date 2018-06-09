@@ -36,7 +36,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:padding="4dp"
-                app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/ImageMedia"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,21 +44,6 @@
                 android:visibility="gone"
                 tools:ignore="ContentDescription"
                 android:src="@drawable/ic_call_24dp"/>
-
-            <TextView
-                android:id="@+id/textViewVoiceCall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/voicecall_volume"
-                android:textColor="?attr/colorAccent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textViewMedia"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/horizontal_guideline"
-                android:visibility="gone"/>
 
             <com.android.musicfx.SeekBarRotator
                 android:id="@+id/SeekBarVoiceCallRotator"
@@ -88,27 +73,13 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:padding="4dp"
-                app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/ImageRinger"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/ImageVoiceCall"
                 app:layout_constraintTop_toBottomOf="@+id/SeekBarMediaRotator"
                 tools:ignore="ContentDescription"
                 android:src="@drawable/ic_volume_up_24dp"/>
-
-            <TextView
-                android:id="@+id/textViewMedia"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/media_volume"
-                android:textColor="?attr/colorAccent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textViewRinger"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textViewVoiceCall"
-                app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
 
             <com.android.musicfx.SeekBarRotator
                 android:id="@+id/SeekBarMediaRotator"
@@ -137,27 +108,13 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:padding="4dp"
-                app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/ImageNotification"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/ImageMedia"
                 app:layout_constraintTop_toBottomOf="@+id/SeekBarRingerRotator"
                 tools:ignore="ContentDescription"
                 android:src="@drawable/ic_ring_volume_24dp"/>
-
-            <TextView
-                android:id="@+id/textViewRinger"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/ringer_volume"
-                android:textColor="?attr/colorAccent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textViewNotification"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textViewMedia"
-                app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
 
             <com.android.musicfx.SeekBarRotator
                 android:id="@+id/SeekBarRingerRotator"
@@ -186,27 +143,13 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:padding="4dp"
-                app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/ImageAlarm"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/ImageRinger"
                 app:layout_constraintTop_toBottomOf="@+id/SeekBarNotificationRotator"
                 tools:ignore="ContentDescription"
                 android:src="@drawable/ic_notifications_24dp"/>
-
-            <TextView
-                android:id="@+id/textViewNotification"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/notification_volume"
-                android:textColor="?attr/colorAccent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textViewAlarm"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textViewRinger"
-                app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
 
             <com.android.musicfx.SeekBarRotator
                 android:id="@+id/SeekBarNotificationRotator"
@@ -235,27 +178,13 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:padding="4dp"
-                app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/vertical_guideline"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/ImageNotification"
                 app:layout_constraintTop_toBottomOf="@+id/SeekBarAlarmRotator"
                 tools:ignore="ContentDescription"
                 android:src="@drawable/ic_alarm_24dp"/>
-
-            <TextView
-                android:id="@+id/textViewAlarm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/alarm_volume"
-                android:textColor="?attr/colorAccent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/vertical_guideline"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textViewNotification"
-                app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
 
             <com.android.musicfx.SeekBarRotator
                 android:id="@+id/SeekBarAlarmRotator"
@@ -312,13 +241,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.85" />
-
-            <android.support.constraint.Guideline
-                android:id="@+id/horizontal_guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.85" />
 
         </android.support.constraint.ConstraintLayout>

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">Floating Volume</string>
     <string name="app_permission_denied">App permissions have not been granted, please grant them manually.</string>
     <string name="start_service">Start</string>
@@ -46,9 +46,10 @@
     <string name="title_activity_theme_settings">Custom Theme Settings</string>
     <string name="pref_icons_color">Icon color</string>
     <string name="pref_primary_color">Primary color</string>
-    <string name="pref_primary_color_dark" tools:keep="@string/pref_primary_color_dark">Primary dark color</string>
     <string name="pref_accent_color">Accent color</string>
     <string name="pref_dialog_color">Dialog color</string>
     <string name="pref_background_color">Background color</string>
     <string name="apply_theme">Apply theme</string>
+    <string name="pref_permanent_voice_call_bar_title">Permanent voice call bar</string>
+    <string name="pref_permanent_voice_call_bar_summary">When disabled, voice call bar will be only visible during calls</string>
 </resources>

@@ -52,6 +52,11 @@
             android:key="pref_head_opacity"
             android:summary="%s"
             android:title="@string/pref_head_opacity_title" />
+        <SwitchPreference
+            android:icon="@drawable/ic_call_24dp"
+            android:key="permanent_voice_call_bar"
+            android:summary="@string/pref_permanent_voice_call_bar_summary"
+            android:title="@string/pref_permanent_voice_call_bar_title" />
         <MultiSelectListPreference
             android:defaultValue="@array/show_bars_multipreference_values_default"
             android:entries="@array/show_bars_multipreference_entries"
@@ -66,8 +71,8 @@
         <Preference
             android:icon="@drawable/ic_open_source_24dp"
             android:key="pref_opensource"
-            android:summary="@string/pref_opensource_libs"
-            android:title="@string/pref_opensources_libs_summary" />
+            android:summary="@string/pref_opensources_libs_summary"
+            android:title="@string/pref_opensource_libs" />
         <Preference
             android:icon="@drawable/ic_info_24dp"
             android:key="pref_about_me"

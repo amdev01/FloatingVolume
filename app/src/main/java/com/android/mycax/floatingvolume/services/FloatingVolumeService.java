@@ -62,7 +62,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private SeekBar mediaControl, ringerControl, alarmControl, voiceCallControl, notificationControl;
     private BroadcastReceiver RingerModeReceiver, InCallModeReceiver;
     private TelephonyManager telephonyManager;
-    private boolean isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled, isVoiceCallRecieverRegistered;
+    private boolean isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled, isVoiceCallRecieverRegistered, isPermanentVoiceCallBarEnabled;
     private int x_init_cord;
     private int y_init_cord;
     private int x_init_margin;
@@ -174,6 +174,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         isUseLastPosition = sharedPref.getBoolean(Constants.PREF_SAVE_LAST_POSITION, false);
         isBounceEnabled = sharedPref.getBoolean(Constants.PREF_ENABLE_BOUNCE, false);
         seekbarSelections = sharedPref.getStringSet(Constants.PREF_ITEMS_TO_SHOW, null);
+        isPermanentVoiceCallBarEnabled = sharedPref.getBoolean(Constants.PREF_PERMANENT_VOICE_CALL_BAR, false);
         int theme = Integer.valueOf(sharedPref.getString(Constants.PREF_THEME_VALUE, "1"));
 
         switch (theme) {
@@ -278,8 +279,6 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                 assert telephonyManager != null;
                 TextView textViewVoiceCall = mFloatingWidgetView.findViewById(R.id.textViewVoiceCall);
                 if (seekbarSelections.contains(Constants.SEEKBAR_VOICE_CALL) && telephonyManager.getCallState() == TelephonyManager.CALL_STATE_OFFHOOK) {
-                    textViewVoiceCall.setVisibility(View.VISIBLE);
-                    textViewVoiceCall.startAnimation(fab_open_0_to_1);
                     if (style == 3) {
                         mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).setVisibility(View.VISIBLE);
                         mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).startAnimation(fab_open_0_to_1);
@@ -288,10 +287,10 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                     } else {
                         mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.VISIBLE);
                         mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).startAnimation(fab_open_0_to_1);
+                        textViewVoiceCall.setVisibility(View.VISIBLE);
+                        textViewVoiceCall.startAnimation(fab_open_0_to_1);
                     }
                 } else {
-                    textViewVoiceCall.setVisibility(View.GONE);
-                    textViewVoiceCall.startAnimation(fab_close_1_to_0);
                     if (style == 3) {
                         mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).setVisibility(View.GONE);
                         mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).startAnimation(fab_close_1_to_0);
@@ -300,13 +299,15 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                     } else {
                         mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.GONE);
                         mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).startAnimation(fab_close_1_to_0);
+                        textViewVoiceCall.setVisibility(View.GONE);
+                        textViewVoiceCall.startAnimation(fab_close_1_to_0);
                     }
                 }
             }
         };
         final IntentFilter filterPhoneStateChanged = new IntentFilter(
                 TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED && !isPermanentVoiceCallBarEnabled) {
             registerReceiver(InCallModeReceiver, filterPhoneStateChanged);
             isVoiceCallRecieverRegistered = true;
         } else isVoiceCallRecieverRegistered = false;
@@ -317,9 +318,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private void seekbarSetup(String enabled, SeekBar seekBar, int streamType, AudioVolumeObserver audioVolumeObserver,
                               int textView, int rotator, int imageView, int linearLayout) {
         if (seekbarSelections.contains(enabled)) {
-            if (seekBar.getId() == R.id.SeekBarVoiceCall && audioManager.getMode() == AudioManager.MODE_IN_CALL) {
+            if (seekBar.getId() == R.id.SeekBarVoiceCall && (isPermanentVoiceCallBarEnabled || audioManager.getMode() == AudioManager.MODE_IN_CALL)) {
                 if (style == 3) {
-                    mFloatingWidgetView.findViewById(textView).setVisibility(View.VISIBLE);
                     mFloatingWidgetView.findViewById(rotator).setVisibility(View.VISIBLE);
                     mFloatingWidgetView.findViewById(imageView).setVisibility(View.VISIBLE);
                 } else {
@@ -340,7 +340,6 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             }
         } else {
             if (style == 3) {
-                mFloatingWidgetView.findViewById(textView).setVisibility(View.GONE);
                 mFloatingWidgetView.findViewById(rotator).setVisibility(View.GONE);
                 mFloatingWidgetView.findViewById(imageView).setVisibility(View.GONE);
             } else {

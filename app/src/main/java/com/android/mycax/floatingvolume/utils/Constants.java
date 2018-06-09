@@ -15,6 +15,7 @@ public interface Constants {
     String PREF_ABOUT_ME = "pref_about_me";
     String PREF_OPENSOURCE = "pref_opensource";
     String PREF_HEAD_OPACITY = "pref_head_opacity";
+    String PREF_PERMANENT_VOICE_CALL_BAR = "permanent_voice_call_bar";
     /* Spectrum */
     String PREF_SPECTRUM_COLOR_PRIMARY = "pref_spectrum_color_primary";
     String PREF_SPECTRUM_COLOR_ACCENT = "pref_spectrum_color_accent";
