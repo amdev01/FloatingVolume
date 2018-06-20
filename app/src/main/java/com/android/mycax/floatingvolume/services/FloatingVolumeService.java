@@ -193,7 +193,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         }
 
         addFloatingWidgetView(inflater, displayMetrics);
-        if (isDisableStaticUiEnabled) implementTouchListenerToFloatingWidgetView(this);
+        implementTouchListenerToFloatingWidgetView(this);
 
         implementVolumeFeatures();
 
@@ -212,7 +212,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 OVERLAY_TYPE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
         if (isDisableStaticUiEnabled) {
             params.gravity = Gravity.TOP | Gravity.START;
@@ -443,32 +443,36 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         }
     }
 
+    private void closeExpandedView() {
+        removeExpandedView();
+        iconView.setVisibility(View.VISIBLE);
+        if (seekbarSelections.contains(Constants.SEEKBAR_MEDIA)) {
+            mAudioVolumeObserverMedia.unregister();
+        }
+        if (seekbarSelections.contains(Constants.SEEKBAR_RINGER)) {
+            mAudioVolumeObserverRinger.unregister();
+        }
+        if (seekbarSelections.contains(Constants.SEEKBAR_ALARM)) {
+            mAudioVolumeObserverAlarm.unregister();
+        }
+        if (seekbarSelections.contains(Constants.SEEKBAR_VOICE_CALL)) {
+            mAudioVolumeObserverVoiceCall.unregister();
+        }
+        if (seekbarSelections.contains(Constants.SEEKBAR_NOTICIATION)) {
+            mAudioVolumeObserverNotification.unregister();
+        }
+        unregisterReceiver(RingerModeReceiver);
+        if (isVoiceCallRecieverRegistered) {
+            unregisterReceiver(InCallModeReceiver);
+            isVoiceCallRecieverRegistered = false;
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.close_expanded_view:
-                removeExpandedView();
-                iconView.setVisibility(View.VISIBLE);
-                if (seekbarSelections.contains(Constants.SEEKBAR_MEDIA)) {
-                    mAudioVolumeObserverMedia.unregister();
-                }
-                if (seekbarSelections.contains(Constants.SEEKBAR_RINGER)) {
-                    mAudioVolumeObserverRinger.unregister();
-                }
-                if (seekbarSelections.contains(Constants.SEEKBAR_ALARM)) {
-                    mAudioVolumeObserverAlarm.unregister();
-                }
-                if (seekbarSelections.contains(Constants.SEEKBAR_VOICE_CALL)) {
-                    mAudioVolumeObserverVoiceCall.unregister();
-                }
-                if (seekbarSelections.contains(Constants.SEEKBAR_NOTICIATION)) {
-                    mAudioVolumeObserverNotification.unregister();
-                }
-                unregisterReceiver(RingerModeReceiver);
-                if (isVoiceCallRecieverRegistered) {
-                    unregisterReceiver(InCallModeReceiver);
-                    isVoiceCallRecieverRegistered = false;
-                }
+                closeExpandedView();
                 break;
             case R.id.imageViewModeSwitch:
                 setNewRingerMode();
@@ -581,52 +585,58 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
                 int x_cord_Destination, y_cord_Destination;
 
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
+                if (isDisableStaticUiEnabled) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
 
-                        x_init_cord = x_cord;
-                        y_init_cord = y_cord;
+                            x_init_cord = x_cord;
+                            y_init_cord = y_cord;
 
-                        x_init_margin = layoutParams.x;
-                        y_init_margin = layoutParams.y;
+                            x_init_margin = layoutParams.x;
+                            y_init_margin = layoutParams.y;
 
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        boolean isClicked = false;
-                        int x_diff = x_cord - x_init_cord;
-                        int y_diff = y_cord - y_init_cord;
+                            return true;
+                        case MotionEvent.ACTION_UP:
+                            boolean isClicked = false;
+                            int x_diff = x_cord - x_init_cord;
+                            int y_diff = y_cord - y_init_cord;
 
-                        if (Math.abs(x_diff) < 5 && Math.abs(y_diff) < 5) isClicked = true;
+                            if (Math.abs(x_diff) < 5 && Math.abs(y_diff) < 5) isClicked = true;
 
-                        y_cord_Destination = y_init_margin + y_diff;
+                            y_cord_Destination = y_init_margin + y_diff;
 
-                        int barHeight = getStatusBarHeight();
-                        if (y_cord_Destination < 0) y_cord_Destination = 0;
-                        else if (y_cord_Destination + (mFloatingWidgetView.getHeight() + barHeight) > szWindow.y) {
-                            y_cord_Destination = szWindow.y - (mFloatingWidgetView.getHeight() + barHeight);
-                        }
+                            int barHeight = getStatusBarHeight();
+                            if (y_cord_Destination < 0) y_cord_Destination = 0;
+                            else if (y_cord_Destination + (mFloatingWidgetView.getHeight() + barHeight) > szWindow.y) {
+                                y_cord_Destination = szWindow.y - (mFloatingWidgetView.getHeight() + barHeight);
+                            }
 
-                        layoutParams.y = y_cord_Destination;
+                            layoutParams.y = y_cord_Destination;
 
-                        if (!isClicked) resetPosition(x_cord);
+                            if (!isClicked) resetPosition(x_cord);
 
-                        return true;
-                    case MotionEvent.ACTION_MOVE:
-                        int x_diff_move = x_cord - x_init_cord;
-                        int y_diff_move = y_cord - y_init_cord;
+                            return true;
+                        case MotionEvent.ACTION_MOVE:
+                            int x_diff_move = x_cord - x_init_cord;
+                            int y_diff_move = y_cord - y_init_cord;
 
-                        x_cord_Destination = x_init_margin + x_diff_move;
-                        y_cord_Destination = y_init_margin + y_diff_move;
+                            x_cord_Destination = x_init_margin + x_diff_move;
+                            y_cord_Destination = y_init_margin + y_diff_move;
 
-                        layoutParams.x = x_cord_Destination;
-                        layoutParams.y = y_cord_Destination;
+                            layoutParams.x = x_cord_Destination;
+                            layoutParams.y = y_cord_Destination;
 
-                        mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
-                        editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                        editor.putInt(Constants.PREF_KEY_LAST_POSITION_X_EXPANDED, layoutParams.x);
-                        editor.putInt(Constants.PREF_KEY_LAST_POSITION_Y_EXPANDED, layoutParams.y);
-                        editor.apply();
-                        return true;
+                            mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
+                            editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+                            editor.putInt(Constants.PREF_KEY_LAST_POSITION_X_EXPANDED, layoutParams.x);
+                            editor.putInt(Constants.PREF_KEY_LAST_POSITION_Y_EXPANDED, layoutParams.y);
+                            editor.apply();
+                            return true;
+                    }
+                }
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                    closeExpandedView();
+                    return true;
                 }
                 return false;
             }
