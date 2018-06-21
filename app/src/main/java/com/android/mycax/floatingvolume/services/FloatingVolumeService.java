@@ -142,7 +142,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                 notificationIntent, 0);
 
         Notification.Builder notificationBuilder = new Notification.Builder(this)
-                .setSmallIcon(R.drawable.ic_music_note_white_24dp)
+                .setSmallIcon(R.drawable.ic_volume_up__white_24dp)
                 .setContentText(getString(R.string.service_runnig))
                 .setContentIntent(pendingIntent);
 
