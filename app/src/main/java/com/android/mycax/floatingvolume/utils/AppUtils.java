@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.ColorRes;
+import androidx.annotation.ColorRes;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -95,7 +95,7 @@ public class AppUtils {
         return lum > 186 ? blackStyle : whiteStyle;
     }
 
-    public void setActionBarTextColor(android.support.v7.app.ActionBar actionBar) {
+    public void setActionBarTextColor(androidx.appcompat.app.ActionBar actionBar) {
         Spannable text = new SpannableString(actionBar.getTitle());
         text.setSpan(new ForegroundColorSpan(setTextColor(sharedPref.getInt(Constants.PREF_COLOR_PRIMARY, -12627531),
                 getColorInt(R.color.black), getColorInt(R.color.white))),
