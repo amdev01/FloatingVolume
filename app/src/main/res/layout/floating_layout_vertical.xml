@@ -236,7 +236,7 @@
                 tools:padding="4dp" />
 
             <!--Guidelines -->
-            <android.support.constraint.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/vertical_guideline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

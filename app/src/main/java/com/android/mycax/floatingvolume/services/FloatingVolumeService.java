@@ -24,6 +24,7 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -307,17 +308,12 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         final IntentFilter filterPhoneStateChanged = new IntentFilter(
                 TelephonyManager.ACTION_PHONE_STATE_CHANGED);
 
-        if (hasPerms() && !isPermanentVoiceCallBarEnabled || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED && !isPermanentVoiceCallBarEnabled) {
             registerReceiver(InCallModeReceiver, filterPhoneStateChanged);
             isVoiceCallRecieverRegistered = true;
         } else isVoiceCallRecieverRegistered = false;
 
         change_ringer_mode.setOnClickListener(this);
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private boolean hasPerms() {
-        return checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void seekbarSetup(String enabled, SeekBar seekBar, int streamType, AudioVolumeObserver audioVolumeObserver,

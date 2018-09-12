@@ -25,9 +25,24 @@
             android:key="pref_dialog_style"
             android:summary="%s"
             android:title="@string/dialog_style_title" />
+
+        <ListPreference
+            android:defaultValue="@string/pref_head_default_value"
+            android:dialogTitle="@string/pref_head_opacity_dtext"
+            android:entries="@array/head_opacity_entries"
+            android:entryValues="@array/head_opacity_values"
+            android:icon="@drawable/ic_opacity_24dp"
+            android:key="pref_head_opacity"
+            android:summary="%s"
+            android:title="@string/pref_head_opacity_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/floating_dialog_settings_category">
+        <SwitchPreference
+            android:icon="@drawable/ic_power_button_24dp"
+            android:key="pref_settings_start_on_boot"
+            android:summary="@string/pref_start_on_boot_summary"
+            android:title="@string/pref_start_on_boot_title" />
         <SwitchPreference
             android:icon="@drawable/ic_save_24dp"
             android:key="settings_save_last_position"
@@ -43,15 +58,6 @@
             android:key="enable_bounce_effect"
             android:summary="@string/pref_enable_bounce_effect_summary"
             android:title="@string/pref_enable_bounce_effect" />
-        <ListPreference
-            android:defaultValue="@string/pref_head_default_value"
-            android:dialogTitle="@string/pref_head_opacity_dtext"
-            android:entries="@array/head_opacity_entries"
-            android:entryValues="@array/head_opacity_values"
-            android:icon="@drawable/ic_opacity_24dp"
-            android:key="pref_head_opacity"
-            android:summary="%s"
-            android:title="@string/pref_head_opacity_title" />
         <SwitchPreference
             android:icon="@drawable/ic_call_24dp"
             android:key="permanent_voice_call_bar"

@@ -52,4 +52,6 @@
     <string name="apply_theme">Apply theme</string>
     <string name="pref_permanent_voice_call_bar_title">Permanent voice call bar</string>
     <string name="pref_permanent_voice_call_bar_summary">When disabled, voice call bar will be only visible during calls</string>
+    <string name="pref_start_on_boot_title">Start on boot</string>
+    <string name="pref_start_on_boot_summary">Floating Volume service will turn on automatically after the device is powered on</string>
 </resources>
