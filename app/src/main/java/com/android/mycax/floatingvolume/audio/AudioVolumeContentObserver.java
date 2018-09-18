@@ -4,6 +4,9 @@ import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
+
+import com.android.mycax.floatingvolume.interfaces.OnAudioVolumeChangedListener;
+
 import androidx.annotation.NonNull;
 
 class AudioVolumeContentObserver extends ContentObserver {
