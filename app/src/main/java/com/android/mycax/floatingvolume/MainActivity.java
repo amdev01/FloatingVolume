@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
     private FancyButton FloatingServiceStart;
     private FancyButton FloatingServiceStop;
     private SwitchPreference bounceEffect;
+    private ListPreference dialogPosition;
     private AppUtils utils;
     private NotificationManager notificationManager;
     private SharedPreferences sharedPref;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
     protected void onCreate(Bundle savedInstanceState) {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         utils = new AppUtils(this);
-        theme = Integer.valueOf(sharedPref.getString(Constants.PREF_THEME_VALUE, "1"));
+        theme = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_THEME_VALUE, "1")));
         utils.onActivityCreateSetTheme(this, theme);
         if (theme == 3) {
             utils.setActionBarTextColor(getSupportActionBar());
@@ -81,10 +82,11 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         }
         ListPreference headOpacityPreference = (ListPreference) findPreference(Constants.PREF_HEAD_OPACITY);
         headOpacityPreference.setOnPreferenceChangeListener(this);
+        dialogPosition = (ListPreference) findPreference(Constants.PRED_DIALOG_POSITION);
         bounceEffect = (SwitchPreference) findPreference(Constants.PREF_ENABLE_BOUNCE);
         if (!sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false)) {
             bounceEffect.setEnabled(false);
-        }
+        } else dialogPosition.setEnabled(false);
         SwitchPreference disableFixedUI = (SwitchPreference) findPreference(Constants.PREF_DISABLE_FIXED_UI);
         disableFixedUI.setOnPreferenceChangeListener(this);
         Preference aboutPreference = findPreference(Constants.PREF_ABOUT_ME);
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         switch (preference.getKey()) {
             case Constants.PREF_DISABLE_FIXED_UI:
                 bounceEffect.setEnabled(!sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false));
+                dialogPosition.setEnabled(sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false));
                 break;
             case Constants.PREF_THEME_VALUE:
                 utils.applyTheme(this);

@@ -25,11 +25,13 @@
         <item>Default style</item>
         <item>Slim style</item>
         <item>Vertical bars style</item>
+        <item>Android Pie Style</item>
     </string-array>
     <string-array name="dialog_style_values">
         <item>1</item>
         <item>2</item>
         <item>3</item>
+        <item>4</item>
     </string-array>
 
     <string-array name="dialog_theme_entries">
@@ -38,6 +40,17 @@
         <item>Custom</item>
     </string-array>
     <string-array name="dialog_theme_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="dialog_fixed_position_entries">
+        <item>Left</item>
+        <item>Centre</item>
+        <item>Right</item>
+    </string-array>
+    <string-array name="dialog_fixed_position_values">
         <item>1</item>
         <item>2</item>
         <item>3</item>

@@ -11,6 +11,8 @@ import com.android.mycax.floatingvolume.utils.Constants;
 import com.vansuita.materialabout.builder.AboutBuilder;
 import com.vansuita.materialabout.views.AboutView;
 
+import java.util.Objects;
+
 public class AboutActivity extends AppCompatActivity {
     private int theme;
     private AppUtils utils;
@@ -20,7 +22,7 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         utils = new AppUtils(this);
-        theme = Integer.valueOf(sharedPref.getString(Constants.PREF_THEME_VALUE, "1"));
+        theme = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_THEME_VALUE, "1")));
         utils.onActivityCreateSetTheme(this, theme);
         if (theme == 3) {
             utils.setActionBarTextColor(getSupportActionBar());

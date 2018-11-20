@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical"
+    tools:ignore="UselessParent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="?attr/card_color"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/imageViewModeSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="?attr/card_color"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+            <!-- Ringer -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.android.musicfx.SeekBarRotator
+                    android:id="@+id/SeekBarRotatorVoiceCall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <SeekBar
+                        android:id="@+id/SeekBarVoiceCall"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" />
+                </com.android.musicfx.SeekBarRotator>
+
+                <com.android.musicfx.SeekBarRotator
+                    android:id="@+id/SeekBarRotatorMedia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <SeekBar
+                        android:id="@+id/SeekBarMedia"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" />
+                </com.android.musicfx.SeekBarRotator>
+
+                <com.android.musicfx.SeekBarRotator
+                    android:id="@+id/SeekBarRotatorRinger"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <SeekBar
+                        android:id="@+id/SeekBarRinger"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" />
+                </com.android.musicfx.SeekBarRotator>
+
+                <com.android.musicfx.SeekBarRotator
+                    android:id="@+id/SeekBarRotatorNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <SeekBar
+                        android:id="@+id/SeekBarNotification"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" />
+                </com.android.musicfx.SeekBarRotator>
+
+                <com.android.musicfx.SeekBarRotator
+                    android:id="@+id/SeekBarRotatorAlarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <SeekBar
+                        android:id="@+id/SeekBarAlarm"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" />
+                </com.android.musicfx.SeekBarRotator>
+            </LinearLayout>
+            <!-- Ringer -->
+            <ImageView
+                android:id="@+id/ImageStreamShared"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/ImageSwitchStream"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:src="@drawable/ic_compare_arrows_24dp"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

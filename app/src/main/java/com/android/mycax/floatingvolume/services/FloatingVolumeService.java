@@ -41,6 +41,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private SharedPreferences sharedPref;
     private ImageView iconView;
     private ExpandedVolumeDialog expandedVolumeDialog;
+    private Animation fab_open_0_to_1;
 
     @Nullable
     @Override
@@ -56,7 +57,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         }
 
         runAsForeground();
-        Animation fab_open_0_to_1 = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
+        fab_open_0_to_1 = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         isUseLastPosition = sharedPref.getBoolean(Constants.PREF_SAVE_LAST_POSITION, false);
         expandedVolumeDialog = new ExpandedVolumeDialog(this);
@@ -66,7 +67,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         Objects.requireNonNull(windowManager).getDefaultDisplay().getMetrics(metrics);
         final LayoutInflater inflater = LayoutInflater.from(this);
         iconView = (ImageView) inflater.inflate(R.layout.floating_head, null, false);
-        iconView.setAlpha(Float.valueOf(sharedPref.getString(Constants.PREF_HEAD_OPACITY, "1f")));
+        iconView.setAlpha(Float.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_HEAD_OPACITY, "1f"))));
         iconView.startAnimation(fab_open_0_to_1);
         iconView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,8 +92,8 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
                 notificationIntent, 0);
 
         Notification.Builder notificationBuilder = new Notification.Builder(this)
-                .setSmallIcon(R.drawable.ic_volume_up__white_24dp)
-                .setContentText(getString(R.string.service_runnig))
+                .setSmallIcon(R.drawable.ic_volume_up_white_24dp)
+                .setContentTitle(getString(R.string.service_running_title))
                 .setContentIntent(pendingIntent);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -108,7 +109,7 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
     @TargetApi(Build.VERSION_CODES.O)
     private void createNotificationChannel() {
-        NotificationChannel channel = new NotificationChannel(Constants.CHANNEL_ID, getString(R.string.service_runnig), NotificationManager.IMPORTANCE_NONE);
+        NotificationChannel channel = new NotificationChannel(Constants.CHANNEL_ID, getString(R.string.service_channel_name), NotificationManager.IMPORTANCE_NONE);
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         assert notificationManager != null;
         notificationManager.createNotificationChannel(channel);
@@ -135,7 +136,10 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
             mFloatingViewManager.removeAllViewToWindow();
             mFloatingViewManager = null;
         }
-        expandedVolumeDialog.removeExpandedView();
+        if (expandedVolumeDialog != null) {
+            expandedVolumeDialog.removeExpandedView();
+            expandedVolumeDialog = null;
+        }
         super.onDestroy();
     }
 
@@ -167,5 +171,6 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     @Override
     public void notifyExpandedVolumeDialogClosed() {
         iconView.setVisibility(View.VISIBLE);
+        iconView.startAnimation(fab_open_0_to_1);
     }
 }

@@ -1,254 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
+    android:orientation="vertical"
     tools:ignore="UselessParent">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/expanded_card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="?attr/card_color"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="6dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
         app:contentPadding="10dp">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <!--   View while view is expanded   -->
-            <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/linearLayoutVoiceCall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp">
 
-                <TextView
-                    android:id="@+id/textViewVoiceCall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/voicecall_volume"
-                    android:textColor="?attr/colorAccent"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutVoiceCall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewVoiceCall">
-
-                    <ImageView
-                        android:id="@+id/ImageVoiceCall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_call_24dp"
-                        tools:ignore="ContentDescription" />
-
-                    <SeekBar
-                        android:id="@+id/SeekBarVoiceCall"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        tools:ignore="InefficientWeight" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/textViewMedia"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/media_volume"
-                    android:textColor="?attr/colorAccent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayoutVoiceCall" />
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutMedia"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewMedia">
-
-                    <ImageView
-                        android:id="@+id/ImageMedia"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_volume_up_24dp"
-                        tools:ignore="ContentDescription" />
-
-                    <SeekBar
-                        android:id="@+id/SeekBarMedia"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        tools:ignore="InefficientWeight" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/textViewRinger"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/ringer_volume"
-                    android:textColor="?attr/colorAccent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayoutMedia" />
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutRinger"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewRinger">
-
-                    <ImageView
-                        android:id="@+id/ImageRinger"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_ring_volume_24dp"
-                        tools:ignore="ContentDescription" />
-
-                    <SeekBar
-                        android:id="@+id/SeekBarRinger"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        tools:ignore="InefficientWeight" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/textViewNotification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/notification_volume"
-                    android:textColor="?attr/colorAccent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayoutRinger" />
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutNotification"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewNotification">
-
-                    <ImageView
-                        android:id="@+id/ImageNotification"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_notifications_24dp"
-                        tools:ignore="ContentDescription" />
-
-                    <SeekBar
-                        android:id="@+id/SeekBarNotification"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        tools:ignore="InefficientWeight" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/textViewAlarm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/alarm_volume"
-                    android:textColor="?attr/colorAccent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayoutNotification" />
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutAlarm"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewAlarm">
-
-                    <ImageView
-                        android:id="@+id/ImageAlarm"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_alarm_24dp"
-                        tools:ignore="ContentDescription" />
-
-                    <SeekBar
-                        android:id="@+id/SeekBarAlarm"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        tools:ignore="InefficientWeight" />
-                </LinearLayout>
-
-                <!--  ImageView to Close Expanded View  -->
                 <ImageView
-                    android:id="@+id/close_expanded_view"
+                    android:id="@+id/ImageVoiceCall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="50dp"
-                    android:src="@drawable/ic_close_24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/imageViewModeSwitch"
-                    app:layout_constraintTop_toTopOf="@+id/linearLayoutAlarm"
-                    tools:ignore="ContentDescription"
-                    tools:padding="4dp" />
+                    android:padding="4dp"
+                    android:src="@drawable/ic_call_24dp"
+                    tools:ignore="ContentDescription" />
+
+                <SeekBar
+                    android:id="@+id/SeekBarVoiceCall"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="8dp"
+                    tools:ignore="InefficientWeight" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutMedia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
 
                 <ImageView
-                    android:id="@+id/imageViewModeSwitch"
+                    android:id="@+id/ImageMedia"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="50dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/close_expanded_view"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/linearLayoutAlarm"
-                    tools:ignore="ContentDescription"
-                    tools:padding="4dp" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+                    android:padding="4dp"
+                    android:src="@drawable/ic_music_note_24dp"
+                    tools:ignore="ContentDescription" />
+
+                <SeekBar
+                    android:id="@+id/SeekBarMedia"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="8dp"
+                    tools:ignore="InefficientWeight" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutRinger"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/ImageRinger"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_ring_volume_24dp"
+                    tools:ignore="ContentDescription" />
+
+                <SeekBar
+                    android:id="@+id/SeekBarRinger"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="8dp"
+                    tools:ignore="InefficientWeight" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutNotification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/ImageNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_notifications_24dp"
+                    tools:ignore="ContentDescription" />
+
+                <SeekBar
+                    android:id="@+id/SeekBarNotification"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="8dp"
+                    tools:ignore="InefficientWeight" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutAlarm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/ImageAlarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_alarm_24dp"
+                    tools:ignore="ContentDescription" />
+
+                <SeekBar
+                    android:id="@+id/SeekBarAlarm"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="8dp"
+                    tools:ignore="InefficientWeight" />
+            </LinearLayout>
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
-</RelativeLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="?attr/card_color"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center"
+            android:orientation="vertical">
+
+            <mehdi.sakout.fancybuttons.FancyButton
+                android:id="@+id/imageViewModeSwitchFancy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                fancy:fb_defaultColor="@android:color/transparent"
+                fancy:fb_focusColor="@android:color/transparent"
+                fancy:fb_iconPosition="left"
+                fancy:fb_textColor="?attr/drawable_color" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

@@ -53,16 +53,20 @@
             android:key="disable_fixed_ui"
             android:summary="@string/pref_disable_fixed_ui_summary"
             android:title="@string/pref_disable_fixed_ui" />
+        <ListPreference
+            android:defaultValue="@string/dialog_position_default"
+            android:dialogTitle="@string/dialog_position_dtext"
+            android:entries="@array/dialog_fixed_position_entries"
+            android:entryValues="@array/dialog_fixed_position_values"
+            android:icon="@drawable/ic_view_column_24dp"
+            android:key="pref_dialog_postition"
+            android:summary="%s"
+            android:title="@string/dialog_position_title" />
         <SwitchPreference
             android:icon="@drawable/ic_bounce_24dp"
             android:key="enable_bounce_effect"
             android:summary="@string/pref_enable_bounce_effect_summary"
             android:title="@string/pref_enable_bounce_effect" />
-        <SwitchPreference
-            android:icon="@drawable/ic_call_24dp"
-            android:key="permanent_voice_call_bar"
-            android:summary="@string/pref_permanent_voice_call_bar_summary"
-            android:title="@string/pref_permanent_voice_call_bar_title" />
         <MultiSelectListPreference
             android:defaultValue="@array/show_bars_multipreference_values_default"
             android:entries="@array/show_bars_multipreference_entries"

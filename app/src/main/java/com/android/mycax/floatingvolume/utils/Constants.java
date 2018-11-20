@@ -15,8 +15,8 @@ public interface Constants {
     String PREF_ABOUT_ME = "pref_about_me";
     String PREF_OPENSOURCE = "pref_opensource";
     String PREF_HEAD_OPACITY = "pref_head_opacity";
-    String PREF_PERMANENT_VOICE_CALL_BAR = "permanent_voice_call_bar";
     String PREF_SETTINGS_START_ON_BOOT = "pref_settings_start_on_boot";
+    String PRED_DIALOG_POSITION = "pref_dialog_postition";
     /* Spectrum */
     String PREF_SPECTRUM_COLOR_PRIMARY = "pref_spectrum_color_primary";
     String PREF_SPECTRUM_COLOR_ACCENT = "pref_spectrum_color_accent";
@@ -47,4 +47,13 @@ public interface Constants {
     int THEME_LIGHT = 1;
     int THEME_DARK = 2;
     int THEME_CUSTOM = 3;
+    int STYLE_DEFAULT = 1;
+    int STYLE_SLIM = 2;
+    int STYLE_VERTICAL = 3;
+    int STYLE_P = 4;
+    int RINGER_STYLE_IMAGE = 1;
+    int RINGER_STYLE_FANCY = 2;
+    int DIALOG_POSITION_LEFT = 1;
+    int DIALOG_POSITION_CENTER = 2;
+    int DIALOG_POSITION_RIGHT = 3;
 }

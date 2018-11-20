@@ -1,6 +1,5 @@
 package com.android.mycax.floatingvolume.utils;
 
-import android.Manifest;
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -8,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
@@ -16,7 +14,6 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
-import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,17 +25,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.android.mycax.floatingvolume.R;
 import com.android.mycax.floatingvolume.audio.AudioVolumeObserver;
 import com.android.mycax.floatingvolume.interfaces.OnAudioVolumeChangedListener;
 import com.android.mycax.floatingvolume.interfaces.OnExpandedVolumeDialogClosed;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import androidx.core.content.ContextCompat;
+import mehdi.sakout.fancybuttons.FancyButton;
 
 import static android.content.Context.WINDOW_SERVICE;
 
@@ -46,23 +44,31 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
 
     private WindowManager mWindowManager;
     private View mFloatingWidgetView;
-    private ImageView change_ringer_mode, ImageToAnimate;
+    private ImageView change_ringer_mode, ImageToAnimate, ImageStreamShared;
+    private FancyButton change_ringer_mode_fancy;
     private AudioManager audioManager;
-    private AudioVolumeObserver mAudioVolumeObserverMedia, mAudioVolumeObserverVoiceCall, mAudioVolumeObserverRinger, mAudioVolumeObserverAlarm, mAudioVolumeObserverNotification;
-    private SeekBar mediaControl, ringerControl, alarmControl, voiceCallControl, notificationControl;
-    private BroadcastReceiver RingerModeReceiver, InCallModeReceiver;
-    private TelephonyManager telephonyManager;
-    private boolean isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled, isVoiceCallRecieverRegistered, isPermanentVoiceCallBarEnabled;
+    private AudioVolumeObserver mAudioVolumeObserverMedia;
+    private AudioVolumeObserver mAudioVolumeObserverVoiceCall;
+    private AudioVolumeObserver mAudioVolumeObserverRinger;
+    private AudioVolumeObserver mAudioVolumeObserverAlarm;
+    private AudioVolumeObserver mAudioVolumeObserverNotification;
+    private SeekBar mediaControl;
+    private SeekBar ringerControl;
+    private SeekBar alarmControl;
+    private SeekBar voiceCallControl;
+    private SeekBar notificationControl;
+    private boolean isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled;
     private int x_init_cord;
     private int y_init_cord;
     private int x_init_margin;
     private int y_init_margin;
-    private int style;
+    private int style, currentSeekbarVisible, seekbarCounter;
+    private List enabledSeekbarRotators;
     private final Point szWindow = new Point();
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPref;
     private Set<String> seekbarSelections;
-    private Animation fab_open_0_to_1, fab_close_1_to_0;
+    private Animation fab_open_0_to_1;
     private Context context;
     private OnExpandedVolumeDialogClosed onExpandedVolumeDialogClosed;
     private static int OVERLAY_TYPE;
@@ -96,19 +102,16 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
 
     public void expandView(LayoutInflater inflater, DisplayMetrics displayMetrics) {
         fab_open_0_to_1 = AnimationUtils.loadAnimation(context, R.anim.fab_open_0_to_1);
-        fab_close_1_to_0 = AnimationUtils.loadAnimation(context, R.anim.fab_close_1_to_0);
         AppUtils appUtils = new AppUtils(context);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         isUseLastPosition = sharedPref.getBoolean(Constants.PREF_SAVE_LAST_POSITION, false);
         mWindowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
         isDisableStaticUiEnabled = sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false);
         isBounceEnabled = sharedPref.getBoolean(Constants.PREF_ENABLE_BOUNCE, false);
         seekbarSelections = sharedPref.getStringSet(Constants.PREF_ITEMS_TO_SHOW, null);
-        isPermanentVoiceCallBarEnabled = sharedPref.getBoolean(Constants.PREF_PERMANENT_VOICE_CALL_BAR, false);
-        int theme = Integer.valueOf(sharedPref.getString(Constants.PREF_THEME_VALUE, "1"));
+        int theme = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_THEME_VALUE, "1")));
 
         switch (theme) {
             case Constants.THEME_LIGHT:
@@ -129,8 +132,6 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
         implementTouchListenerToFloatingWidgetView();
 
         implementVolumeFeatures();
-
-        mFloatingWidgetView.findViewById(R.id.close_expanded_view).setOnClickListener(this);
     }
 
     @SuppressLint("InflateParams")
@@ -157,174 +158,207 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
                 params.y = (height / 4);
             }
         } else {
-            params.gravity = Gravity.CENTER;
+            params.gravity = getDialogPosition();
             params.x = 0;
             params.y = 0;
         }
-        params.windowAnimations = android.R.style.Animation_Dialog;
+        params.windowAnimations = android.R.style.Animation_Translucent;
 
         mWindowManager.addView(mFloatingWidgetView, params);
     }
 
     private void implementVolumeFeatures() {
+
         mediaControl = mFloatingWidgetView.findViewById(R.id.SeekBarMedia);
         mAudioVolumeObserverMedia = new AudioVolumeObserver(context);
-        seekbarSetup(Constants.SEEKBAR_MEDIA, mediaControl, AudioManager.STREAM_MUSIC, mAudioVolumeObserverMedia, R.id.textViewMedia,
-                R.id.SeekBarMediaRotator, R.id.ImageMedia, R.id.linearLayoutMedia);
-
         ringerControl = mFloatingWidgetView.findViewById(R.id.SeekBarRinger);
         mAudioVolumeObserverRinger = new AudioVolumeObserver(context);
-        seekbarSetup(Constants.SEEKBAR_RINGER, ringerControl, AudioManager.STREAM_RING, mAudioVolumeObserverRinger, R.id.textViewRinger,
-                R.id.SeekBarRingerRotator, R.id.ImageRinger, R.id.linearLayoutRinger);
-
         alarmControl = mFloatingWidgetView.findViewById(R.id.SeekBarAlarm);
         mAudioVolumeObserverAlarm = new AudioVolumeObserver(context);
-        seekbarSetup(Constants.SEEKBAR_ALARM, alarmControl, AudioManager.STREAM_ALARM, mAudioVolumeObserverAlarm, R.id.textViewAlarm,
-                R.id.SeekBarAlarmRotator, R.id.ImageAlarm, R.id.linearLayoutAlarm);
-
         mAudioVolumeObserverVoiceCall = new AudioVolumeObserver(context);
         voiceCallControl = mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCall);
-        seekbarSetup(Constants.SEEKBAR_VOICE_CALL, voiceCallControl, AudioManager.STREAM_VOICE_CALL, mAudioVolumeObserverVoiceCall, R.id.textViewVoiceCall,
-                R.id.SeekBarVoiceCallRotator, R.id.ImageVoiceCall, R.id.linearLayoutVoiceCall);
-
         mAudioVolumeObserverNotification = new AudioVolumeObserver(context);
         notificationControl = mFloatingWidgetView.findViewById(R.id.SeekBarNotification);
-        seekbarSetup(Constants.SEEKBAR_NOTICIATION, notificationControl, AudioManager.STREAM_NOTIFICATION, mAudioVolumeObserverNotification, R.id.textViewNotification,
-                R.id.SeekBarNotificationRotator, R.id.ImageNotification, R.id.linearLayoutNotification);
 
-        change_ringer_mode = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitch);
+        seekbarData(mediaControl, AudioManager.STREAM_MUSIC, mAudioVolumeObserverMedia);
+        seekbarData(ringerControl, AudioManager.STREAM_RING, mAudioVolumeObserverRinger);
+        seekbarData(alarmControl, AudioManager.STREAM_ALARM, mAudioVolumeObserverAlarm);
+        seekbarData(voiceCallControl, AudioManager.STREAM_VOICE_CALL, mAudioVolumeObserverVoiceCall);
+        seekbarData(notificationControl, AudioManager.STREAM_NOTIFICATION, mAudioVolumeObserverNotification);
 
-        RingerModeReceiver = new BroadcastReceiver() {
+        if (style == Constants.STYLE_P) {
+            enabledSeekbarRotators = new ArrayList();
+            if (seekbarSelections.contains(Constants.SEEKBAR_MEDIA))
+                //noinspection unchecked
+                enabledSeekbarRotators.add(R.id.SeekBarRotatorMedia);
+            if (seekbarSelections.contains(Constants.SEEKBAR_RINGER))
+                //noinspection unchecked
+                enabledSeekbarRotators.add(R.id.SeekBarRotatorRinger);
+            if (seekbarSelections.contains(Constants.SEEKBAR_ALARM))
+                //noinspection unchecked
+                enabledSeekbarRotators.add(R.id.SeekBarRotatorAlarm);
+            if (seekbarSelections.contains(Constants.SEEKBAR_NOTICIATION))
+                //noinspection unchecked
+                enabledSeekbarRotators.add(R.id.SeekBarRotatorNotification);
+            if (seekbarSelections.contains(Constants.SEEKBAR_VOICE_CALL))
+                //noinspection unchecked
+                enabledSeekbarRotators.add(R.id.SeekBarRotatorVoiceCall);
+            if (seekbarSelections.isEmpty()) //noinspection unchecked
+                enabledSeekbarRotators.add(R.id.SeekBarRotatorMedia);
+            currentSeekbarVisible = (int) enabledSeekbarRotators.get(0);
+            ImageStreamShared = mFloatingWidgetView.findViewById(R.id.ImageStreamShared);
+            ImageStreamShared.setOnClickListener(this);
+            mFloatingWidgetView.findViewById(R.id.ImageSwitchStream).setOnClickListener(this);
+            seekbarPStyleVisibility(currentSeekbarVisible);
+
+            ringerModeReciverSetup(Constants.RINGER_STYLE_IMAGE);
+
+        } else {
+
+            seekbarNormalVisibility(Constants.SEEKBAR_ALARM, R.id.ImageAlarm, R.id.linearLayoutAlarm);
+            seekbarNormalVisibility(Constants.SEEKBAR_MEDIA, R.id.ImageMedia, R.id.linearLayoutMedia);
+            seekbarNormalVisibility(Constants.SEEKBAR_RINGER, R.id.ImageRinger, R.id.linearLayoutRinger);
+            seekbarNormalVisibility(Constants.SEEKBAR_VOICE_CALL, R.id.ImageVoiceCall, R.id.linearLayoutVoiceCall);
+            seekbarNormalVisibility(Constants.SEEKBAR_NOTICIATION, R.id.ImageNotification, R.id.linearLayoutNotification);
+            if (style == Constants.STYLE_SLIM) ringerModeReciverSetup(Constants.RINGER_STYLE_IMAGE);
+            else ringerModeReciverSetup(Constants.RINGER_STYLE_FANCY);
+        }
+    }
+
+    private void ringerModeReciverSetup(final int ringerModeChangeStyle) {
+        switch (ringerModeChangeStyle) {
+            case Constants.RINGER_STYLE_IMAGE:
+                change_ringer_mode = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitch);
+                break;
+            case Constants.RINGER_STYLE_FANCY:
+                change_ringer_mode_fancy = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitchFancy);
+                break;
+        }
+
+        BroadcastReceiver ringerModeReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                change_ringer_mode.setImageResource(getCurrentRingerModeDrawable());
-                change_ringer_mode.startAnimation(fab_open_0_to_1);
+                switch (ringerModeChangeStyle) {
+                    case Constants.RINGER_STYLE_IMAGE:
+                        change_ringer_mode.setImageResource(getCurrentRingerModeDrawable());
+                        change_ringer_mode.startAnimation(fab_open_0_to_1);
+                        break;
+                    case Constants.RINGER_STYLE_FANCY:
+                        change_ringer_mode_fancy.setIconResource(context.getDrawable(getCurrentRingerModeDrawable()));
+                        change_ringer_mode_fancy.setText(getCurrentRingerModeText());
+                        change_ringer_mode_fancy.startAnimation(fab_open_0_to_1);
+                        break;
+                }
             }
         };
         final IntentFilter filterRingerChanged = new IntentFilter(
                 AudioManager.RINGER_MODE_CHANGED_ACTION);
-        context.registerReceiver(RingerModeReceiver, filterRingerChanged);
-
-        InCallModeReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                assert telephonyManager != null;
-                TextView textViewVoiceCall = mFloatingWidgetView.findViewById(R.id.textViewVoiceCall);
-                if (seekbarSelections.contains(Constants.SEEKBAR_VOICE_CALL) && telephonyManager.getCallState() == TelephonyManager.CALL_STATE_OFFHOOK) {
-                    if (style == 3) {
-                        mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).setVisibility(View.VISIBLE);
-                        mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).startAnimation(fab_open_0_to_1);
-                        mFloatingWidgetView.findViewById(R.id.ImageVoiceCall).setVisibility(View.VISIBLE);
-                        mFloatingWidgetView.findViewById(R.id.ImageVoiceCall).startAnimation(fab_open_0_to_1);
-                    } else {
-                        mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.VISIBLE);
-                        mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).startAnimation(fab_open_0_to_1);
-                        textViewVoiceCall.setVisibility(View.VISIBLE);
-                        textViewVoiceCall.startAnimation(fab_open_0_to_1);
-                    }
-                } else {
-                    if (style == 3) {
-                        mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).setVisibility(View.GONE);
-                        mFloatingWidgetView.findViewById(R.id.SeekBarVoiceCallRotator).startAnimation(fab_close_1_to_0);
-                        mFloatingWidgetView.findViewById(R.id.ImageVoiceCall).setVisibility(View.GONE);
-                        mFloatingWidgetView.findViewById(R.id.ImageVoiceCall).startAnimation(fab_close_1_to_0);
-                    } else {
-                        mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).setVisibility(View.GONE);
-                        mFloatingWidgetView.findViewById(R.id.linearLayoutVoiceCall).startAnimation(fab_close_1_to_0);
-                        textViewVoiceCall.setVisibility(View.GONE);
-                        textViewVoiceCall.startAnimation(fab_close_1_to_0);
-                    }
-                }
-            }
-        };
-        final IntentFilter filterPhoneStateChanged = new IntentFilter(
-                TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED && !isPermanentVoiceCallBarEnabled) {
-            context.registerReceiver(InCallModeReceiver, filterPhoneStateChanged);
-            isVoiceCallRecieverRegistered = true;
-        } else isVoiceCallRecieverRegistered = false;
-
-        change_ringer_mode.setOnClickListener(this);
+        context.registerReceiver(ringerModeReceiver, filterRingerChanged);
+        switch (ringerModeChangeStyle) {
+            case Constants.RINGER_STYLE_IMAGE:
+                change_ringer_mode.setOnClickListener(this);
+                break;
+            case Constants.RINGER_STYLE_FANCY:
+                change_ringer_mode_fancy.setOnClickListener(this);
+                break;
+        }
     }
 
-    private void seekbarSetup(String enabled, SeekBar seekBar, int streamType, AudioVolumeObserver audioVolumeObserver,
-                              int textView, int rotator, int imageView, int linearLayout) {
+    private void seekbarData(SeekBar seekBar, int streamType, AudioVolumeObserver audioVolumeObserver) {
+        seekBar.setMax(Objects.requireNonNull(audioManager).getStreamMaxVolume(streamType));
+        seekBar.setProgress(audioManager.getStreamVolume(streamType));
+        seekBar.setOnSeekBarChangeListener(this);
+        audioVolumeObserver.register(streamType, this);
+    }
+
+    private void seekbarNormalVisibility(String enabled, int imageView, int linearLayout) {
         if (seekbarSelections.contains(enabled)) {
-            if (seekBar.getId() == R.id.SeekBarVoiceCall && (isPermanentVoiceCallBarEnabled || audioManager.getMode() == AudioManager.MODE_IN_CALL)) {
-                if (style == 3) {
-                    mFloatingWidgetView.findViewById(rotator).setVisibility(View.VISIBLE);
-                    mFloatingWidgetView.findViewById(imageView).setVisibility(View.VISIBLE);
-                } else {
-                    mFloatingWidgetView.findViewById(linearLayout).setVisibility(View.VISIBLE);
-                    mFloatingWidgetView.findViewById(textView).setVisibility(View.VISIBLE);
-                }
-                seekBar.setMax(Objects.requireNonNull(audioManager).getStreamMaxVolume(streamType));
-                seekBar.setProgress(audioManager.getStreamVolume(streamType));
-                seekBar.setOnSeekBarChangeListener(this);
-                audioVolumeObserver.register(streamType, this);
-                mFloatingWidgetView.findViewById(imageView).setOnClickListener(this);
-            } else {
-                seekBar.setMax(Objects.requireNonNull(audioManager).getStreamMaxVolume(streamType));
-                seekBar.setProgress(audioManager.getStreamVolume(streamType));
-                seekBar.setOnSeekBarChangeListener(this);
-                audioVolumeObserver.register(streamType, this);
-                mFloatingWidgetView.findViewById(imageView).setOnClickListener(this);
-            }
+            mFloatingWidgetView.findViewById(imageView).setOnClickListener(this);
         } else {
-            if (style == 3) {
-                mFloatingWidgetView.findViewById(rotator).setVisibility(View.GONE);
-                mFloatingWidgetView.findViewById(imageView).setVisibility(View.GONE);
-            } else {
-                mFloatingWidgetView.findViewById(textView).setVisibility(View.GONE);
-                mFloatingWidgetView.findViewById(linearLayout).setVisibility(View.GONE);
-            }
+            mFloatingWidgetView.findViewById(linearLayout).setVisibility(View.GONE);
         }
+    }
+
+    private void seekbarPStyleVisibility(int seekbarRotator) {
+        mFloatingWidgetView.findViewById(R.id.SeekBarRotatorAlarm).setVisibility(seekbarRotator == R.id.SeekBarRotatorAlarm ? View.VISIBLE : View.GONE);
+        mFloatingWidgetView.findViewById(R.id.SeekBarRotatorVoiceCall).setVisibility(seekbarRotator == R.id.SeekBarRotatorVoiceCall ? View.VISIBLE : View.GONE);
+        mFloatingWidgetView.findViewById(R.id.SeekBarRotatorRinger).setVisibility(seekbarRotator == R.id.SeekBarRotatorRinger ? View.VISIBLE : View.GONE);
+        mFloatingWidgetView.findViewById(R.id.SeekBarRotatorNotification).setVisibility(seekbarRotator == R.id.SeekBarRotatorNotification ? View.VISIBLE : View.GONE);
+        mFloatingWidgetView.findViewById(R.id.SeekBarRotatorMedia).setVisibility(seekbarRotator == R.id.SeekBarRotatorMedia ? View.VISIBLE : View.GONE);
+        ImageStreamShared.setImageResource(setSeekbarImage(seekbarRotator));
+        ImageStreamShared.startAnimation(fab_open_0_to_1);
+        ImageStreamShared.setOnClickListener(this);
+
+    }
+
+    private void nextStreamPStyle() {
+        setNextStreamCounter();
+        setNextStreamVisibility();
+    }
+
+    private void setNextStreamCounter() {
+        if (seekbarCounter < enabledSeekbarRotators.size() - 1 && seekbarCounter >= 0)
+            seekbarCounter++;
+        else seekbarCounter = 0;
+    }
+
+    private void setNextStreamVisibility() {
+        currentSeekbarVisible = (int) enabledSeekbarRotators.get(seekbarCounter);
+        seekbarPStyleVisibility(currentSeekbarVisible);
+        Animation fab_1_13 = AnimationUtils.loadAnimation(context, R.anim.fab_open_1_to_13);
+        Animation fab_13_1 = AnimationUtils.loadAnimation(context, R.anim.fab_close_13_to_1);
+        ImageView imageView = mFloatingWidgetView.findViewById(R.id.ImageSwitchStream);
+        imageView.startAnimation(fab_1_13);
+        imageView.startAnimation(fab_13_1);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar arg0) {
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.fab_close_13_to_1);
-        switch (arg0.getId()) {
-            case R.id.SeekBarMedia:
-                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageMedia);
-                break;
-            case R.id.SeekBarRinger:
-                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageRinger);
-                break;
-            case R.id.SeekBarAlarm:
-                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageAlarm);
-                break;
-            case R.id.SeekBarVoiceCall:
-                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageVoiceCall);
-                break;
-            case R.id.SeekBarNotification:
-                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageNotification);
-                break;
-        }
+        if (style != Constants.STYLE_P) {
+            switch (arg0.getId()) {
+                case R.id.SeekBarMedia:
+                    ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageMedia);
+                    break;
+                case R.id.SeekBarRinger:
+                    ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageRinger);
+                    break;
+                case R.id.SeekBarAlarm:
+                    ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageAlarm);
+                    break;
+                case R.id.SeekBarVoiceCall:
+                    ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageVoiceCall);
+                    break;
+                case R.id.SeekBarNotification:
+                    ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageNotification);
+                    break;
+            }
+        } else ImageToAnimate = ImageStreamShared;
         ImageToAnimate.startAnimation(animation);
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar arg0) {
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.fab_open_1_to_13);
-        switch (arg0.getId()) {
-            case R.id.SeekBarMedia:
-                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageMedia);
-                break;
-            case R.id.SeekBarRinger:
-                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageRinger);
-                break;
-            case R.id.SeekBarAlarm:
-                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageAlarm);
-                break;
-            case R.id.SeekBarVoiceCall:
-                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageVoiceCall);
-                break;
-            case R.id.SeekBarNotification:
-                ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageNotification);
-                break;
-        }
+        if (style != Constants.STYLE_P) {
+            switch (arg0.getId()) {
+                case R.id.SeekBarMedia:
+                    ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageMedia);
+                    break;
+                case R.id.SeekBarRinger:
+                    ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageRinger);
+                    break;
+                case R.id.SeekBarAlarm:
+                    ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageAlarm);
+                    break;
+                case R.id.SeekBarVoiceCall:
+                    ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageVoiceCall);
+                    break;
+                case R.id.SeekBarNotification:
+                    ImageToAnimate = mFloatingWidgetView.findViewById(R.id.ImageNotification);
+                    break;
+            }
+        } else ImageToAnimate = ImageStreamShared;
         ImageToAnimate.startAnimation(animation);
     }
 
@@ -345,20 +379,21 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
                 break;
             case R.id.SeekBarNotification:
                 audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, arg1, 0);
-                break;
         }
     }
 
-    private int getCurrentRingerModeDrawable() {
-        switch (audioManager.getRingerMode()) {
-            case AudioManager.RINGER_MODE_NORMAL:
-                return R.drawable.ic_volume_up_24dp;
-            case AudioManager.RINGER_MODE_VIBRATE:
-                return R.drawable.ic_vibration_24dp;
-            case AudioManager.RINGER_MODE_SILENT:
-                return R.drawable.ic_do_not_disturb_on_24dp;
-        }
-        return -1;
+    @Override
+    public void onAudioVolumeChanged(AudioVolumeObserver audioVolumeObserver) {
+        if (audioVolumeObserver.equals(mAudioVolumeObserverRinger))
+            ringerControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_RING));
+        else if (audioVolumeObserver.equals(mAudioVolumeObserverMedia))
+            mediaControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        else if (audioVolumeObserver.equals(mAudioVolumeObserverVoiceCall))
+            voiceCallControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
+        else if (audioVolumeObserver.equals(mAudioVolumeObserverAlarm))
+            alarmControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_ALARM));
+        else if (audioVolumeObserver.equals(mAudioVolumeObserverNotification))
+            notificationControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION));
     }
 
     private void setNewRingerMode() {
@@ -376,38 +411,27 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
         }
     }
 
-    private void closeExpandedView() {
-        removeExpandedView();
-        if (seekbarSelections.contains(Constants.SEEKBAR_MEDIA)) {
-            mAudioVolumeObserverMedia.unregister();
+    private void handleImageClick(int imageViewId, int streamType) {
+        if (audioManager.getStreamVolume(streamType) == 0) {
+            audioManager.setStreamVolume(streamType, 1, 0);
+        } else {
+            audioManager.setStreamVolume(streamType, 0, 0);
         }
-        if (seekbarSelections.contains(Constants.SEEKBAR_RINGER)) {
-            mAudioVolumeObserverRinger.unregister();
-        }
-        if (seekbarSelections.contains(Constants.SEEKBAR_ALARM)) {
-            mAudioVolumeObserverAlarm.unregister();
-        }
-        if (seekbarSelections.contains(Constants.SEEKBAR_VOICE_CALL)) {
-            mAudioVolumeObserverVoiceCall.unregister();
-        }
-        if (seekbarSelections.contains(Constants.SEEKBAR_NOTICIATION)) {
-            mAudioVolumeObserverNotification.unregister();
-        }
-        context.unregisterReceiver(RingerModeReceiver);
-        if (isVoiceCallRecieverRegistered) {
-            context.unregisterReceiver(InCallModeReceiver);
-            isVoiceCallRecieverRegistered = false;
-        }
-        onExpandedVolumeDialogClosed.notifyExpandedVolumeDialogClosed();
+        Animation fab_1_13 = AnimationUtils.loadAnimation(context, R.anim.fab_open_1_to_13);
+        Animation fab_13_1 = AnimationUtils.loadAnimation(context, R.anim.fab_close_13_to_1);
+        ImageView imageView = mFloatingWidgetView.findViewById(imageViewId);
+        imageView.startAnimation(fab_1_13);
+        imageView.startAnimation(fab_13_1);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.close_expanded_view:
-                closeExpandedView();
+            case R.id.ImageSwitchStream:
+                nextStreamPStyle();
                 break;
             case R.id.imageViewModeSwitch:
+            case R.id.imageViewModeSwitchFancy:
                 setNewRingerMode();
                 break;
             case R.id.ImageRinger:
@@ -425,20 +449,10 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
             case R.id.ImageNotification:
                 handleImageClick(R.id.ImageNotification, AudioManager.STREAM_NOTIFICATION);
                 break;
+            case R.id.ImageStreamShared:
+                handleImageClick(R.id.ImageStreamShared, getDisplaySeekbarStream(currentSeekbarVisible));
+                break;
         }
-    }
-
-    private void handleImageClick(int imageViewId, int streamType) {
-        if (audioManager.getStreamVolume(streamType) == 0) {
-            audioManager.setStreamVolume(streamType, 1, 0);
-        } else {
-            audioManager.setStreamVolume(streamType, 0, 0);
-        }
-        Animation fab_1_13 = AnimationUtils.loadAnimation(context, R.anim.fab_open_1_to_13);
-        Animation fab_13_1 = AnimationUtils.loadAnimation(context, R.anim.fab_close_13_to_1);
-        ImageView imageView = mFloatingWidgetView.findViewById(imageViewId);
-        imageView.startAnimation(fab_1_13);
-        imageView.startAnimation(fab_13_1);
     }
 
     public void removeExpandedView() {
@@ -448,18 +462,15 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
         }
     }
 
-    @Override
-    public void onAudioVolumeChanged(AudioVolumeObserver audioVolumeObserver) {
-        if (audioVolumeObserver.equals(mAudioVolumeObserverRinger))
-            ringerControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_RING));
-        else if (audioVolumeObserver.equals(mAudioVolumeObserverMedia))
-            mediaControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-        else if (audioVolumeObserver.equals(mAudioVolumeObserverVoiceCall))
-            voiceCallControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
-        else if (audioVolumeObserver.equals(mAudioVolumeObserverAlarm))
-            alarmControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_ALARM));
-        else if (audioVolumeObserver.equals(mAudioVolumeObserverNotification))
-            notificationControl.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION));
+    private void closeExpandedView() {
+        removeExpandedView();
+        mAudioVolumeObserverMedia.unregister();
+        mAudioVolumeObserverRinger.unregister();
+        mAudioVolumeObserverAlarm.unregister();
+        mAudioVolumeObserverVoiceCall.unregister();
+        mAudioVolumeObserverNotification.unregister();
+        mAudioVolumeObserverVoiceCall.unregister();
+        onExpandedVolumeDialogClosed.notifyExpandedVolumeDialogClosed();
     }
 
     private void implementTouchListenerToFloatingWidgetView() {
@@ -615,16 +626,89 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
         mWindowManager.getDefaultDisplay().getSize(szWindow);
     }
 
+    /* helper functions */
+
     private int getDialogLayout() {
-        style = Integer.valueOf(sharedPref.getString(Constants.PREF_DIALOG_STYLE, "1"));
+        style = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_DIALOG_STYLE, "1")));
         switch (style) {
-            case 1:
+            case Constants.STYLE_DEFAULT:
                 return R.layout.floating_layout;
-            case 2:
+            case Constants.STYLE_SLIM:
                 return R.layout.floating_layout_slim;
-            case 3:
+            case Constants.STYLE_VERTICAL:
                 return R.layout.floating_layout_vertical;
+            case Constants.STYLE_P:
+                return R.layout.floating_layout_pstyle;
         }
         return R.layout.floating_layout;
+    }
+
+    private int getDialogPosition() {
+        int dialogPosition = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PRED_DIALOG_POSITION, "2")));
+        switch (dialogPosition) {
+            case Constants.DIALOG_POSITION_LEFT:
+                return Gravity.CENTER | Gravity.START;
+            case Constants.DIALOG_POSITION_CENTER:
+                return Gravity.CENTER;
+            case Constants.DIALOG_POSITION_RIGHT:
+                return Gravity.CENTER | Gravity.END;
+        }
+        return Gravity.CENTER;
+    }
+
+    private int getDisplaySeekbarStream(int seekbarRotator) {
+        switch (seekbarRotator) {
+            case R.id.SeekBarRotatorRinger:
+                return AudioManager.STREAM_RING;
+            case R.id.SeekBarRotatorAlarm:
+                return AudioManager.STREAM_ALARM;
+            case R.id.SeekBarRotatorNotification:
+                return AudioManager.STREAM_NOTIFICATION;
+            case R.id.SeekBarRotatorVoiceCall:
+                return AudioManager.STREAM_VOICE_CALL;
+            case R.id.SeekBarRotatorMedia:
+                return AudioManager.STREAM_MUSIC;
+        }
+        return -1;
+    }
+
+    private String getCurrentRingerModeText() {
+        switch (audioManager.getRingerMode()) {
+            case AudioManager.RINGER_MODE_NORMAL:
+                return context.getApplicationContext().getResources().getString(R.string.mode_ring);
+            case AudioManager.RINGER_MODE_VIBRATE:
+                return context.getApplicationContext().getResources().getString(R.string.mode_vibrate);
+            case AudioManager.RINGER_MODE_SILENT:
+                return context.getApplicationContext().getResources().getString(R.string.mode_silent);
+        }
+        return "Error";
+    }
+
+    private int getCurrentRingerModeDrawable() {
+        switch (audioManager.getRingerMode()) {
+            case AudioManager.RINGER_MODE_NORMAL:
+                return R.drawable.ic_volume_up_24dp;
+            case AudioManager.RINGER_MODE_VIBRATE:
+                return R.drawable.ic_vibration_24dp;
+            case AudioManager.RINGER_MODE_SILENT:
+                return R.drawable.ic_do_not_disturb_on_24dp;
+        }
+        return -1;
+    }
+
+    private int setSeekbarImage(int seekbarRotator) {
+        switch (seekbarRotator) {
+            case R.id.SeekBarRotatorRinger:
+                return R.drawable.ic_ring_volume_24dp;
+            case R.id.SeekBarRotatorAlarm:
+                return R.drawable.ic_alarm_24dp;
+            case R.id.SeekBarRotatorNotification:
+                return R.drawable.ic_notifications_24dp;
+            case R.id.SeekBarRotatorVoiceCall:
+                return R.drawable.ic_call_24dp;
+            case R.id.SeekBarRotatorMedia:
+                return R.drawable.ic_music_note_24dp;
+        }
+        return -1;
     }
 }

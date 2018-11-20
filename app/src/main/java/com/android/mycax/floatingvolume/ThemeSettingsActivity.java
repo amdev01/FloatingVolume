@@ -10,6 +10,8 @@ import com.android.mycax.floatingvolume.utils.AppUtils;
 import com.android.mycax.floatingvolume.utils.Constants;
 import com.thebluealliance.spectrum.SpectrumPreference;
 
+import java.util.Objects;
+
 import mehdi.sakout.fancybuttons.FancyButton;
 
 @SuppressWarnings("deprecation")
@@ -21,7 +23,7 @@ public class ThemeSettingsActivity extends AppCompatPreferenceActivity implement
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         utils = new AppUtils(this);
-        int theme = Integer.valueOf(sharedPref.getString(Constants.PREF_THEME_VALUE, "1"));
+        int theme = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_THEME_VALUE, "1")));
         utils.onActivityCreateSetTheme(this, theme);
         if (theme == 3) {
             utils.setActionBarTextColor(getSupportActionBar());

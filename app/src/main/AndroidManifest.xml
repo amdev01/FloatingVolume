@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -36,7 +37,7 @@
             android:name=".services.FloatingTile"
             android:enabled="true"
             android:exported="true"
-            android:icon="@drawable/ic_volume_up__white_24dp"
+            android:icon="@drawable/ic_volume_up_white_24dp"
             android:label="Floating Volume"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>

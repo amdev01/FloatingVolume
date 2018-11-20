@@ -8,5 +8,6 @@
         <ignore path="src/main/res/mipmap-xhdpi/ic_launcher.png" />
         <ignore path="src/main/res/mipmap-xhdpi/ic_launcher.png" />
         <ignore path="src/main/res/mipmap-xxhdpi/ic_launcher.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/ic_launcher.png" />
     </issue>
 </lint>
