@@ -1,6 +1,8 @@
 package com.android.mycax.floatingvolume.utils;
 
 import android.animation.LayoutTransition;
+import android.animation.TimeInterpolator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
@@ -52,12 +55,13 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     private AudioVolumeObserver mAudioVolumeObserverRinger;
     private AudioVolumeObserver mAudioVolumeObserverAlarm;
     private AudioVolumeObserver mAudioVolumeObserverNotification;
+    private BroadcastReceiver ringerModeReceiver;
     private SeekBar mediaControl;
     private SeekBar ringerControl;
     private SeekBar alarmControl;
     private SeekBar voiceCallControl;
     private SeekBar notificationControl;
-    private boolean isDisableStaticUiEnabled, isUseLastPosition, isBounceEnabled;
+    private boolean isDisableStaticUiEnabled, isUseLastPosition, isExpanded;
     private int x_init_cord;
     private int y_init_cord;
     private int x_init_margin;
@@ -71,6 +75,7 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     private Animation fab_open_0_to_1;
     private Context context;
     private OnExpandedVolumeDialogClosed onExpandedVolumeDialogClosed;
+    private TimeInterpolator mMoveEdgeInterpolator;
     private static int OVERLAY_TYPE;
 
     static {
@@ -102,6 +107,7 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
 
     public void expandView(LayoutInflater inflater, DisplayMetrics displayMetrics) {
         fab_open_0_to_1 = AnimationUtils.loadAnimation(context, R.anim.fab_open_0_to_1);
+        mMoveEdgeInterpolator = new OvershootInterpolator(Constants.MOVE_TO_EDGE_OVERSHOOT_TENSION);
         AppUtils appUtils = new AppUtils(context);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         isUseLastPosition = sharedPref.getBoolean(Constants.PREF_SAVE_LAST_POSITION, false);
@@ -109,7 +115,6 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         isDisableStaticUiEnabled = sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false);
-        isBounceEnabled = sharedPref.getBoolean(Constants.PREF_ENABLE_BOUNCE, false);
         seekbarSelections = sharedPref.getStringSet(Constants.PREF_ITEMS_TO_SHOW, null);
         int theme = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_THEME_VALUE, "1")));
 
@@ -132,6 +137,8 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
         implementTouchListenerToFloatingWidgetView();
 
         implementVolumeFeatures();
+
+        isExpanded = true;
     }
 
     @SuppressLint("InflateParams")
@@ -235,7 +242,7 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
                 break;
         }
 
-        BroadcastReceiver ringerModeReceiver = new BroadcastReceiver() {
+        ringerModeReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 switch (ringerModeChangeStyle) {
@@ -463,7 +470,9 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     }
 
     private void closeExpandedView() {
+        isExpanded = false;
         removeExpandedView();
+        context.unregisterReceiver(ringerModeReceiver);
         mAudioVolumeObserverMedia.unregister();
         mAudioVolumeObserverRinger.unregister();
         mAudioVolumeObserverAlarm.unregister();
@@ -544,63 +553,32 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     }
 
     private void resetPosition(int x_cord_now) {
-        if (x_cord_now <= szWindow.x / 2) moveToLeft(x_cord_now);
-        else moveToRight(x_cord_now);
+        if (x_cord_now <= szWindow.x / 2) moveToEdge(x_cord_now, 0);
+        else moveToEdge(x_cord_now, szWindow.x - mFloatingWidgetView.getWidth());
     }
 
-    private void moveToLeft(final int current_x_cord) {
-        new CountDownTimer(500, 5) {
-            final WindowManager.LayoutParams mParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
+    private void moveToEdge(int currentX, int goalPositionX) {
 
-            public void onTick(long t) {
-                long step = (500 - t) / 5;
-
-                mParams.x = 0 - (int) (current_x_cord * current_x_cord * step);
-
-                if (isBounceEnabled)
-                    mParams.x = 0 - (int) (double) bounceValue(step, current_x_cord);
-
-                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
+        final WindowManager.LayoutParams mParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
+        final ValueAnimator mMoveEdgeAnimator = ValueAnimator.ofInt(currentX, goalPositionX);
+        mMoveEdgeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if (isExpanded) {
+                    mParams.x = (Integer) animation.getAnimatedValue();
+                    mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
+                } else {
+                    mMoveEdgeAnimator.cancel();
+                }
             }
-
-            public void onFinish() {
-                mParams.x = 0;
-
-                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
-            }
-        }.start();
-    }
-
-    private void moveToRight(final int current_x_cord) {
-
-        new CountDownTimer(500, 5) {
-            final WindowManager.LayoutParams mParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
-
-            public void onTick(long t) {
-                long step = (500 - t) / 5;
-
-                mParams.x = (int) (szWindow.x + (current_x_cord * current_x_cord * step) - mFloatingWidgetView.getWidth());
-
-                if (isBounceEnabled)
-                    mParams.x = szWindow.x + (int) (double) bounceValue(step, current_x_cord) - mFloatingWidgetView.getWidth();
-
-                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
-            }
-
-            public void onFinish() {
-                mParams.x = szWindow.x - mFloatingWidgetView.getWidth();
-
-                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
-            }
-        }.start();
+        });
+        mMoveEdgeAnimator.setDuration(Constants.MOVE_TO_EDGE_DURATION);
+        mMoveEdgeAnimator.setInterpolator(mMoveEdgeInterpolator);
+        mMoveEdgeAnimator.start();
     }
 
     private int getStatusBarHeight() {
         return (int) Math.ceil(25 * context.getApplicationContext().getResources().getDisplayMetrics().density);
-    }
-
-    private double bounceValue(long step, long scale) {
-        return scale * Math.exp(-0.055 * step) * Math.cos(0.08 * step);
     }
 
     public void onConfigurationChanged(Configuration newConfig) {

@@ -9,7 +9,6 @@ public interface Constants {
     String PREF_CUSTOM_THEME = "custom_theme_pref";
     String PREF_SAVE_LAST_POSITION = "settings_save_last_position";
     String PREF_DIALOG_STYLE = "pref_dialog_style";
-    String PREF_ENABLE_BOUNCE = "enable_bounce_effect";
     String PREF_DISABLE_FIXED_UI = "disable_fixed_ui";
     String PREF_ITEMS_TO_SHOW = "items_to_show_in_dialog_pref";
     String PREF_ABOUT_ME = "pref_about_me";
@@ -56,4 +55,6 @@ public interface Constants {
     int DIALOG_POSITION_LEFT = 1;
     int DIALOG_POSITION_CENTER = 2;
     int DIALOG_POSITION_RIGHT = 3;
+    long MOVE_TO_EDGE_DURATION = 500L;
+    float MOVE_TO_EDGE_OVERSHOOT_TENSION = 1.25f;
 }

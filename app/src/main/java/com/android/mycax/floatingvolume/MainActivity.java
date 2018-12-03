@@ -39,7 +39,6 @@ import mehdi.sakout.fancybuttons.FancyButton;
 public class MainActivity extends AppCompatPreferenceActivity implements SwitchPreference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, FancyButton.OnClickListener {
     private FancyButton FloatingServiceStart;
     private FancyButton FloatingServiceStop;
-    private SwitchPreference bounceEffect;
     private ListPreference dialogPosition;
     private AppUtils utils;
     private NotificationManager notificationManager;
@@ -83,10 +82,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         ListPreference headOpacityPreference = (ListPreference) findPreference(Constants.PREF_HEAD_OPACITY);
         headOpacityPreference.setOnPreferenceChangeListener(this);
         dialogPosition = (ListPreference) findPreference(Constants.PRED_DIALOG_POSITION);
-        bounceEffect = (SwitchPreference) findPreference(Constants.PREF_ENABLE_BOUNCE);
-        if (!sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false)) {
-            bounceEffect.setEnabled(false);
-        } else dialogPosition.setEnabled(false);
+        if (sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false)) dialogPosition.setEnabled(false);
         SwitchPreference disableFixedUI = (SwitchPreference) findPreference(Constants.PREF_DISABLE_FIXED_UI);
         disableFixedUI.setOnPreferenceChangeListener(this);
         Preference aboutPreference = findPreference(Constants.PREF_ABOUT_ME);
@@ -104,7 +100,6 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
     public boolean onPreferenceChange(Preference preference, Object object) {
         switch (preference.getKey()) {
             case Constants.PREF_DISABLE_FIXED_UI:
-                bounceEffect.setEnabled(!sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false));
                 dialogPosition.setEnabled(sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false));
                 break;
             case Constants.PREF_THEME_VALUE:

@@ -132,13 +132,13 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
 
     @Override
     public void onDestroy() {
-        if (mFloatingViewManager != null) {
-            mFloatingViewManager.removeAllViewToWindow();
-            mFloatingViewManager = null;
-        }
         if (expandedVolumeDialog != null) {
             expandedVolumeDialog.removeExpandedView();
             expandedVolumeDialog = null;
+        }
+        if (mFloatingViewManager != null) {
+            mFloatingViewManager.removeAllViewToWindow();
+            mFloatingViewManager = null;
         }
         super.onDestroy();
     }
