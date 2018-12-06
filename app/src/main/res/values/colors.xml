@@ -35,4 +35,6 @@
     <color name="blue_grey">#607D8B</color>
     <color name="blue_grey_900">#263238</color>
     <color name="black">#000000</color>
+    <color name="lightGreySeekbar">#eeeeee</color>
+    <color name="darkGreySeekbar">#424242</color>
 </resources>

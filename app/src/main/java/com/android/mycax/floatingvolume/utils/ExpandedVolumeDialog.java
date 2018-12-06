@@ -14,7 +14,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -121,14 +120,17 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
         switch (theme) {
             case Constants.THEME_LIGHT:
                 context.getTheme().applyStyle(R.style.AppTheme, true);
+                context.getTheme().applyStyle(R.style.SeekbarTheme_LightGreySeekbar, true);
                 break;
             case Constants.THEME_DARK:
                 context.getTheme().applyStyle(R.style.AppTheme_Dark, true);
+                context.getTheme().applyStyle(R.style.SeekbarTheme_DarkGreySeekbar, true);
                 break;
             case Constants.THEME_CUSTOM:
                 context.getTheme().applyStyle(appUtils.getDrawableColor(), true);
                 context.getTheme().applyStyle(appUtils.getAccentColor(), true);
                 context.getTheme().applyStyle(appUtils.getDialogColor(), true);
+                context.getTheme().applyStyle(appUtils.getSeekbarTintColor(), true);
                 break;
 
         }

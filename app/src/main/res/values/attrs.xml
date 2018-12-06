@@ -6,5 +6,6 @@
         <attr name="button_drawable_text_color" format="color" />
         <attr name="dialog_accent_color" format="color" />
         <attr name="alert_dialog_text_color" format="color" />
+        <attr name="seekbar_background_tint" format="color" />
     </declare-styleable>
 </resources>

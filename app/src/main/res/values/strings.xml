@@ -12,8 +12,6 @@
     <string name="settings_summary_save_position">Place volume control dialog in last saved position</string>
     <string name="pref_disable_fixed_ui">Enable movable volume dialog</string>
     <string name="pref_disable_fixed_ui_summary">Allow moving volume dialog anywhere on the screen</string>
-    <string name="pref_enable_bounce_effect">Enable window bounce effect</string>
-    <string name="pref_enable_bounce_effect_summary">Volume control dialog will bounce off the edge when dropped</string>
     <string name="pref_opensource_libs">Open source</string>
     <string name="pref_opensources_libs_summary">Libraries used in this project</string>
     <string name="pref_head_opacity_title">Floating icon opacity</string>

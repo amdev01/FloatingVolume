@@ -29,6 +29,7 @@
                 android:id="@+id/linearLayoutVoiceCall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:padding="8dp">
 
                 <ImageView
@@ -45,6 +46,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="8dp"
+                    android:progressDrawable="@drawable/seekbar_drawable"
+                    android:splitTrack="false"
+                    android:thumb="@drawable/seekbar_thumb"
                     tools:ignore="InefficientWeight" />
             </LinearLayout>
 
@@ -52,6 +56,7 @@
                 android:id="@+id/linearLayoutMedia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:padding="8dp">
 
                 <ImageView
@@ -64,6 +69,9 @@
 
                 <SeekBar
                     android:id="@+id/SeekBarMedia"
+                    android:progressDrawable="@drawable/seekbar_drawable"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:splitTrack="false"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -75,6 +83,7 @@
                 android:id="@+id/linearLayoutRinger"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:padding="8dp">
 
                 <ImageView
@@ -87,6 +96,9 @@
 
                 <SeekBar
                     android:id="@+id/SeekBarRinger"
+                    android:progressDrawable="@drawable/seekbar_drawable"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:splitTrack="false"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -98,6 +110,7 @@
                 android:id="@+id/linearLayoutNotification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:padding="8dp">
 
                 <ImageView
@@ -110,6 +123,9 @@
 
                 <SeekBar
                     android:id="@+id/SeekBarNotification"
+                    android:progressDrawable="@drawable/seekbar_drawable"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:splitTrack="false"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -121,6 +137,7 @@
                 android:id="@+id/linearLayoutAlarm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:padding="8dp">
 
                 <ImageView
@@ -133,6 +150,9 @@
 
                 <SeekBar
                     android:id="@+id/SeekBarAlarm"
+                    android:progressDrawable="@drawable/seekbar_drawable"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:splitTrack="false"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

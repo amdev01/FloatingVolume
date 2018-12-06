@@ -48,7 +48,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal">
 
                 <com.android.musicfx.SeekBarRotator
                     android:id="@+id/SeekBarRotatorVoiceCall"
@@ -58,6 +59,9 @@
 
                     <SeekBar
                         android:id="@+id/SeekBarVoiceCall"
+                        android:progressDrawable="@drawable/seekbar_drawable"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:splitTrack="false"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -72,6 +76,9 @@
 
                     <SeekBar
                         android:id="@+id/SeekBarMedia"
+                        android:progressDrawable="@drawable/seekbar_drawable"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:splitTrack="false"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -86,6 +93,9 @@
 
                     <SeekBar
                         android:id="@+id/SeekBarRinger"
+                        android:progressDrawable="@drawable/seekbar_drawable"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:splitTrack="false"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -100,6 +110,9 @@
 
                     <SeekBar
                         android:id="@+id/SeekBarNotification"
+                        android:progressDrawable="@drawable/seekbar_drawable"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:splitTrack="false"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -114,6 +127,9 @@
 
                     <SeekBar
                         android:id="@+id/SeekBarAlarm"
+                        android:progressDrawable="@drawable/seekbar_drawable"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:splitTrack="false"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

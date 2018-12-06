@@ -842,6 +842,16 @@
         <item name="card_color">@color/black</item>
     </style>
 
+    <!-- Seekbar theme -->
+    <style name="SeekbarTheme" />
+
+    <style name="SeekbarTheme.LightGreySeekbar">
+        <item name="seekbar_background_tint">@color/lightGreySeekbar</item>
+    </style>
+
+    <style name="SeekbarTheme.DarkGreySeekbar">
+        <item name="seekbar_background_tint">@color/darkGreySeekbar</item>
+    </style>
 
     <!-- Splash screen -->
     <style name="AppTheme.Launcher">

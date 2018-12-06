@@ -43,7 +43,9 @@ public class AppUtils {
     public void manageService(boolean state) {
         Intent intent = new Intent(context, FloatingVolumeService.class);
         if (state) {
-            context.startService(intent);
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                context.startService(intent);
+            } else context.startForegroundService(intent);
         } else context.stopService(intent);
     }
 
@@ -74,6 +76,7 @@ public class AppUtils {
                 activity.getTheme().applyStyle(setTextColor(sharedPref.getInt(Constants.PREF_COLOR_ACCENT, -1499549),
                         R.style.ButtonTextColor_Black, R.style.ButtonTextColor_White), true); /* Button text colors */
                 activity.getWindow().setStatusBarColor(sharedPref.getInt(Constants.PREF_COLOR_PRIMARY, -12627531));
+                activity.getTheme().applyStyle(getSeekbarTintColor(), true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) setStatusBar(activity);
                 break;
         }
@@ -101,6 +104,11 @@ public class AppUtils {
                 getColorInt(R.color.black), getColorInt(R.color.white))),
                 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         actionBar.setTitle(text);
+    }
+
+    public int getSeekbarTintColor() {
+        return setTextColor(sharedPref.getInt(Constants.PREF_COLOR_DIALOG, -1),
+                R.style.SeekbarTheme_DarkGreySeekbar, R.style.SeekbarTheme_LightGreySeekbar);
     }
 
     private int getPrimaryColor() {

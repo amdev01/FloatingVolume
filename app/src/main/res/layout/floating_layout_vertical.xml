@@ -30,6 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center"
+                android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -40,6 +41,9 @@
 
                     <SeekBar
                         android:id="@+id/SeekBarVoiceCall"
+                        android:progressDrawable="@drawable/seekbar_drawable"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:splitTrack="false"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -61,6 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center"
+                android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -71,6 +76,9 @@
 
                     <SeekBar
                         android:id="@+id/SeekBarMedia"
+                        android:progressDrawable="@drawable/seekbar_drawable"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:splitTrack="false"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -93,6 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center"
+                android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -107,6 +116,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="8dp"
+                        android:progressDrawable="@drawable/seekbar_drawable"
+                        android:splitTrack="false"
+                        android:thumb="@drawable/seekbar_thumb"
                         tools:ignore="InefficientWeight" />
                 </com.android.musicfx.SeekBarRotator>
 
@@ -124,6 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center"
+                android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -134,6 +147,9 @@
 
                     <SeekBar
                         android:id="@+id/SeekBarNotification"
+                        android:progressDrawable="@drawable/seekbar_drawable"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:splitTrack="false"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -155,6 +171,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center"
+                android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -165,6 +182,9 @@
 
                     <SeekBar
                         android:id="@+id/SeekBarAlarm"
+                        android:progressDrawable="@drawable/seekbar_drawable"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:splitTrack="false"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
