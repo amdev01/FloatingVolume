@@ -1,12 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="url_xdalabs_link">https://labs.xda-developers.com/store/app/com.android.mycax.floatingvolume</string>
-    <string name="name_fb_ig">mycax6</string>
-    <string name="name_twitter">Adam_Myczkowski</string>
-    <string name="name_googleplus">112043897899708921734</string>
-    <string name="name_youtube">UCxQZUuxF0N7Aj0SNlLcEpgw</string>
-    <string name="name_email">mycaxd511@gmail.com</string>
-    <string name="name_github">MyczkowskiAdam</string>
-    <string name="url_fv_website">https://myczkowskiadam.github.io/FloatingVolume/</string>
-    <string name="url_fv_repo">https://github.com/MyczkowskiAdam/FloatingVolume</string>
-</resources>
+<resources></resources>

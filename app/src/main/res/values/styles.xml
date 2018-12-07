@@ -853,6 +853,102 @@
         <item name="seekbar_background_tint">@color/darkGreySeekbar</item>
     </style>
 
+
+    <!-- Custom alert dialog themes -->
+    <style name="AboutCardBackground" tools:keep="@style/AboutCardBackground" />
+
+    <style name="AboutCardBackground.White">
+        <item name="aboutCardBackground">@color/white</item>
+    </style>
+
+    <style name="AboutCardBackground.Red">
+        <item name="aboutCardBackground">@color/red</item>
+    </style>
+
+    <style name="AboutCardBackground.Pink">
+        <item name="aboutCardBackground">@color/pink</item>
+    </style>
+
+    <style name="AboutCardBackground.Purple">
+        <item name="aboutCardBackground">@color/purple</item>
+    </style>
+
+    <style name="AboutCardBackground.Deep_Purple">
+        <item name="aboutCardBackground">@color/deep_purple</item>
+    </style>
+
+    <style name="AboutCardBackground.Indigo">
+        <item name="aboutCardBackground">@color/indigo</item>
+    </style>
+
+    <style name="AboutCardBackground.Blue">
+        <item name="aboutCardBackground">@color/blue</item>
+    </style>
+
+    <style name="AboutCardBackground.Light_Blue">
+        <item name="aboutCardBackground">@color/light_blue</item>
+    </style>
+
+    <style name="AboutCardBackground.Cyan">
+        <item name="aboutCardBackground">@color/cyan</item>
+    </style>
+
+    <style name="AboutCardBackground.Teal">
+        <item name="aboutCardBackground">@color/teal</item>
+    </style>
+
+    <style name="AboutCardBackground.Green">
+        <item name="aboutCardBackground">@color/green</item>
+    </style>
+
+    <style name="AboutCardBackground.Light_Green">
+        <item name="aboutCardBackground">@color/light_green</item>
+    </style>
+
+    <style name="AboutCardBackground.Lime">
+        <item name="aboutCardBackground">@color/lime</item>
+    </style>
+
+    <style name="AboutCardBackground.Yellow">
+        <item name="aboutCardBackground">@color/yellow</item>
+    </style>
+
+    <style name="AboutCardBackground.Amber">
+        <item name="aboutCardBackground">@color/amber</item>
+    </style>
+
+    <style name="AboutCardBackground.Orange">
+        <item name="aboutCardBackground">@color/orange</item>
+    </style>
+
+    <style name="AboutCardBackground.Deep_Orange">
+        <item name="aboutCardBackground">@color/deep_orange</item>
+    </style>
+
+    <style name="AboutCardBackground.Brown">
+        <item name="aboutCardBackground">@color/brown</item>
+    </style>
+
+    <style name="AboutCardBackground.Grey">
+        <item name="aboutCardBackground">@color/grey</item>
+    </style>
+
+    <style name="AboutCardBackground.Grey_900">
+        <item name="aboutCardBackground">@color/grey_900</item>
+    </style>
+
+    <style name="AboutCardBackground.Blue_Grey">
+        <item name="aboutCardBackground">@color/blue_grey</item>
+    </style>
+
+    <style name="AboutCardBackground.Blue_Grey_900">
+        <item name="aboutCardBackground">@color/blue_grey_900</item>
+    </style>
+
+    <style name="AboutCardBackground.Black">
+        <item name="aboutCardBackground">@color/black</item>
+    </style>
+
     <!-- Splash screen -->
     <style name="AppTheme.Launcher">
         <item name="android:windowBackground">@drawable/splash_screen</item>

@@ -12,7 +12,6 @@ public interface Constants {
     String PREF_DISABLE_FIXED_UI = "disable_fixed_ui";
     String PREF_ITEMS_TO_SHOW = "items_to_show_in_dialog_pref";
     String PREF_ABOUT_ME = "pref_about_me";
-    String PREF_OPENSOURCE = "pref_opensource";
     String PREF_HEAD_OPACITY = "pref_head_opacity";
     String PREF_SETTINGS_START_ON_BOOT = "pref_settings_start_on_boot";
     String PRED_DIALOG_POSITION = "pref_dialog_postition";

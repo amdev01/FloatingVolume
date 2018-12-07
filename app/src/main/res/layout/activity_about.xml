@@ -1,14 +1,10 @@
-<tools:LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".AboutActivity">
-
-<FrameLayout
-    android:id="@+id/about"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-</FrameLayout>
-
-</tools:LinearLayout>
+    <fragment android:name="com.android.mycax.floatingvolume.AboutFragment"
+        android:id="@+id/about_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

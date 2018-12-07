@@ -27,8 +27,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
-import com.mikepenz.aboutlibraries.Libs;
-import com.mikepenz.aboutlibraries.LibsBuilder;
 
 import java.util.Objects;
 
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         utils = new AppUtils(this);
         theme = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_THEME_VALUE, "1")));
         utils.onActivityCreateSetTheme(this, theme);
-        if (theme == 3) {
+        if (theme == Constants.THEME_CUSTOM) {
             utils.setActionBarTextColor(getSupportActionBar());
         }
         super.onCreate(savedInstanceState);
@@ -87,8 +85,6 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         disableFixedUI.setOnPreferenceChangeListener(this);
         Preference aboutPreference = findPreference(Constants.PREF_ABOUT_ME);
         aboutPreference.setOnPreferenceClickListener(this);
-        Preference openSourcePreference = findPreference((Constants.PREF_OPENSOURCE));
-        openSourcePreference.setOnPreferenceClickListener(this);
     }
 
     private void initializeView() {
@@ -170,26 +166,8 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
             case Constants.PREF_CUSTOM_THEME:
                 startActivityForResult(new Intent(this, ThemeSettingsActivity.class), Constants.THEME_PREFRENCES_REQUEST);
                 break;
-            case Constants.PREF_OPENSOURCE:
-                new LibsBuilder()
-                        .withActivityStyle(getActivityStyle())
-                        .withAboutIconShown(true)
-                        .start(this);
-                break;
         }
         return false;
-    }
-
-    private com.mikepenz.aboutlibraries.Libs.ActivityStyle getActivityStyle() {
-        switch(theme) {
-            case Constants.THEME_LIGHT:
-                return Libs.ActivityStyle.LIGHT;
-            case Constants.THEME_DARK:
-                return Libs.ActivityStyle.DARK;
-            case Constants.THEME_CUSTOM:
-                return Libs.ActivityStyle.LIGHT;
-        }
-        return Libs.ActivityStyle.LIGHT;
     }
 
     @Override

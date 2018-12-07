@@ -71,12 +71,12 @@ public class AppUtils {
                 activity.getTheme().applyStyle(getPrimaryColor(), true); /* Primary */
                 activity.getTheme().applyStyle(getAccentColor(), true); /* Accent */
                 activity.getTheme().applyStyle(getDrawableColor(), true); /* Drawables */
+                activity.getTheme().applyStyle(getAboutCardBackgroundColor(), true); /* AboutActivity card */
                 activity.getTheme().applyStyle(setTextColor(sharedPref.getInt(Constants.PREF_COLOR_BACKGROUND, -1),
                         R.style.TextColor_Black, R.style.TextColor_White), true); /* Primary and secondary text colors */
                 activity.getTheme().applyStyle(setTextColor(sharedPref.getInt(Constants.PREF_COLOR_ACCENT, -1499549),
                         R.style.ButtonTextColor_Black, R.style.ButtonTextColor_White), true); /* Button text colors */
                 activity.getWindow().setStatusBarColor(sharedPref.getInt(Constants.PREF_COLOR_PRIMARY, -12627531));
-                activity.getTheme().applyStyle(getSeekbarTintColor(), true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) setStatusBar(activity);
                 break;
         }
@@ -108,7 +108,7 @@ public class AppUtils {
 
     public int getSeekbarTintColor() {
         return setTextColor(sharedPref.getInt(Constants.PREF_COLOR_DIALOG, -1),
-                R.style.SeekbarTheme_DarkGreySeekbar, R.style.SeekbarTheme_LightGreySeekbar);
+                R.style.SeekbarTheme_LightGreySeekbar, R.style.SeekbarTheme_DarkGreySeekbar);
     }
 
     private int getPrimaryColor() {
@@ -423,56 +423,56 @@ public class AppUtils {
         return R.style.AlertDialogAccent_White;
     }
 
-    public int getCardBackgroundColor() {
+    private int getAboutCardBackgroundColor() {
         int color = sharedPref.getInt(Constants.PREF_COLOR_BACKGROUND, -1);
         if (color == getColorInt(R.color.white)) {
-            return R.color.white;
+            return R.style.AboutCardBackground_White;
         } else if (color == getColorInt(R.color.red)) {
-            return R.color.red;
+            return R.style.AboutCardBackground_Red;
         } else if (color == getColorInt(R.color.pink)) {
-            return R.color.pink;
+            return R.style.AboutCardBackground_Pink;
         } else if (color == getColorInt(R.color.purple)) {
-            return R.color.purple;
+            return R.style.AboutCardBackground_Purple;
         } else if (color == getColorInt(R.color.deep_purple)) {
-            return R.color.deep_purple;
+            return R.style.AboutCardBackground_Deep_Purple;
         } else if (color == getColorInt(R.color.indigo)) {
-            return R.color.indigo;
+            return R.style.AboutCardBackground_Indigo;
         } else if (color == getColorInt(R.color.blue)) {
-            return R.color.blue;
+            return R.style.AboutCardBackground_Blue;
         } else if (color == getColorInt(R.color.light_blue)) {
-            return R.color.light_blue;
+            return R.style.AboutCardBackground_Light_Blue;
         } else if (color == getColorInt(R.color.cyan)) {
-            return R.color.cyan;
+            return R.style.AboutCardBackground_Cyan;
         } else if (color == getColorInt(R.color.teal)) {
-            return R.color.teal;
+            return R.style.AboutCardBackground_Teal;
         } else if (color == getColorInt(R.color.green)) {
-            return R.color.green;
+            return R.style.AboutCardBackground_Green;
         }else if (color == getColorInt(R.color.light_green)) {
-            return R.color.light_green;
+            return R.style.AboutCardBackground_Light_Green;
         } else if (color == getColorInt(R.color.lime)) {
-            return R.color.lime;
+            return R.style.AboutCardBackground_Lime;
         } else if (color == getColorInt(R.color.yellow)) {
-            return R.color.yellow;
+            return R.style.AboutCardBackground_Yellow;
         } else if (color == getColorInt(R.color.amber)) {
-            return R.color.amber;
+            return R.style.AboutCardBackground_Amber;
         } else if (color == getColorInt(R.color.orange)) {
-            return R.color.orange;
+            return R.style.AboutCardBackground_Orange;
         } else if (color == getColorInt(R.color.deep_orange)) {
-            return R.color.deep_orange;
+            return R.style.AboutCardBackground_Deep_Orange;
         } else if (color == getColorInt(R.color.brown)) {
-            return R.color.brown;
+            return R.style.AboutCardBackground_Brown;
         } else if (color == getColorInt(R.color.grey)) {
-            return R.color.grey;
+            return R.style.AboutCardBackground_Grey;
         } else if (color == getColorInt(R.color.grey_900)) {
-            return R.color.grey_900;
+            return R.style.AboutCardBackground_Grey_900;
         } else if (color == getColorInt(R.color.blue_grey)) {
-            return R.color.blue_grey;
+            return R.style.AboutCardBackground_Blue_Grey;
         } else if (color == getColorInt(R.color.blue_grey_900)) {
-            return R.color.blue_grey_900;
+            return R.style.AboutCardBackground_Blue_Grey_900;
         } else if (color == getColorInt(R.color.black)) {
-            return R.color.black;
+            return R.style.AboutCardBackground_Black;
         }
-        return R.color.white;
+        return R.style.AboutCardBackground_White;
     }
 
     private int getColorInt(@ColorRes int color) {

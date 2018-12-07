@@ -25,11 +25,13 @@ public class ThemeSettingsActivity extends AppCompatPreferenceActivity implement
         utils = new AppUtils(this);
         int theme = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_THEME_VALUE, "1")));
         utils.onActivityCreateSetTheme(this, theme);
-        if (theme == 3) {
+        if (theme == Constants.THEME_CUSTOM) {
             utils.setActionBarTextColor(getSupportActionBar());
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theme_settings);
+        if (getSupportActionBar()!=null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         FancyButton applyThemeButton = findViewById(R.id.apply_theme_button);
         applyThemeButton.setOnClickListener(this);
     }
@@ -56,5 +58,4 @@ public class ThemeSettingsActivity extends AppCompatPreferenceActivity implement
         editor.apply();
         utils.applyTheme(this);
     }
-
 }

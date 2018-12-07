@@ -12,8 +12,6 @@
     <string name="settings_summary_save_position">Place volume control dialog in last saved position</string>
     <string name="pref_disable_fixed_ui">Enable movable volume dialog</string>
     <string name="pref_disable_fixed_ui_summary">Allow moving volume dialog anywhere on the screen</string>
-    <string name="pref_opensource_libs">Open source</string>
-    <string name="pref_opensources_libs_summary">Libraries used in this project</string>
     <string name="pref_head_opacity_title">Floating icon opacity</string>
     <string name="pref_head_default_value">1f</string>
     <string name="pref_head_opacity_dtext">Choose preferred opacity</string>
@@ -30,11 +28,8 @@
     <string name="dialog_style_title">Dialog style settings</string>
     <string name="dialog_style_dtext">Choose your preferred style</string>
     <string name="dialog_default_style">1</string>
-    <string name="about_me">About me</string>
-    <string name="about_me_summary">Version, contact</string>
-    <string name="dev_name">Adam Myczkowski</string>
-    <string name="dev_sub">Computer Science student</string>
-    <string name="git_project">Project\'s repo</string>
+    <string name="about_app">About application</string>
+    <string name="about_app_summary">Version, contact info, report bugs</string>
     <string name="pref_custom_theme">Custom theme settings</string>
     <string name="pref_custom_theme_summary">Adjust your own theme</string>
     <string name="title_activity_theme_settings">Custom Theme Settings</string>
@@ -52,4 +47,16 @@
     <string name="dialog_position_title">Fixed dialog position</string>
     <string name="dialog_position_dtext">Choose preferred dialog position</string>
     <string name="dialog_position_default">2</string>
+    <string name="app_author">By Adam Myczkowski</string>
+    <string name="licenses">Licenses</string>
+    <string name="visit_website">Visit website</string>
+    <string name="author">Author</string>
+    <string name="author_name">Adam Myczkowski</string>
+    <string name="author_location">Telford, United Kingdom</string>
+    <string name="github_fork">Fork on GitHub</string>
+    <string name="send_email">Send me an email</string>
+    <string name="youtube_channel">YouTube channel</string>
+    <string name="support">Support</string>
+    <string name="rate_application">Rate application</string>
+    <string name="bug_report">Report bugs</string>
 </resources>
