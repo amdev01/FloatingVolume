@@ -49,6 +49,13 @@
             android:summary="@string/settings_summary_save_position"
             android:title="@string/settings_title_save_position" />
         <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_vibration_24dp"
+            android:key="pref_show_mode_switch"
+            android:title="@string/pref_show_mode_switch_title"
+            android:summary="@string/pref_show_mode_switch_summary"/>
+
+        <SwitchPreference
             android:icon="@drawable/ic_touch_app_24dp"
             android:key="disable_fixed_ui"
             android:summary="@string/pref_disable_fixed_ui_summary"

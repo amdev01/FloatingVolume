@@ -59,4 +59,6 @@
     <string name="support">Support</string>
     <string name="rate_application">Rate application</string>
     <string name="bug_report">Report bugs</string>
+    <string name="pref_show_mode_switch_title">Show ringer mode switch</string>
+    <string name="pref_show_mode_switch_summary">Disable on Android Go devices or when you do not want to use the mode switch</string>
 </resources>

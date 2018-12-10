@@ -14,7 +14,8 @@ public interface Constants {
     String PREF_ABOUT_ME = "pref_about_me";
     String PREF_HEAD_OPACITY = "pref_head_opacity";
     String PREF_SETTINGS_START_ON_BOOT = "pref_settings_start_on_boot";
-    String PRED_DIALOG_POSITION = "pref_dialog_postition";
+    String PREF_DIALOG_POSTITION = "pref_dialog_postition";
+    String PREF_SHOW_MODE_SWITCH = "pref_show_mode_switch";
     /* Spectrum */
     String PREF_SPECTRUM_COLOR_PRIMARY = "pref_spectrum_color_primary";
     String PREF_SPECTRUM_COLOR_ACCENT = "pref_spectrum_color_accent";

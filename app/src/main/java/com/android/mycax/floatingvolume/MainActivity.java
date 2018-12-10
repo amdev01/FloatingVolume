@@ -1,6 +1,5 @@
 package com.android.mycax.floatingvolume;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.NotificationManager;
@@ -21,12 +20,6 @@ import android.widget.Toast;
 import com.android.mycax.floatingvolume.services.FloatingVolumeService;
 import com.android.mycax.floatingvolume.utils.AppUtils;
 import com.android.mycax.floatingvolume.utils.Constants;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.Objects;
 
@@ -79,7 +72,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         }
         ListPreference headOpacityPreference = (ListPreference) findPreference(Constants.PREF_HEAD_OPACITY);
         headOpacityPreference.setOnPreferenceChangeListener(this);
-        dialogPosition = (ListPreference) findPreference(Constants.PRED_DIALOG_POSITION);
+        dialogPosition = (ListPreference) findPreference(Constants.PREF_DIALOG_POSTITION);
         if (sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false)) dialogPosition.setEnabled(false);
         SwitchPreference disableFixedUI = (SwitchPreference) findPreference(Constants.PREF_DISABLE_FIXED_UI);
         disableFixedUI.setOnPreferenceChangeListener(this);
@@ -130,17 +123,17 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
             }
         }
 
-        Dexter.withActivity(this)
+        /*Dexter.withActivity(this)
                 .withPermission(Manifest.permission.READ_PHONE_STATE)
                 .withListener(new PermissionListener() {
-                    @Override public void onPermissionGranted(PermissionGrantedResponse response) {/* ... */}
+                    @Override public void onPermissionGranted(PermissionGrantedResponse response) {/ ... /}
                     @Override public void onPermissionDenied(PermissionDeniedResponse response) {
                         Toast.makeText(getApplicationContext(), R.string.app_permission_denied, Toast.LENGTH_SHORT).show();
                     }
                     @Override public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
                         token.continuePermissionRequest();
                     }
-                }).check();
+                }).check(); */
     }
 
     @TargetApi(Build.VERSION_CODES.M)

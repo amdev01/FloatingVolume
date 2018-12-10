@@ -28,6 +28,8 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import androidx.cardview.widget.CardView;
+
 import com.android.mycax.floatingvolume.R;
 import com.android.mycax.floatingvolume.audio.AudioVolumeObserver;
 import com.android.mycax.floatingvolume.interfaces.OnAudioVolumeChangedListener;
@@ -60,7 +62,7 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     private SeekBar alarmControl;
     private SeekBar voiceCallControl;
     private SeekBar notificationControl;
-    private boolean isDisableStaticUiEnabled, isUseLastPosition, isExpanded;
+    private boolean isDisableStaticUiEnabled, isUseLastPosition, isExpanded, showModeSwitch;
     private int x_init_cord;
     private int y_init_cord;
     private int x_init_margin;
@@ -114,6 +116,7 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         isDisableStaticUiEnabled = sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false);
+        showModeSwitch = sharedPref.getBoolean(Constants.PREF_SHOW_MODE_SWITCH, true);
         seekbarSelections = sharedPref.getStringSet(Constants.PREF_ITEMS_TO_SHOW, null);
         int theme = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_THEME_VALUE, "1")));
 
@@ -235,41 +238,51 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     }
 
     private void ringerModeReciverSetup(final int ringerModeChangeStyle) {
-        switch (ringerModeChangeStyle) {
-            case Constants.RINGER_STYLE_IMAGE:
-                change_ringer_mode = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitch);
-                break;
-            case Constants.RINGER_STYLE_FANCY:
-                change_ringer_mode_fancy = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitchFancy);
-                break;
-        }
-
-        ringerModeReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                switch (ringerModeChangeStyle) {
-                    case Constants.RINGER_STYLE_IMAGE:
-                        change_ringer_mode.setImageResource(getCurrentRingerModeDrawable());
-                        change_ringer_mode.startAnimation(fab_open_0_to_1);
-                        break;
-                    case Constants.RINGER_STYLE_FANCY:
-                        change_ringer_mode_fancy.setIconResource(context.getDrawable(getCurrentRingerModeDrawable()));
-                        change_ringer_mode_fancy.setText(getCurrentRingerModeText());
-                        change_ringer_mode_fancy.startAnimation(fab_open_0_to_1);
-                        break;
-                }
+        if (showModeSwitch) {
+            switch (ringerModeChangeStyle) {
+                case Constants.RINGER_STYLE_IMAGE:
+                    change_ringer_mode = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitch);
+                    break;
+                case Constants.RINGER_STYLE_FANCY:
+                    change_ringer_mode_fancy = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitchFancy);
+                    break;
             }
-        };
-        final IntentFilter filterRingerChanged = new IntentFilter(
-                AudioManager.RINGER_MODE_CHANGED_ACTION);
-        context.registerReceiver(ringerModeReceiver, filterRingerChanged);
-        switch (ringerModeChangeStyle) {
-            case Constants.RINGER_STYLE_IMAGE:
-                change_ringer_mode.setOnClickListener(this);
-                break;
-            case Constants.RINGER_STYLE_FANCY:
-                change_ringer_mode_fancy.setOnClickListener(this);
-                break;
+
+            ringerModeReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    switch (ringerModeChangeStyle) {
+                        case Constants.RINGER_STYLE_IMAGE:
+                            change_ringer_mode.setImageResource(getCurrentRingerModeDrawable());
+                            change_ringer_mode.startAnimation(fab_open_0_to_1);
+                            break;
+                        case Constants.RINGER_STYLE_FANCY:
+                            change_ringer_mode_fancy.setIconResource(context.getDrawable(getCurrentRingerModeDrawable()));
+                            change_ringer_mode_fancy.setText(getCurrentRingerModeText());
+                            change_ringer_mode_fancy.startAnimation(fab_open_0_to_1);
+                            break;
+                    }
+                }
+            };
+            final IntentFilter filterRingerChanged = new IntentFilter(
+                    AudioManager.RINGER_MODE_CHANGED_ACTION);
+            context.registerReceiver(ringerModeReceiver, filterRingerChanged);
+            switch (ringerModeChangeStyle) {
+                case Constants.RINGER_STYLE_IMAGE:
+                    change_ringer_mode.setOnClickListener(this);
+                    break;
+                case Constants.RINGER_STYLE_FANCY:
+                    change_ringer_mode_fancy.setOnClickListener(this);
+                    break;
+            }
+        } else {
+            if (style == Constants.STYLE_SLIM) {
+                change_ringer_mode = mFloatingWidgetView.findViewById(R.id.imageViewModeSwitch);
+                change_ringer_mode.setVisibility(View.GONE);
+            } else {
+                CardView cardModeSwitch = mFloatingWidgetView.findViewById(R.id.cardModeSwitch);
+                cardModeSwitch.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -474,7 +487,7 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     private void closeExpandedView() {
         isExpanded = false;
         removeExpandedView();
-        context.unregisterReceiver(ringerModeReceiver);
+        if(showModeSwitch) context.unregisterReceiver(ringerModeReceiver);
         mAudioVolumeObserverMedia.unregister();
         mAudioVolumeObserverRinger.unregister();
         mAudioVolumeObserverAlarm.unregister();
@@ -624,7 +637,7 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     }
 
     private int getDialogPosition() {
-        int dialogPosition = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PRED_DIALOG_POSITION, "2")));
+        int dialogPosition = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_DIALOG_POSTITION, "2")));
         switch (dialogPosition) {
             case Constants.DIALOG_POSITION_LEFT:
                 return Gravity.CENTER | Gravity.START;
