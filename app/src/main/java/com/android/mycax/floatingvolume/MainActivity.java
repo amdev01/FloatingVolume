@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
     private AppUtils utils;
     private NotificationManager notificationManager;
     private SharedPreferences sharedPref;
+    private SwitchPreference ringerSwitch;
     private int theme;
 
     @Override
@@ -73,11 +74,14 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         ListPreference headOpacityPreference = (ListPreference) findPreference(Constants.PREF_HEAD_OPACITY);
         headOpacityPreference.setOnPreferenceChangeListener(this);
         dialogPosition = (ListPreference) findPreference(Constants.PREF_DIALOG_POSTITION);
-        if (sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false)) dialogPosition.setEnabled(false);
+        if (sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false))
+            dialogPosition.setEnabled(false);
         SwitchPreference disableFixedUI = (SwitchPreference) findPreference(Constants.PREF_DISABLE_FIXED_UI);
         disableFixedUI.setOnPreferenceChangeListener(this);
         Preference aboutPreference = findPreference(Constants.PREF_ABOUT_ME);
         aboutPreference.setOnPreferenceClickListener(this);
+        ringerSwitch = (SwitchPreference) findPreference(Constants.PREF_SHOW_MODE_SWITCH);
+        ringerSwitch.setOnPreferenceChangeListener(this);
     }
 
     private void initializeView() {
@@ -99,28 +103,36 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
                     utils.manageService(false);
                     utils.manageService(true);
                 }
+            case Constants.PREF_SHOW_MODE_SWITCH:
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1 && !ringerSwitch.isChecked()) {
+                    checkModeSwitchAvailable();
+                }
         }
         return true;
     }
 
     @TargetApi(Build.VERSION_CODES.M)
+    private void checkModeSwitchAvailable() {
+        if (!Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
+            checkPermissions();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
     private void checkPermissions() {
         notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Settings.canDrawOverlays(this) && Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
+        if (Settings.canDrawOverlays(this)) {
             initializeView();
-        } else {
-            if (!Settings.canDrawOverlays(this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, Constants.OVERLAY_PERMISSION_REQUEST);
-            }
-            if (!Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
-                Intent intent = new Intent(
-                        android.provider.Settings
-                                .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+        } if (!Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, Constants.OVERLAY_PERMISSION_REQUEST);
+        } if (!Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
+            Intent intent = new Intent(
+                    android.provider.Settings
+                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
 
-                startActivityForResult(intent, Constants.NOTIFICATION_POLICY_PERMISSION_REQUEST);
-            }
+            startActivityForResult(intent, Constants.NOTIFICATION_POLICY_PERMISSION_REQUEST);
         }
 
         /*Dexter.withActivity(this)
@@ -139,11 +151,16 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.OVERLAY_PERMISSION_REQUEST || requestCode == Constants.NOTIFICATION_POLICY_PERMISSION_REQUEST) {
-            if (Settings.canDrawOverlays(this) && Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
+        if (requestCode == Constants.OVERLAY_PERMISSION_REQUEST) {
+            if (Settings.canDrawOverlays(this)) {
                 initializeView();
             } else {
                 Toast.makeText(this, R.string.app_permission_denied, Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == Constants.NOTIFICATION_POLICY_PERMISSION_REQUEST) {
+            if (!Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
+                ringerSwitch.setChecked(false);
+                //permission not available
             }
         } else if (requestCode == Constants.THEME_PREFRENCES_REQUEST) {
             utils.applyTheme(this);
@@ -165,7 +182,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()) {
+        switch (v.getId()) {
             case R.id.button_start_service:
                 utils.manageService(true);
                 break;
