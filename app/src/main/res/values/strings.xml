@@ -61,4 +61,7 @@
     <string name="bug_report">Report bugs</string>
     <string name="pref_show_mode_switch_title">Show ringer mode switch</string>
     <string name="pref_show_mode_switch_summary">Disable on Android Go devices or when you do not want to use the mode switch</string>
+    <string name="dialog_timeout_default">3000</string>
+    <string name="dialog_timeout_dtext">Volume dialog will be automatically closed after chosen time of inactivity</string>
+    <string name="dialog_timeout_title">Volume dialog timeout</string>
 </resources>

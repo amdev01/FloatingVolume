@@ -56,6 +56,24 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="dialog_timeout_entries">
+        <item>3s</item>
+        <item>5s</item>
+        <item>7s</item>
+        <item>10s</item>
+        <item>13s</item>
+        <item>15s</item>
+    </string-array>
+
+    <string-array name="dialog_timeout_values">
+        <item>3000</item>
+        <item>5000</item>
+        <item>7000</item>
+        <item>10000</item>
+        <item>13000</item>
+        <item>15000</item>
+    </string-array>
+
     <string-array name="head_opacity_entries">
         <item>10%</item>
         <item>20%</item>

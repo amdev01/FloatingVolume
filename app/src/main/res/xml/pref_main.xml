@@ -54,12 +54,20 @@
             android:key="pref_show_mode_switch"
             android:title="@string/pref_show_mode_switch_title"
             android:summary="@string/pref_show_mode_switch_summary"/>
-
         <SwitchPreference
             android:icon="@drawable/ic_touch_app_24dp"
             android:key="disable_fixed_ui"
             android:summary="@string/pref_disable_fixed_ui_summary"
             android:title="@string/pref_disable_fixed_ui" />
+        <ListPreference
+            android:defaultValue="@string/dialog_timeout_default"
+            android:dialogTitle="@string/dialog_timeout_dtext"
+            android:entries="@array/dialog_timeout_entries"
+            android:entryValues="@array/dialog_timeout_values"
+            android:icon="@drawable/ic_timer_24dp"
+            android:key="pref_dialog_timeout"
+            android:summary="%s"
+            android:title="@string/dialog_timeout_title" />
         <ListPreference
             android:defaultValue="@string/dialog_position_default"
             android:dialogTitle="@string/dialog_position_dtext"

@@ -14,6 +14,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -67,7 +68,7 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     private int y_init_cord;
     private int x_init_margin;
     private int y_init_margin;
-    private int style, currentSeekbarVisible, seekbarCounter;
+    private int style, currentSeekbarVisible, seekbarCounter, dialogTimeoutMS;
     private List enabledSeekbarRotators;
     private final Point szWindow = new Point();
     private SharedPreferences.Editor editor;
@@ -77,6 +78,7 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     private Context context;
     private OnExpandedVolumeDialogClosed onExpandedVolumeDialogClosed;
     private TimeInterpolator mMoveEdgeInterpolator;
+    private CountDownTimer closeViewTimer = null;
     private static int OVERLAY_TYPE;
 
     static {
@@ -144,6 +146,8 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
         implementVolumeFeatures();
 
         isExpanded = true;
+        dialogTimeoutMS = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_DIALOG_TIMEOUT, "1")));
+        startTimer(dialogTimeoutMS);
     }
 
     @SuppressLint("InflateParams")
@@ -357,6 +361,7 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
             }
         } else ImageToAnimate = ImageStreamShared;
         ImageToAnimate.startAnimation(animation);
+        startTimer(dialogTimeoutMS);
     }
 
     @Override
@@ -382,6 +387,7 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
             }
         } else ImageToAnimate = ImageStreamShared;
         ImageToAnimate.startAnimation(animation);
+        cancelTimer();
     }
 
     @Override
@@ -475,6 +481,8 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
                 handleImageClick(R.id.ImageStreamShared, getDisplaySeekbarStream(currentSeekbarVisible));
                 break;
         }
+        cancelTimer();
+        startTimer(dialogTimeoutMS);
     }
 
     public void removeExpandedView() {
@@ -487,7 +495,8 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     private void closeExpandedView() {
         isExpanded = false;
         removeExpandedView();
-        if(showModeSwitch) context.unregisterReceiver(ringerModeReceiver);
+        cancelTimer();
+        if (showModeSwitch) context.unregisterReceiver(ringerModeReceiver);
         mAudioVolumeObserverMedia.unregister();
         mAudioVolumeObserverRinger.unregister();
         mAudioVolumeObserverAlarm.unregister();
@@ -539,6 +548,9 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
 
                             if (!isClicked) resetPosition(x_cord);
 
+                            cancelTimer();
+                            startTimer(dialogTimeoutMS);
+
                             return true;
                         case MotionEvent.ACTION_MOVE:
                             int x_diff_move = x_cord - x_init_cord;
@@ -557,6 +569,11 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
                             editor.apply();
                             return true;
                     }
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    cancelTimer();
+                    startTimer(dialogTimeoutMS);
+                    return true;
                 }
                 if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
                     closeExpandedView();
@@ -620,6 +637,22 @@ public class ExpandedVolumeDialog implements View.OnClickListener, SeekBar.OnSee
     }
 
     /* helper functions */
+
+    private void startTimer(int time) {
+        closeViewTimer = new CountDownTimer(time, 1000) {
+            public void onTick(long millisUntilFinished) { }
+
+            public void onFinish() {
+                closeExpandedView();
+            }
+        };
+        closeViewTimer.start();
+    }
+
+    private void cancelTimer() {
+        if (closeViewTimer != null)
+            closeViewTimer.cancel();
+    }
 
     private int getDialogLayout() {
         style = Integer.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_DIALOG_STYLE, "1")));
