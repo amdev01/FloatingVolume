@@ -1,6 +1,7 @@
 package com.android.mycax.floatingvolume;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.View;
 import com.marcoscg.easyabout.EasyAboutFragment;
 import com.marcoscg.easyabout.helpers.AboutItemBuilder;
 import com.marcoscg.easyabout.items.AboutCard;
+import com.marcoscg.easyabout.items.AboutItem;
 import com.marcoscg.easyabout.items.NormalAboutItem;
 import com.marcoscg.easyabout.items.PersonAboutItem;
 import com.marcoscg.licenser.Library;
@@ -79,9 +81,13 @@ public class AboutFragment extends EasyAboutFragment {
 
         addCard(new AboutCard.Builder(context)
                 .setTitle(R.string.support)
-                .addItem(AboutItemBuilder.generatePlayStoreItem(context)
-                        .setTitle(R.string.rate_application)
-                        .setIcon(R.drawable.ic_star_border_black_24dp))
+                .addItem(BuildConfig.APPLICATION_ID == "com.android.mycax.floatingvolume" ?
+                        AboutItemBuilder.generateLinkItem(context, "https://labs.xda-developers.com/store/app/com.android.mycax.floatingvolume")
+                                .setTitle(R.string.rate_application)
+                                .setIcon(R.drawable.ic_star_border_black_24dp) :
+                        AboutItemBuilder.generatePlayStoreItem(context)
+                                .setTitle(R.string.rate_application)
+                                .setIcon(R.drawable.ic_star_border_black_24dp))
                 .addItem(AboutItemBuilder.generateLinkItem(context, "https://github.com/MyczkowskiAdam/FloatingVolume/issues/new")
                         .setTitle(R.string.bug_report)
                         .setIcon(R.drawable.ic_bug_report_black_24dp))
