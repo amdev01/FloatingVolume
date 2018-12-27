@@ -64,4 +64,7 @@
     <string name="dialog_timeout_default">3000</string>
     <string name="dialog_timeout_dtext">Volume dialog will be automatically closed after chosen time of inactivity</string>
     <string name="dialog_timeout_title">Volume dialog timeout</string>
+    <string name="floating_icon_size_default">54</string>
+    <string name="floating_icon_size_dtext">Choose preferred size of the floating icon</string>
+    <string name="floating_icon_size_title">Floating icon size</string>
 </resources>

@@ -64,7 +64,6 @@
         <item>13s</item>
         <item>15s</item>
     </string-array>
-
     <string-array name="dialog_timeout_values">
         <item>3000</item>
         <item>5000</item>
@@ -73,6 +72,24 @@
         <item>13000</item>
         <item>15000</item>
     </string-array>
+
+    <string-array name="floating_icon_size_entries">
+        <item>24dp</item>
+        <item>34dp</item>
+        <item>44dp</item>
+        <item>54dp</item>
+        <item>64dp</item>
+        <item>74dp</item>
+    </string-array>
+    <string-array name="floating_icon_size_values">
+        <item>24</item>
+        <item>34</item>
+        <item>44</item>
+        <item>54</item>
+        <item>64</item>
+        <item>74</item>
+    </string-array>
+
 
     <string-array name="head_opacity_entries">
         <item>10%</item>

@@ -35,6 +35,15 @@
             android:key="pref_head_opacity"
             android:summary="%s"
             android:title="@string/pref_head_opacity_title" />
+        <ListPreference
+            android:defaultValue="@string/floating_icon_size_default"
+            android:dialogTitle="@string/floating_icon_size_dtext"
+            android:entries="@array/floating_icon_size_entries"
+            android:entryValues="@array/floating_icon_size_values"
+            android:icon="@drawable/ic_transform_24dp"
+            android:key="pref_floating_icon_size"
+            android:summary="%s"
+            android:title="@string/floating_icon_size_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/floating_dialog_settings_category">

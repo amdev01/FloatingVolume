@@ -41,7 +41,6 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     private SharedPreferences sharedPref;
     private ImageView iconView;
     private ExpandedVolumeDialog expandedVolumeDialog;
-    private Animation fab_open_0_to_1;
 
     @Nullable
     @Override
@@ -57,16 +56,19 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
         }
 
         runAsForeground();
-        fab_open_0_to_1 = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
+        Animation fab_open_0_to_1 = AnimationUtils.loadAnimation(this, R.anim.fab_open_0_to_1);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         isUseLastPosition = sharedPref.getBoolean(Constants.PREF_SAVE_LAST_POSITION, false);
         expandedVolumeDialog = new ExpandedVolumeDialog(this);
         expandedVolumeDialog.setOnCloseListener(this);
+
         final DisplayMetrics metrics = new DisplayMetrics();
         final WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         Objects.requireNonNull(windowManager).getDefaultDisplay().getMetrics(metrics);
         final LayoutInflater inflater = LayoutInflater.from(this);
+
         iconView = (ImageView) inflater.inflate(R.layout.floating_head, null, false);
+        iconView.setImageDrawable(getDrawable(getFloatingIcon()));
         iconView.setAlpha(Float.valueOf(Objects.requireNonNull(sharedPref.getString(Constants.PREF_HEAD_OPACITY, "1f"))));
         iconView.startAnimation(fab_open_0_to_1);
         iconView.setOnClickListener(new View.OnClickListener() {
@@ -171,6 +173,23 @@ public class FloatingVolumeService extends Service implements FloatingViewListen
     @Override
     public void notifyExpandedVolumeDialogClosed() {
         iconView.setVisibility(View.VISIBLE);
-        iconView.startAnimation(fab_open_0_to_1);
+    }
+
+    private int getFloatingIcon() {
+        switch (Objects.requireNonNull(sharedPref.getString(Constants.PREF_FLOATING_ICON_SIZE, "54"))) {
+            case Constants.SIZE_24DP:
+                return R.drawable.ic_floating_head_24dp;
+            case Constants.SIZE_34DP:
+                return R.drawable.ic_floating_head_34dp;
+            case Constants.SIZE_44DP:
+                return R.drawable.ic_floating_head_44dp;
+            case Constants.SIZE_54DP:
+                return R.drawable.ic_floating_head_54dp;
+            case Constants.SIZE_64DP:
+                return R.drawable.ic_floating_head_64dp;
+            case Constants.SIZE_74DP:
+                return R.drawable.ic_floating_head_74dp;
+        }
+        return R.drawable.ic_floating_head_54dp;
     }
 }

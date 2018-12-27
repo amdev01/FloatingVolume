@@ -24,8 +24,7 @@ public class FloatingTile extends TileService {
     public void onStartListening() {
         utils = new AppUtils(this);
         tile = getQsTile();
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (!Settings.canDrawOverlays(this) || !Objects.requireNonNull(notificationManager).isNotificationPolicyAccessGranted()) {
+        if (!Settings.canDrawOverlays(this)) {
             tile.setState(Tile.STATE_UNAVAILABLE);
         } else tile.setState(utils.isServiceRunning(FloatingVolumeService.class) ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
         tile.updateTile();

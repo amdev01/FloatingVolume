@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         aboutPreference.setOnPreferenceClickListener(this);
         ringerSwitch = (SwitchPreference) findPreference(Constants.PREF_SHOW_MODE_SWITCH);
         ringerSwitch.setOnPreferenceChangeListener(this);
+        ListPreference floatingIconSizePref = (ListPreference) findPreference(Constants.PREF_FLOATING_ICON_SIZE);
+        floatingIconSizePref.setOnPreferenceChangeListener(this);
     }
 
     private void initializeView() {
@@ -98,15 +100,18 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
             case Constants.PREF_THEME_VALUE:
                 utils.applyTheme(this);
                 break;
+            case Constants.PREF_FLOATING_ICON_SIZE:
             case Constants.PREF_HEAD_OPACITY:
                 if (utils.isServiceRunning(FloatingVolumeService.class)) {
                     utils.manageService(false);
                     utils.manageService(true);
                 }
+                break;
             case Constants.PREF_SHOW_MODE_SWITCH:
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1 && !ringerSwitch.isChecked()) {
                     checkModeSwitchAvailable();
                 }
+                break;
         }
         return true;
     }
