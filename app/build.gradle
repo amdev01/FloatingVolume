@@ -3,43 +3,9 @@ apply plugin: 'com.android.application'
 
 def compile_sdk_version = 28
 def min_sdk_version = 21
-def support_library_version = "27.1.1"
 def androidX = "1.0.2"
 def build_tools_version = "28.0.3"
-def play_services_version = "15.0.0"
-def firebase_version = "15.0.0"
-def support_test_version = "1.0.1"
-def gson_version = "2.8.2"
-def glide_version = "3.8.0"
 
-
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        // Skip multidex because it follows a different versioning pattern.
-        if (!details.requested.name.startsWith("multidex")) {
-            switch (details.requested.group) {
-                case 'com.android.support':
-                    details.useVersion "$support_library_version"
-                    break
-                case 'com.google.android.gms':
-                    details.useVersion "$play_services_version"
-                    break
-                case 'com.google.firebase':
-                    details.useVersion "$firebase_version"
-                    break
-                case 'com.android.support.test':
-                    details.useVersion "$support_test_version"
-                    break
-                case 'com.google.code.gson':
-                    details.useVersion "$gson_version"
-                    break
-                case 'com.github.bumptech.glide':
-                    details.useVersion "$glide_version"
-                    break
-            }
-        }
-    }
-}
 
 android {
     compileSdkVersion compile_sdk_version

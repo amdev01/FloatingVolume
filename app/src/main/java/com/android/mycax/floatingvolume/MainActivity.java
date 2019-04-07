@@ -24,6 +24,7 @@ import com.android.mycax.floatingvolume.utils.Constants;
 import java.util.Objects;
 
 import mehdi.sakout.fancybuttons.FancyButton;
+import mehdi.sakout.fancybuttons.Utils;
 
 @SuppressLint("ExportedPreferenceActivity")
 @SuppressWarnings("deprecation")
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
     private FancyButton FloatingServiceStart;
     private FancyButton FloatingServiceStop;
     private ListPreference dialogPosition;
+    private ListPreference headOpacityPreference;
+    private ListPreference floatingIconSizePref;
     private AppUtils utils;
     private NotificationManager notificationManager;
     private SharedPreferences sharedPref;
@@ -71,7 +74,9 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         } else {
             customThemePreference.setEnabled(false);
         }
-        ListPreference headOpacityPreference = (ListPreference) findPreference(Constants.PREF_HEAD_OPACITY);
+        ListPreference interfaceType = (ListPreference) findPreference(Constants.PREF_INTERFACE_TYPE);
+        interfaceType.setOnPreferenceChangeListener(this);
+        headOpacityPreference = (ListPreference) findPreference(Constants.PREF_HEAD_OPACITY);
         headOpacityPreference.setOnPreferenceChangeListener(this);
         dialogPosition = (ListPreference) findPreference(Constants.PREF_DIALOG_POSTITION);
         if (sharedPref.getBoolean(Constants.PREF_DISABLE_FIXED_UI, false))
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
         aboutPreference.setOnPreferenceClickListener(this);
         ringerSwitch = (SwitchPreference) findPreference(Constants.PREF_SHOW_MODE_SWITCH);
         ringerSwitch.setOnPreferenceChangeListener(this);
-        ListPreference floatingIconSizePref = (ListPreference) findPreference(Constants.PREF_FLOATING_ICON_SIZE);
+        floatingIconSizePref = (ListPreference) findPreference(Constants.PREF_FLOATING_ICON_SIZE);
         floatingIconSizePref.setOnPreferenceChangeListener(this);
     }
 
@@ -112,6 +117,16 @@ public class MainActivity extends AppCompatPreferenceActivity implements SwitchP
                     checkModeSwitchAvailable();
                 }
                 break;
+            case Constants.PREF_INTERFACE_TYPE:
+                if (sharedPref.getString(Constants.PREF_INTERFACE_TYPE, "1") == Constants.ROCKER_SERVICE) {
+                    //if(utils.isAccessibilitySettingsOn(getApplicationContext())) startActivity(new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS));
+                    startActivityForResult(new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS), 6);
+                    floatingIconSizePref.setEnabled(false);
+                    headOpacityPreference.setEnabled(false);
+                } else {
+                    floatingIconSizePref.setEnabled(true);
+                    headOpacityPreference.setEnabled(true);
+                }
         }
         return true;
     }

@@ -22,9 +22,10 @@
     <string name="show_voicecall_bar">Voice Call Bar</string>
     <string name="items_to_show_in_dialog">Items to show in floating dialog</string>
     <string name="items_to_show_in_dialog_summary">Select which seek bars to show in the floating dialog</string>
-    <string name="floating_dialog_settings_category">Floating Dialog Settings</string>
+    <string name="floating_interface_settings_category">Floating Interface Settings</string>
     <string name="about_category">About</string>
     <string name="theme_settings_category">Appearance</string>
+    <string name="volume_interface_category">Volume Interface Settings</string>
     <string name="dialog_style_title">Dialog style settings</string>
     <string name="dialog_style_dtext">Choose your preferred style</string>
     <string name="dialog_default_style">1</string>
@@ -67,4 +68,7 @@
     <string name="floating_icon_size_default">54</string>
     <string name="floating_icon_size_dtext">Choose preferred size of the floating icon</string>
     <string name="floating_icon_size_title">Floating icon size</string>
+    <string name="dialog_interface_type_default">1</string>
+    <string name="dialog_interface_type_dtext">Choose interface type</string>
+    <string name="dialog_interface_type_title">Interface type</string>
 </resources>

@@ -90,6 +90,14 @@
         <item>74</item>
     </string-array>
 
+    <string-array name="interface_type_entries">
+        <item>Floating Interface</item>
+        <item>Volume Rocker Interface</item>
+    </string-array>
+    <string-array name="interface_type_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
     <string-array name="head_opacity_entries">
         <item>10%</item>

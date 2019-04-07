@@ -10,15 +10,22 @@ import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import androidx.annotation.ColorRes;
+
+import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 
 import com.android.mycax.floatingvolume.R;
 import com.android.mycax.floatingvolume.services.FloatingVolumeService;
+import com.android.mycax.floatingvolume.services.VolumeKeyService;
 
 import java.util.Objects;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class AppUtils {
 
@@ -30,6 +37,22 @@ public class AppUtils {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    /**
+     * method is used getting log tag with line number.
+     *
+     * @return String tag in (filename.java:XX) format
+     */
+    public static String getTag() {
+        String tag = "";
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        for (int i = 0; i < ste.length; i++) {
+            if (ste[i].getMethodName().equals("getTag")) {
+                tag = "("+ste[i + 1].getFileName() + ":" + ste[i + 1].getLineNumber()+")";
+            }
+        }
+        return tag;
+    }
+
     public boolean isServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : Objects.requireNonNull(manager).getRunningServices(Integer.MAX_VALUE)) {
@@ -39,6 +62,45 @@ public class AppUtils {
         }
         return false;
     }
+
+    public boolean isAccessibilitySettingsOn(Context mContext) {
+        int accessibilityEnabled = 0;
+        final String service = mContext.getPackageName() + "/" + VolumeKeyService.class.getCanonicalName();
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(
+                    mContext.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+            Log.v(getTag(), "accessibilityEnabled = " + accessibilityEnabled);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e(getTag(), "Error finding setting, default accessibility to not found: "
+                    + e.getMessage());
+        }
+        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+        if (accessibilityEnabled == 1) {
+            Log.v(getTag(), "***ACCESSIBILITY IS ENABLED*** -----------------");
+            String settingValue = Settings.Secure.getString(
+                    mContext.getApplicationContext().getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                mStringColonSplitter.setString(settingValue);
+                while (mStringColonSplitter.hasNext()) {
+                    String accessibilityService = mStringColonSplitter.next();
+
+                    Log.v(getTag(), "-------------- > accessibilityService :: " + accessibilityService + " " + service);
+                    if (accessibilityService.equalsIgnoreCase(service)) {
+                        Log.v(getTag(), "We've found the correct setting - accessibility is switched on!");
+                        return true;
+                    }
+                }
+            }
+        } else {
+            Log.v(TAG, "***ACCESSIBILITY IS DISABLED***");
+        }
+
+        return false;
+    }
+
 
     public void manageService(boolean state) {
         Intent intent = new Intent(context, FloatingVolumeService.class);

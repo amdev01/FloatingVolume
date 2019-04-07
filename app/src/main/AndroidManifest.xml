@@ -18,6 +18,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher"
         tools:ignore="GoogleAppIndexingWarning">
+        <service
+            android:name=".services.VolumeKeyService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
         <activity
             android:name=".MainActivity"
             tools:ignore="ExportedPreferenceActivity">
@@ -43,6 +55,7 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
+
         <receiver
             android:name=".receiver.startOnBootReceiver"
             android:label="startOnBootReceiver">

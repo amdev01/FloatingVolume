@@ -18,6 +18,7 @@ public interface Constants {
     String PREF_SHOW_MODE_SWITCH = "pref_show_mode_switch";
     String PREF_DIALOG_TIMEOUT = "pref_dialog_timeout";
     String PREF_FLOATING_ICON_SIZE = "pref_floating_icon_size";
+    String PREF_INTERFACE_TYPE = "pref_interface_type";
     /* Spectrum */
     String PREF_SPECTRUM_COLOR_PRIMARY = "pref_spectrum_color_primary";
     String PREF_SPECTRUM_COLOR_ACCENT = "pref_spectrum_color_accent";
@@ -41,6 +42,8 @@ public interface Constants {
     String SEEKBAR_ALARM = "3";
     String SEEKBAR_VOICE_CALL = "4";
     String SEEKBAR_NOTICIATION = "5";
+    String FLOATING_SERVICE = "1";
+    String ROCKER_SERVICE = "2";
     String SIZE_24DP = "24";
     String SIZE_34DP = "34";
     String SIZE_44DP = "44";
